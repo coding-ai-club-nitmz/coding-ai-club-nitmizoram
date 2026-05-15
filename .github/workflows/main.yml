@@ -1,0 +1,34 @@
+name: Website Quality Guard
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  verify-code:
+    name: Verify Code & Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 1. HTML Structural Validation
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run HTMLHint Linter
+        run: |
+          npx --yes htmlhint "**/*.html" --config .htmlhintrc
+
+      # 2. Broken Link Checker
+      - name: Check for Broken Links
+        uses: lycheeverse/lychee-action@v1.9.3
+        with:
+          # Checks all HTML files. Excludes email mailto: links from throwing errors.
+          args: --exclude-mail --offline './**/*.html'
+          fail: true
