@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Join Us – Coding &amp; AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <h2>Join The Club / Propose Idea</h2>
+        <p>Fill out this application form and it will instantly draft an email for you! We will get back to you soon.</p>
+        <form class="contact-form" id="joinForm" onsubmit="sendEmail(event)">
+            <label for="userName">Name</label>
+            <input type="text" id="userName" placeholder="Your Name" required>
+            <label for="userTopic">I want to…</label>
+            <select id="userTopic" required>
+                <option value="Join the Club">Join as a Member</option>
+                <option value="Propose a New Project">Propose a New Project</option>
+                <option value="Join an Existing Project">Join an Existing Project</option>
+                <option value="General Inquiry">General Inquiry</option>
+            </select>
+            <label for="userMessage">Message / Bio / Idea Details</label>
+            <textarea id="userMessage" placeholder="Tell us a bit about yourself or your idea…" required></textarea>
+            <button type="submit">Prepare Email</button>
+        </form>
+        <script>
+            // Persist form data in localStorage so refresh does not lose it
+            const form = document.getElementById('joinForm');
+            const fields = ['userName', 'userTopic', 'userMessage'];
+            // Load saved data on page load
+            window.addEventListener('load', () => {
+                fields.forEach(id => {
+                    const saved = localStorage.getItem('join_' + id);
+                    if (saved !== null) {
+                        const el = document.getElementById(id);
+                        if (el) el.value = saved;
+                    }
+                });
+            });
+            // Save data on each input change
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', () => {
+                        localStorage.setItem('join_' + id, el.value);
+                    });
+                }
+            });
+            // On submit, generate mailto link and then clear storage
+            function sendEmail(e) {
+                e.preventDefault();
+                const name = document.getElementById('userName').value;
+                const topic = document.getElementById('userTopic').value;
+                const message = document.getElementById('userMessage').value;
+                const body = `Name: ${name}%0D%0ATopic: ${topic}%0D%0A%0D%0A${encodeURIComponent(message)}`;
+                // Clear saved data after preparing email
+                fields.forEach(id => localStorage.removeItem('join_' + id));
+                window.location.href = `mailto:{{ global_data.social.email }}?subject=${encodeURIComponent(topic)}&body=${body}`;
+            }
+        </script>
+    </section>
+{% endblock %}

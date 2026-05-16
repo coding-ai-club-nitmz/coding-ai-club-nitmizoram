@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Team – Coding & AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <h2>Mentors</h2>
+        <p>Guided by faculty and research scholars who shape our technical direction.</p>
+        <div class="team-container">
+            {% for person in mentors %}
+            <div class="team-card">
+                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <span class="role-badge">{{ person.badge }}</span>
+                <h3>{{ person.name }}</h3>
+                <p>{{ person.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <h2>Club Guiders</h2>
+        <p>Senior members who lead the learning and project culture of the club.</p>
+        <div class="team-container">
+            {% for person in guiders %}
+            <div class="team-card">
+                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <span class="role-badge">{{ person.badge }}</span>
+                <h3>{{ person.name }}</h3>
+                <p>{{ person.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <h2>Core Committee</h2>
+        <p>The elected committee that drives the club's operations and vision.</p>
+        <div class="team-container">
+            {% for person in core %}
+            <div class="team-card">
+                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <span class="role-badge">{{ person.badge }}</span>
+                <h3>{{ person.name }}</h3>
+                <p>{{ person.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

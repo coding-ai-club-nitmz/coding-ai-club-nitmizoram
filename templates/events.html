@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Events – Coding & AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <div class="technox-bar">Club Activities</div>
+        <p style="margin-bottom: 20px;">Discover the diverse range of ongoing projects, regular workshops, and weekly meetups organized by Club.</p>
+        <div class="marquee-container">
+            <div class="marquee-track">
+                <img src="images/slider1.jpg" alt="Event Image 1">
+                <img src="images/slider2.jpg" alt="Event Image 2">
+                <img src="images/slider3.jpg" alt="Event Image 3">
+                <img src="images/slider4.jpg" alt="Event Image 4">
+                <img src="images/slider5.jpg" alt="Event Image 5">
+                <img src="images/slider6.jpg" alt="Event Image 6">
+                <img src="images/slider7.jpg" alt="Event Image 7">
+                <img src="images/slider8.jpg" alt="Event Image 8">
+                <img src="images/slider9.jpg" alt="Event Image 9">
+                <img src="images/slider10.jpg" alt="Event Image 10">
+                <img src="images/slider11.jpg" alt="Event Image 11">
+                <img src="images/slider12.jpg" alt="Event Image 12">
+                <img src="images/slider13.jpg" alt="Event Image 13">
+                <img src="images/slider14.jpg" alt="Event Image 14">
+            </div>
+        </div>
+        <div class="technox-bar">TECHNOX'2025-26</div>
+        <p style="margin-bottom: 20px;">Explore the premier technical events and coding competitions hosted during the festival.</p>
+        <div class="marquee-container">
+            <div class="marquee-track reverse">
+                <img src="images/technox_26/slider1.jpg" alt="Technox Image 1">
+                <img src="images/technox_26/slider2.jpg" alt="Technox Image 2">
+                <img src="images/technox_26/slider3.jpg" alt="Technox Image 3">
+                <img src="images/technox_26/slider4.jpg" alt="Technox Image 4">
+                <img src="images/technox_26/slider5.jpg" alt="Technox Image 5">
+                <img src="images/technox_26/slider6.jpg" alt="Technox Image 6">
+                <img src="images/technox_26/slider7.jpg" alt="Technox Image 7">
+                <img src="images/technox_26/slider8.jpg" alt="Technox Image 8">
+                <img src="images/technox_26/slider9.jpg" alt="Technox Image 9">
+                <img src="images/technox_26/slider10.jpg" alt="Technox Image 10">
+                <img src="images/technox_26/slider11.jpg" alt="Technox Image 11">
+                <img src="images/technox_26/slider12.jpg" alt="Technox Image 12">
+                <img src="images/technox_26/slider13.jpg" alt="Technox Image 13">
+                <img src="images/technox_26/slider14.jpg" alt="Technox Image 14">
+                <img src="images/technox_26/slider15.jpg" alt="Technox Image 15">
+                <img src="images/technox_26/slider16.jpg" alt="Technox Image 16">
+            </div>
+        </div>
+        <div class="event-container">
+            {% for event in events %}
+            <div class="event-card">
+                <img src="{{ event.image }}" alt="{{ event.title }}">
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

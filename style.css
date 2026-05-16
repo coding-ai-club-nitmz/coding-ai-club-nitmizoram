@@ -260,15 +260,16 @@ body {
 }
 .team-card h3 {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
     color: var(--primary);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 .team-card p, .event-card p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-muted);
-    margin: 2px 0;
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 .event-card { width: 260px; }
 .event-card img {

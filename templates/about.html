@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}About – Coding & AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <h2>Who We Are</h2>
+        <p>{{ about.intro }}</p>
+        <div class="event-container" style="margin-top:32px;">
+            {% for card in about.mission_cards %}
+            <div class="event-card">
+                <h3>{{ card.title }}</h3>
+                <p>{{ card.content }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <div class="info-strip">
+        <div class="stat"><span class="stat-num">NIT</span><span class="stat-label">Mizoram</span></div>
+        <div class="stat"><span class="stat-num" style="font-family:'Noto Sans Devanagari',sans-serif;font-size:1.3rem;">राष्ट्रीय</span><span class="stat-label">प्रौद्योगिकी संस्थान</span></div>
+        <div class="stat"><span class="stat-num">2025</span><span class="stat-label">Est.</span></div>
+    </div>
+    <section class="section">
+        <h2>Our Values</h2>
+        <div class="event-container">
+            {% for value in about.core_values %}
+            <div class="event-card">
+                <h3>{{ value.title }}</h3>
+                <p>{{ value.content }}</p>
+                <span class="project-tag">{{ value.tag }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

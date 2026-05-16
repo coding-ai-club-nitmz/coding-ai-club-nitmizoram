@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Sitemap location for better indexing
+Sitemap: https://coding-ai-club-nitmizoram.vercel.app/sitemap.xml

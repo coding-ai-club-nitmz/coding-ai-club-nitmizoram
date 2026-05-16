@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Web Creators | Coding & AI Club{% endblock %}
+{% block content %}
+<section class="section">
+    <h2>Website &amp; Social Media Team</h2>
+    <p>The developers, designers, and creators who engineered this digital experience.</p>
+    <div class="team-container">
+        {% for person in web_team %}
+        <div class="team-card"><img src="{{ person.image }}" alt="{{ person.name }}"><span class="role-badge">{{ person.badge }}</span><h3>{{ person.name }}</h3><p>{{ person.role }}</p></div>
+        {% endfor %}
+    </div>
+    <hr>
+    <h3>Volunteers in Website Creation &amp; Theme Design</h3>
+    <div class="team-container">
+        {% for person in volunteers %}
+        <div class="team-card"><img src="{{ person.image }}" alt="{{ person.name }}"><span class="role-badge">{{ person.badge }}</span><h3>{{ person.name }}</h3><p>{{ person.role }}</p></div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

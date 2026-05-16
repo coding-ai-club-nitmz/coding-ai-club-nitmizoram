@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Resources – Coding & AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <h2>Learning Materials &amp; Downloads</h2>
+        <p>Access official club slides, technical roadmaps, and PDF guides.</p>
+        <div class="event-container" style="margin-top:32px;">
+            {% for resource in resources %}
+            <div class="event-card" title="{{ resource.title }}">
+                <h3>{{ resource.title }}</h3>
+                <p>{{ resource.desc }}</p>
+                <span class="project-tag" style="margin-top:10px;">{{ resource.tag }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

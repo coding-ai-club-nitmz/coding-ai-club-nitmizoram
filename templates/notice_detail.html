@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ notice.title }} – {{ global_data.club_name }}{% endblock %}
+{% block meta_description %}{{ notice.summary }}{% endblock %}
+{% block og_title %}{{ notice.title }} | {{ global_data.club_name }}{% endblock %}
+{% block og_description %}{{ notice.summary }}{% endblock %}
+{% block content %}
+    <section class="section">
+        <div style="max-width: 850px; margin: 0 auto; text-align: center;">
+            <div style="margin-bottom: 30px; text-align: left;">
+                <a href="/notices" style="display: inline-flex; align-items: center; gap: 6px; color: var(--accent); text-decoration: none; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                    Back
+                </a>
+            </div>
+            <h2 style="margin-bottom: 10px; font-size: 2.2rem;">{{ notice.title }}</h2>
+            <div style="color: #666; margin-bottom: 40px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 15px;">
+                Posted on: {{ notice.date }}
+            </div>
+            
+            <div class="content-box" style="line-height: 1.8; color: #333; font-size: 1.1rem; background: rgba(255,255,255,0.5); padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <p>{{ notice.content }}</p>
+                
+                {% if notice.link %}
+                <div style="margin-top: 40px; text-align: center;">
+                    {% if notice.link.startswith('mailto:') %}
+                    <a href="{{ notice.link }}{{ '?subject=Official Inquiry regarding ' ~ notice.title ~ ' | ' ~ global_data.club_name ~ ', NIT Mizoram' if '?' not in notice.link else '' }}" class="contact-link color-web" style="display: inline-block; padding: 12px 30px; background: #0a1f44; color: white; text-decoration: none; border-radius: 8px;">
+                        {{ notice.link_text }}
+                    </a>
+                    {% else %}
+                    <a href="{{ notice.link }}" class="contact-link color-web" style="display: inline-block; padding: 12px 30px; background: #0a1f44; color: white; text-decoration: none; border-radius: 8px;">
+                        {{ notice.link_text }}
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

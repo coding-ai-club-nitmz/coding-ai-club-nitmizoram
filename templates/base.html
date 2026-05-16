@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SEO Meta Tags (Hidden from normal view, read by GoogleBot) -->
+    <meta name="description" content="{% block meta_description %}Official website of the Coding & AI Club at NIT Mizoram. A community of student engineers building real-world AI and software projects.{% endblock %}">
+    <meta name="keywords" content="Coding Club, AI Club, NIT Mizoram, Programming, Artificial Intelligence, Software Engineering, Student Tech Club">
+    <meta name="author" content="{{ global_data.club_name }}">
+    <meta name="robots" content="index, follow">
+    <title>{% block title %}{{ global_data.club_name }}{% endblock %}</title>
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="{% block og_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
+    <meta property="og:image" content="/images/club-logo.png">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0a1f44">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/images/club-logo.png" type="image/png">
+</head>
+<body>
+    <header class="header top-header">
+        <a href="/"><img src="/images/nitmz-logo.png" alt="Institute Logo" class="logo"></a>
+        <div class="header-text">
+            <h1>{{ global_data.club_name }}</h1>
+            <p class="tagline">{{ global_data.tagline }}</p>
+            <p class="hindi-text">{{ global_data.hindi_name }}</p>
+        </div>
+        <a href="/"><img src="/images/club-logo.png" alt="Club Logo" class="logo"></a>
+    </header>
+    <nav class="navbar">
+        <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
+        <a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a>
+        <a href="/notices" class="{{ 'active' if request.path == '/notices' or request.path.startswith('/notices/') else '' }}">Notice Board</a>
+        <a href="/events" class="{{ 'active' if request.path == '/events' else '' }}">Events</a>
+        <a href="/teams" class="{{ 'active' if request.path == '/teams' else '' }}">Core Team</a>
+        <a href="/credits" class="{{ 'active' if request.path == '/credits' else '' }}">Web Team</a>
+        <a href="/projects" class="{{ 'active' if request.path == '/projects' else '' }}">Projects</a>
+        <a href="/resources" class="{{ 'active' if request.path == '/resources' else '' }}">Resources</a>
+        <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Connect</a>
+        <a href="/join" class="{{ 'active' if request.path == '/join' else '' }}">Join Us</a>
+    </nav>
+    <main style="flex:1;display:flex;flex-direction:column;">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="footer">
+        <p>{{ global_data.copyright }}</p>
+        <p class="hindi-footer">{{ global_data.club_name }} · National Institute of Technology</p>
+        <p class="sub-text">Built with care by the {{ global_data.club_name }} web &amp; social media team.</p>
+    </footer>
+</body>
+</html>
