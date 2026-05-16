@@ -73,6 +73,18 @@ def contact():
 def join():
     return render_template('join.html')
 
+@app.route('/diagnostic')
+def diagnostic():
+    try:
+        files = os.listdir(template_dir)
+        return {
+            "template_dir": template_dir,
+            "exists": os.path.exists(template_dir),
+            "files": files
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.route('/robots.txt')
 def robots():
     return send_from_directory(app.static_folder, 'robots.txt')
