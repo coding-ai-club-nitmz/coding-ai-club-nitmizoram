@@ -3,6 +3,7 @@ import os
 from data import TEAM_DATA, PROJECT_DATA, EVENT_DATA, RESOURCE_DATA, STATS_DATA, GLOBAL_DATA, ANNOUNCEMENTS, ABOUT_DATA, CONTACT_PAGE_DATA, HOME_DATA
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
 static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
+print("DIAGNOSTIC - templates contents:", os.listdir(template_dir))
 app = Flask(__name__, static_folder=static_dir, static_url_path='', template_folder=template_dir)
 
 # Context processor makes 'global_data' available in every template
