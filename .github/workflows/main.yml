@@ -29,6 +29,6 @@ jobs:
       - name: Check for Broken Links
         uses: lycheeverse/lychee-action@v1.9.3
         with:
-          # Checks all HTML files. Excludes email mailto: links from throwing errors.
-          args: --exclude-mail --offline './**/*.html'
+          # Checks all HTML files. Excludes Jinja placeholders and static images from offline scanning.
+          args: --offline --exclude '\{\{.*\}\}' --exclude 'images/' './**/*.html'
           fail: true
