@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request
 import os
 from data import TEAM_DATA, PROJECT_DATA, EVENT_DATA, RESOURCE_DATA, STATS_DATA, GLOBAL_DATA, ANNOUNCEMENTS, ABOUT_DATA, CONTACT_PAGE_DATA, HOME_DATA
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
@@ -11,12 +11,30 @@ app = Flask(__name__, static_folder=static_dir, static_url_path='', template_fol
 def inject_global_data():
     return dict(global_data=GLOBAL_DATA)
 
-# Force browser to reload all templates/assets without caching during development
+# Configure caching based on request type: prevent caching for dynamic templates, but allow caching for static assets
 @app.after_request
 def add_header(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    # Check if the request is for a static asset
+    is_static = (
+        request.endpoint == 'static' or 
+        request.path.startswith('/images/') or 
+        request.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.woff', '.woff2', '.ttf'))
+    )
+    
+    if is_static:
+        # Cache static files in the browser. 
+        # "must-revalidate" combined with a max-age tells the browser to cache files locally.
+        # This prevents annoying flicker and eliminates constant reloading on page refresh.
+        # If the user reopens the website and changes have happened on the server,
+        # the browser will fetch the new data automatically.
+        response.headers["Cache-Control"] = "public, max-age=86400, must-revalidate"
+        response.headers.pop("Pragma", None)
+        response.headers.pop("Expires", None)
+    else:
+        # Force browser to reload all dynamic templates without caching
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
     return response
 
 @app.route('/')
