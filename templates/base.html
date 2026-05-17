@@ -19,8 +19,9 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/images/club-logo.png" type="image/png">
     
-    <!-- Image Cache Recovery Script: Auto-retries corrupted/failed cached images directly from server -->
+    <!-- Performance Optimization Script: Includes Image Cache Recovery and Hover-based Page Prefetching -->
     <script>
+        // 1. Image Cache Recovery: Auto-retries failed cached images directly from server
         document.addEventListener('error', function(event) {
             var element = event.target;
             if (element.tagName === 'IMG') {
@@ -28,12 +29,35 @@
                     element.dataset.retried = 'true';
                     var originalSrc = element.src;
                     var separator = originalSrc.indexOf('?') !== -1 ? '&' : '?';
-                    // Append a timestamp to bypass local cache and force server reload
                     element.src = originalSrc + separator + 'retry=true&t=' + Date.now();
                     console.warn('Image failed to load from cache. Bypassing cache to load from server:', originalSrc);
                 }
             }
         }, true); // Use capture phase because image error events do not bubble
+
+        // 2. Hover Prefetching: Prefetches links on hover/touch, making page transitions feel instant (<0ms!)
+        document.addEventListener('DOMContentLoaded', function() {
+            var links = document.querySelectorAll('nav a, header a, .navbar a');
+            var preloaded = {};
+            links.forEach(function(link) {
+                var href = link.getAttribute('href');
+                // Only prefetch internal navigation links
+                if (href && href.startsWith('/') && href !== '/' && !href.startsWith('mailto:')) {
+                    var handlePrefetch = function() {
+                        if (!preloaded[href]) {
+                            preloaded[href] = true;
+                            var preloadLink = document.createElement('link');
+                            preloadLink.rel = 'prefetch';
+                            preloadLink.href = href;
+                            document.head.appendChild(preloadLink);
+                        }
+                    };
+                    // Trigger on desktop hover or mobile touch start
+                    link.addEventListener('mouseenter', handlePrefetch);
+                    link.addEventListener('touchstart', handlePrefetch, { passive: true });
+                }
+            });
+        });
     </script>
 </head>
 <body>
