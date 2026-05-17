@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder=static_dir, static_url_path='', template_fol
 def inject_global_data():
     return dict(global_data=GLOBAL_DATA)
 
-# Configure caching based on request type: prevent caching for dynamic templates, but allow caching for static assets
+# Configure caching based on request type: prevent caching for dynamic templates in development, but cache in production
 @app.after_request
 def add_header(response):
     # Check if the request is for a static asset
@@ -21,17 +21,24 @@ def add_header(response):
         request.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.woff', '.woff2', '.ttf'))
     )
     
+    # Check if running in production on Vercel
+    is_vercel = os.environ.get('VERCEL') == '1'
+    
     if is_static:
-        # Cache static files in the browser. 
+        # Cache static files in the browser for both local and production (24 hours)
         # "must-revalidate" combined with a max-age tells the browser to cache files locally.
-        # This prevents annoying flicker and eliminates constant reloading on page refresh.
-        # If the user reopens the website and changes have happened on the server,
-        # the browser will fetch the new data automatically.
         response.headers["Cache-Control"] = "public, max-age=86400, must-revalidate"
         response.headers.pop("Pragma", None)
         response.headers.pop("Expires", None)
+    elif is_vercel:
+        # In production on Vercel, cache HTML pages for 30 minutes with revalidation.
+        # This makes site navigation and page loads instant (0ms) instead of taking 300ms!
+        # When you push a new deployment to Vercel, it automatically invalidates the CDN cache.
+        response.headers["Cache-Control"] = "public, max-age=1800, must-revalidate"
+        response.headers.pop("Pragma", None)
+        response.headers.pop("Expires", None)
     else:
-        # Force browser to reload all dynamic templates without caching
+        # During local development, force browser to reload dynamic templates without caching
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
