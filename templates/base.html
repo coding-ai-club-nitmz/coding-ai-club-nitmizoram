@@ -18,6 +18,23 @@
     <meta name="theme-color" content="#0a1f44">
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/images/club-logo.png" type="image/png">
+    
+    <!-- Image Cache Recovery Script: Auto-retries corrupted/failed cached images directly from server -->
+    <script>
+        document.addEventListener('error', function(event) {
+            var element = event.target;
+            if (element.tagName === 'IMG') {
+                if (!element.dataset.retried) {
+                    element.dataset.retried = 'true';
+                    var originalSrc = element.src;
+                    var separator = originalSrc.indexOf('?') !== -1 ? '&' : '?';
+                    // Append a timestamp to bypass local cache and force server reload
+                    element.src = originalSrc + separator + 'retry=true&t=' + Date.now();
+                    console.warn('Image failed to load from cache. Bypassing cache to load from server:', originalSrc);
+                }
+            }
+        }, true); // Use capture phase because image error events do not bubble
+    </script>
 </head>
 <body>
     <header class="header top-header">
