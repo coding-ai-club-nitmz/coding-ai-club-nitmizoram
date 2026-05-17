@@ -520,22 +520,89 @@ body {
     .header-text .tagline { font-size: clamp(0.65rem, 2vw, 0.8rem); }
     .header-text .hindi-text { font-size: clamp(0.85rem, 3.5vw, 1.25rem); margin-top: 2px;}
 
-    /* 4. CLEAN 2-COLUMN MENU GRID */
-    .navbar { 
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Creates 2 equal columns */
-        padding: 0;
+    /* 4. PREMIUM HAMBURGER MENU */
+    .navbar-mobile-row {
+        display: flex !important;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 12px;
+        box-sizing: border-box;
     }
-    .navbar a { 
-        padding: 12px 5px; 
-        border-bottom: 1px solid rgba(255,255,255,0.06); 
-        font-size: 0.9rem;
+
+    .mobile-nav-link {
+        color: rgba(255, 255, 255, 0.88);
+        text-decoration: none;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 14px 8px;
+        white-space: nowrap;
     }
-    /* Adds a subtle divider line between the two columns */
-    .navbar a:nth-child(odd) {
-        border-right: 1px solid rgba(255,255,255,0.06);
+
+    .mobile-nav-link:hover, .mobile-nav-link.active {
+        color: var(--accent);
     }
-    .navbar a::after { display: none; } /* Removes the hover underline for mobile grid */
+
+    .navbar-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 36px;
+        height: 36px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+    .hamburger-bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background-color: var(--accent);
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--secondary);
+    }
+
+    .navbar-links.show {
+        display: flex;
+    }
+
+    .navbar-links a {
+        display: block;
+        width: 100%;
+        padding: 12px 24px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.95rem;
+        box-sizing: border-box;
+    }
+
+    .navbar-links a::after {
+        display: none;
+    }
+
+    .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(2) {
+        opacity: 0;
+    }
+    .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
 
     /* General Mobile Fixes */
     .section { padding: 40px 20px; }

@@ -70,18 +70,46 @@
         </div>
         <a href="/"><img src="/images/club-logo.png" alt="Club Logo" class="logo"></a>
     </header>
-    <nav class="navbar">
-        <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
-        <a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a>
-        <a href="/notices" class="{{ 'active' if request.path == '/notices' or request.path.startswith('/notices/') else '' }}">Notice Board</a>
-        <a href="/events" class="{{ 'active' if request.path == '/events' else '' }}">Events</a>
-        <a href="/teams" class="{{ 'active' if request.path == '/teams' else '' }}">Core Team</a>
-        <a href="/credits" class="{{ 'active' if request.path == '/credits' else '' }}">Web Team</a>
-        <a href="/projects" class="{{ 'active' if request.path == '/projects' else '' }}">Projects</a>
-        <a href="/resources" class="{{ 'active' if request.path == '/resources' else '' }}">Resources</a>
-        <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Connect</a>
-        <a href="/join" class="{{ 'active' if request.path == '/join' else '' }}">Join Us</a>
+    <nav class="navbar" id="mainNavbar">
+        <div class="navbar-mobile-row">
+            <a href="/" class="mobile-nav-link {{ 'active' if request.path == '/' else '' }}">Home</a>
+            <a href="/about" class="mobile-nav-link {{ 'active' if request.path == '/about' else '' }}">About</a>
+            <a href="/teams" class="mobile-nav-link {{ 'active' if request.path == '/teams' else '' }}">Team</a>
+            <button class="navbar-toggle" onclick="toggleNavbar()" aria-label="Toggle Menu">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-links" id="navbarLinks">
+            <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
+            <a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a>
+            <a href="/notices" class="{{ 'active' if request.path == '/notices' or request.path.startswith('/notices/') else '' }}">Notice Board</a>
+            <a href="/events" class="{{ 'active' if request.path == '/events' else '' }}">Events</a>
+            <a href="/teams" class="{{ 'active' if request.path == '/teams' else '' }}">Core Team</a>
+            <a href="/credits" class="{{ 'active' if request.path == '/credits' else '' }}">Web Team</a>
+            <a href="/projects" class="{{ 'active' if request.path == '/projects' else '' }}">Projects</a>
+            <a href="/resources" class="{{ 'active' if request.path == '/resources' else '' }}">Resources</a>
+            <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Connect</a>
+            <a href="/join" class="{{ 'active' if request.path == '/join' else '' }}">Join Us</a>
+        </div>
     </nav>
+    <script>
+        function toggleNavbar() {
+            var links = document.getElementById("navbarLinks");
+            var navbar = document.getElementById("mainNavbar");
+            links.classList.toggle("show");
+            navbar.classList.toggle("expanded");
+        }
+        document.addEventListener('click', function(event) {
+            var navbar = document.getElementById("mainNavbar");
+            var links = document.getElementById("navbarLinks");
+            if (!navbar.contains(event.target) && links.classList.contains("show")) {
+                links.classList.remove("show");
+                navbar.classList.remove("expanded");
+            }
+        });
+    </script>
     <main style="flex:1;display:flex;flex-direction:column;">
         {% block content %}{% endblock %}
     </main>
