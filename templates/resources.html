@@ -6,10 +6,17 @@
         <p>Access official club slides, technical roadmaps, and PDF guides.</p>
         <div class="event-container" style="margin-top:32px;">
             {% for resource in resources %}
-            <div class="event-card" title="{{ resource.title }}">
-                <h3>{{ resource.title }}</h3>
-                <p>{{ resource.desc }}</p>
-                <span class="project-tag" style="margin-top:10px;">{{ resource.tag }}</span>
+            <div class="event-card" title="{{ resource.title }}" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 200px; padding: 24px 20px;">
+                <div style="width: 100%;">
+                    <h3>{{ resource.title }}</h3>
+                    <p>{{ resource.desc }}</p>
+                    <span class="project-tag" style="margin-top:10px;">{{ resource.tag }}</span>
+                </div>
+                {% if resource.link %}
+                <div class="btn-group" style="width: 100%; margin-top: 15px; padding-top: 0;">
+                    <a href="{{ resource.link }}" class="contact-link color-drive" target="_blank" rel="noopener noreferrer" style="width: 100%; text-align: center; justify-content: center; font-size: 0.85rem; padding: 6px 12px;">View Material →</a>
+                </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>

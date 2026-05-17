@@ -113,9 +113,9 @@ EVENT_DATA = [
 ]
 
 RESOURCE_DATA = [
-    {"title": "Machine Learning Guide", "desc": "Our comprehensive introductory PDF guide for beginners starting with Python and ML models.", "tag": "Documentation"},
-    {"title": "Web Dev Roadmap", "desc": "A step-by-step checklist and resource collection for mastering frontend and backend development.", "tag": "Roadmap"},
-    {"title": "Tech Fest Rulebooks", "desc": "Official guidelines, problem statements, and judging criteria for upcoming hackathons.", "tag": "Competition"}
+    {"title": "Machine Learning Guide", "desc": "Our comprehensive introductory PDF guide for beginners starting with Python and ML models.", "tag": "Documentation", "link": "https://github.com/coding-ai-club-nitmz"},
+    {"title": "Web Dev Roadmap", "desc": "A step-by-step checklist and resource collection for mastering frontend and backend development.", "tag": "Roadmap", "link": "https://github.com/coding-ai-club-nitmz"},
+    {"title": "Tech Fest Rulebooks", "desc": "Official guidelines, problem statements, and judging criteria for upcoming hackathons.", "tag": "Competition", "link": "https://github.com/coding-ai-club-nitmz"}
 ]
 
 STATS_DATA = [
