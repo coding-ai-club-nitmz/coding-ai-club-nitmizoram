@@ -21,18 +21,18 @@ GLOBAL_DATA = {
 # Announcements / Notice Board
 # To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
-    {
-        "id": "technox-part-ii",
-        "featured": True,
-        "title": "Technox'2025-26 Part-II",
-        "date": "May 27, 2026",
-        "summary": "Registration is open for Technox Part-II events. Register now!",
-        "content": "The much-awaited Technox'2025-26 Part-II technical festival is starting soon! Get ready for exciting coding events, AI hackathons, hardware exhibitions, and tech quizzes. Registrations are now open for all students. Choose your target event and submit the registration form to confirm your participation.",
-        "registration_open": False,
-        "event_name": "Technox'2025-26 Part-II",
-        "link": "/register",
-        "link_text": "open soon"
-    },
+#    {
+#        "id": "technox-part-ii",
+#        "featured": False,
+#        "title": "Technox'2025-26 Part-II",
+#        "date": "May 27, 2026",
+#        "summary": "Registration is open for Technox Part-II events. Register now!",
+#        "content": "The much-awaited Technox'2025-26 Part-II technical festival is starting soon! Get ready for exciting coding events, AI hackathons, hardware exhibitions, and tech #quizzes. Registrations are now open for all students. Choose your target event and submit the registration form to confirm your participation.",
+#        "registration_open": False,
+#        "event_name": "Technox'2025-26 Part-II",
+#        "link": "/register",
+#        "link_text": "open soon"
+#   },
     {
         "id": "core-team-recruitment",
         "featured": True,
