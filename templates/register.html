@@ -102,6 +102,13 @@
                         el.value = eventParam;
                     }
                 }
+                
+                // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
+                if (eventParam) {
+                    try {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } catch (e) {}
+                }
             });
 
             // Save data on each input change

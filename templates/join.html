@@ -60,6 +60,13 @@
                     const el = document.getElementById('userMessage');
                     if (el) el.value = message;
                 }
+                
+                // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
+                if (topic || message) {
+                    try {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } catch (e) {}
+                }
             });
             // Save data on each input change
             fields.forEach(id => {
