@@ -28,10 +28,10 @@ ANNOUNCEMENTS = [
         "date": "May 27, 2026",
         "summary": "Registration is open for Technox Part-II events. Register now!",
         "content": "The much-awaited Technox'2025-26 Part-II technical festival is starting soon! Get ready for exciting coding events, AI hackathons, hardware exhibitions, and tech quizzes. Registrations are now open for all students. Choose your target event and submit the registration form to confirm your participation.",
-        "registration_open": True,
+        "registration_open": False,
         "event_name": "Technox'2025-26 Part-II",
         "link": "/register",
-        "link_text": "Register Now"
+        "link_text": "open soon"
     },
     {
         "id": "core-team-recruitment",
