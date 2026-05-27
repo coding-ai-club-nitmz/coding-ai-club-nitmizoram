@@ -13,11 +13,11 @@
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="{% block og_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
-    <meta property="og:image" content="/images/club-logo.png">
+    <meta property="og:image" content="/static/images/club-logo.png">
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#0a1f44">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="icon" href="/images/club-logo.png" type="image/png">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/images/club-logo.png" type="image/png">
     
     <!-- Performance Optimization Script: Includes Image Cache Recovery and Hover-based Page Prefetching -->
     <script>
@@ -62,19 +62,28 @@
 </head>
 <body>
     <header class="header top-header">
-        <a href="/"><img src="/images/nitmz-logo.png" alt="Institute Logo" class="logo"></a>
+        <a href="/"><img src="/static/images/nitmz-logo.png" alt="Institute Logo" class="logo"></a>
         <div class="header-text">
             <h1>{{ global_data.club_name }}</h1>
             <p class="tagline">{{ global_data.tagline }}</p>
             <p class="hindi-text">{{ global_data.hindi_name }}</p>
         </div>
-        <a href="/"><img src="/images/club-logo.png" alt="Club Logo" class="logo"></a>
+        <a href="/"><img src="/static/images/club-logo.png" alt="Club Logo" class="logo"></a>
     </header>
     <nav class="navbar" id="mainNavbar">
         <div class="navbar-mobile-row">
-            <a href="/" class="mobile-nav-link {{ 'active' if request.path == '/' else '' }}">Home</a>
-            <a href="/about" class="mobile-nav-link {{ 'active' if request.path == '/about' else '' }}">About</a>
-            <a href="/teams" class="mobile-nav-link {{ 'active' if request.path == '/teams' else '' }}">Team</a>
+            {% set m_active_home = 'active' if request.path == '/' else '' %}
+            {% set m_aria_home = 'aria-current=page' if request.path == '/' else '' %}
+            <a href="/" class="mobile-nav-link {{ m_active_home }}" {{ m_aria_home }}>Home</a>
+
+            {% set m_active_about = 'active' if request.path == '/about' else '' %}
+            {% set m_aria_about = 'aria-current=page' if request.path == '/about' else '' %}
+            <a href="/about" class="mobile-nav-link {{ m_active_about }}" {{ m_aria_about }}>About</a>
+
+            {% set m_active_teams = 'active' if request.path == '/teams' else '' %}
+            {% set m_aria_teams = 'aria-current=page' if request.path == '/teams' else '' %}
+            <a href="/teams" class="mobile-nav-link {{ m_active_teams }}" {{ m_aria_teams }}>Team</a>
+
             <button class="navbar-toggle" onclick="toggleNavbar()" aria-label="Toggle Menu">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
@@ -82,16 +91,45 @@
             </button>
         </div>
         <div class="navbar-links" id="navbarLinks">
-            <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
-            <a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a>
-            <a href="/notices" class="{{ 'active' if request.path == '/notices' or request.path.startswith('/notices/') else '' }}">Notice Board</a>
-            <a href="/events" class="{{ 'active' if request.path == '/events' else '' }}">Events</a>
-            <a href="/teams" class="{{ 'active' if request.path == '/teams' else '' }}">Core Team</a>
-            <a href="/credits" class="{{ 'active' if request.path == '/credits' else '' }}">Web Team</a>
-            <a href="/projects" class="{{ 'active' if request.path == '/projects' else '' }}">Projects</a>
-            <a href="/resources" class="{{ 'active' if request.path == '/resources' else '' }}">Resources</a>
-            <a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Connect</a>
-            <a href="/join" class="{{ 'active' if request.path == '/join' else '' }}">Join Us</a>
+            {% set d_active_home = 'active' if request.path == '/' else '' %}
+            {% set d_aria_home = 'aria-current=page' if request.path == '/' else '' %}
+            <a href="/" class="{{ d_active_home }}" {{ d_aria_home }}>Home</a>
+
+            {% set d_active_about = 'active' if request.path == '/about' else '' %}
+            {% set d_aria_about = 'aria-current=page' if request.path == '/about' else '' %}
+            <a href="/about" class="{{ d_active_about }}" {{ d_aria_about }}>About</a>
+
+            {% set d_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
+            {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
+            <a href="/notices" class="{{ d_active_notices }}" {{ d_aria_notices }}>Notice Board</a>
+
+            {% set d_active_events = 'active' if request.path == '/events' else '' %}
+            {% set d_aria_events = 'aria-current=page' if request.path == '/events' else '' %}
+            <a href="/events" class="{{ d_active_events }}" {{ d_aria_events }}>Events</a>
+
+            {% set d_active_teams = 'active' if request.path == '/teams' else '' %}
+            {% set d_aria_teams = 'aria-current=page' if request.path == '/teams' else '' %}
+            <a href="/teams" class="{{ d_active_teams }}" {{ d_aria_teams }}>Core Team</a>
+
+            {% set d_active_credits = 'active' if request.path == '/credits' else '' %}
+            {% set d_aria_credits = 'aria-current=page' if request.path == '/credits' else '' %}
+            <a href="/credits" class="{{ d_active_credits }}" {{ d_aria_credits }}>Web Team</a>
+
+            {% set d_active_projects = 'active' if request.path == '/projects' else '' %}
+            {% set d_aria_projects = 'aria-current=page' if request.path == '/projects' else '' %}
+            <a href="/projects" class="{{ d_active_projects }}" {{ d_aria_projects }}>Projects</a>
+
+            {% set d_active_resources = 'active' if request.path == '/resources' else '' %}
+            {% set d_aria_resources = 'aria-current=page' if request.path == '/resources' else '' %}
+            <a href="/resources" class="{{ d_active_resources }}" {{ d_aria_resources }}>Resources</a>
+
+            {% set d_active_contact = 'active' if request.path == '/contact' else '' %}
+            {% set d_aria_contact = 'aria-current=page' if request.path == '/contact' else '' %}
+            <a href="/contact" class="{{ d_active_contact }}" {{ d_aria_contact }}>Connect</a>
+
+            {% set d_active_join = 'active' if request.path == '/join' else '' %}
+            {% set d_aria_join = 'aria-current=page' if request.path == '/join' else '' %}
+            <a href="/join" class="{{ d_active_join }}" {{ d_aria_join }}>Join Us</a>
         </div>
     </nav>
     <script>

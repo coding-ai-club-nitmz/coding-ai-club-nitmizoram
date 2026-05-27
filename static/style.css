@@ -14,7 +14,7 @@
     --bg:            #f4f6f9;
     --bg-card:       #ffffff;
     --text-main:     #1a2a3a;
-    --text-muted:    #5a6a7a;
+    --text-muted:    #4f5f6f;
     --border:        rgba(16,42,86,0.1);
     --shadow-sm:     0 2px 8px rgba(10,31,68,0.08);
     --shadow-md:     0 6px 24px rgba(10,31,68,0.12);
@@ -499,6 +499,8 @@ body {
 .team-container .team-card:nth-child(2), .event-container .event-card:nth-child(2) { animation: fadeUp 0.5s 0.2s ease both; }
 .team-container .team-card:nth-child(3), .event-container .event-card:nth-child(3) { animation: fadeUp 0.5s 0.3s ease both; }
 .team-container .team-card:nth-child(4), .event-container .event-card:nth-child(4) { animation: fadeUp 0.5s 0.4s ease both; }
+.team-container .team-card:nth-child(5), .event-container .event-card:nth-child(5) { animation: fadeUp 0.5s 0.5s ease both; }
+.team-container .team-card:nth-child(6), .event-container .event-card:nth-child(6) { animation: fadeUp 0.5s 0.6s ease both; }
 
 /* ─── Mobile Responsiveness ───────────────────── */
 @media screen and (max-width: 768px) {
@@ -595,13 +597,13 @@ body {
     }
 
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
+        transform: translateY(7px) rotate(45deg);
     }
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(2) {
         opacity: 0;
     }
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-7px) rotate(-45deg);
     }
 
     /* General Mobile Fixes */
@@ -612,10 +614,12 @@ body {
     .marquee-track img { width: 220px; height: 140px; }
 }
 
-@media screen and (max-width: 480px) {
-    .header-text h1 { font-size: 1.3rem; }
-    .header-text .hindi-text { font-size: 1.25rem; }
-}
+    /* Desktop navbar hide for mobile row (B1) */
+    @media screen and (min-width: 769px) {
+        .navbar-mobile-row {
+            display: none !important;
+        }
+    }
 
 /* ─── Contact Forms ───────────────────────────── */
 .contact-form {
@@ -673,3 +677,341 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
+
+/* ─── Notice Board Styles (P6 & P1) ────────────── */
+.notices-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1250px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.notice-card-full {
+    flex: 1;
+    min-width: 300px;
+    max-width: 380px;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    text-align: left;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+    border-top: 5px solid var(--accent);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notice-card-full:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.notice-card-full h3 {
+    margin: 0 0 10px 0;
+    color: var(--primary);
+    font-size: 1.15rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+}
+
+.notice-card-full .notice-date {
+    font-size: 0.75rem;
+    color: #888;
+    display: block;
+    margin-bottom: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.notice-card-full p {
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.notice-card-full .card-actions {
+    display: flex;
+    gap: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 20px;
+}
+
+/* Notice Card Small (Homepage) */
+.notice-card-small {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notice-card-small:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.notices-scroll-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding: 15px 5px 30px 5px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+.notices-scroll-container::-webkit-scrollbar {
+    height: 6px;
+}
+.notices-scroll-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
+}
+
+@media (min-width: 992px) {
+    .notice-card-small {
+        flex: 0 0 calc(33.333% - 14px);
+        max-width: 380px;
+    }
+}
+@media (max-width: 991px) {
+    .notices-scroll-container {
+        justify-content: flex-start;
+    }
+    .notice-card-small {
+        flex: 0 0 290px;
+    }
+}
+
+/* ─── Notice Detail Page Styling ──────────────── */
+.notice-detail-container {
+    max-width: 850px;
+    margin: 0 auto;
+    text-align: center;
+}
+.back-link-box {
+    margin-bottom: 30px;
+    text-align: left;
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color var(--transition);
+}
+.back-link:hover {
+    color: var(--primary);
+}
+.notice-detail-title {
+    margin-bottom: 10px;
+    font-size: 2.2rem;
+    color: var(--primary);
+}
+.notice-detail-meta {
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.notice-detail-content {
+    line-height: 1.8;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+}
+.notice-detail-action-box {
+    margin-top: 40px;
+    text-align: center;
+}
+.notice-detail-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--secondary);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+.notice-detail-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: var(--primary);
+}
+
+/* ─── Notices Action Links ────────────────────── */
+.notice-action-link {
+    font-weight: 700;
+    text-decoration: underline;
+    font-size: 0.9rem;
+    transition: opacity var(--transition);
+}
+.notice-action-link:hover {
+    opacity: 0.8;
+}
+.notice-action-primary {
+    color: var(--primary);
+}
+.notice-action-accent {
+    color: var(--accent);
+}
+
+/* ─── Clickable Event Cards (Projects) ────────── */
+.clickable-card {
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+.clickable-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-8px) scale(1.02);
+}
+
+/* ─── Homepage Notice & Banner Elements ───────── */
+.home-banner {
+    margin: 30px auto;
+    max-width: 800px;
+}
+.home-announcements-section {
+    margin-top: 50px;
+}
+.home-announcements-header {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+.home-announcements-title {
+    color: var(--primary);
+    font-size: 1.4rem;
+    margin: 0;
+}
+.home-view-all-link {
+    font-weight: bold;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color var(--transition);
+}
+.home-view-all-link:hover {
+    color: var(--primary);
+}
+
+/* Homepage Notice Card Details */
+.notice-card-small-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+.notice-card-small-text {
+    flex: 1;
+    min-width: 0;
+}
+.notice-card-small-title {
+    margin: 0;
+    color: var(--primary);
+    font-size: 0.95rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.notice-card-small-summary {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.notice-card-small-meta {
+    text-align: right;
+    min-width: 80px;
+    flex-shrink: 0;
+}
+.notice-card-small-date {
+    font-size: 0.65rem;
+    color: #888;
+    font-weight: 600;
+    display: block;
+}
+.notice-card-small-link {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: bold;
+    text-decoration: none;
+    transition: color var(--transition);
+}
+.notice-card-small-link:hover {
+    color: var(--primary);
+}
+
+/* ─── Success Page Elements ───────────────────── */
+.success-container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 40px;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border-top: 5px solid var(--accent);
+    text-align: center;
+}
+.success-icon {
+    width: 64px;
+    height: 64px;
+    stroke: var(--accent);
+    margin-bottom: 20px;
+}
+.success-title {
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+.success-message {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    margin-bottom: 25px;
+}
+.success-subtext {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+
+

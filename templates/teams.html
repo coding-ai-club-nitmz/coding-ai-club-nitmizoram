@@ -7,7 +7,9 @@
         <div class="team-container">
             {% for person in mentors %}
             <div class="team-card">
-                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
+                     alt="{{ person.name }}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ person.name | urlencode }}&background=random&color=fff&size=200'">
                 <span class="role-badge">{{ person.badge }}</span>
                 <h3>{{ person.name }}</h3>
                 <p>{{ person.role }}</p>
@@ -20,7 +22,9 @@
         <div class="team-container">
             {% for person in guiders %}
             <div class="team-card">
-                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
+                     alt="{{ person.name }}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ person.name | urlencode }}&background=random&color=fff&size=200'">
                 <span class="role-badge">{{ person.badge }}</span>
                 <h3>{{ person.name }}</h3>
                 <p>{{ person.role }}</p>
@@ -33,7 +37,9 @@
         <div class="team-container">
             {% for person in core %}
             <div class="team-card">
-                <img src="{{ person.image }}" alt="{{ person.name }}">
+                <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
+                     alt="{{ person.name }}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ person.name | urlencode }}&background=random&color=fff&size=200'">
                 <span class="role-badge">{{ person.badge }}</span>
                 <h3>{{ person.name }}</h3>
                 <p>{{ person.role }}</p>

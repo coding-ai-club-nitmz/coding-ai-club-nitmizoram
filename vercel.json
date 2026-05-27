@@ -1,20 +1,20 @@
 {
   "headers": [
     {
-      "source": "/images/(.*)",
+      "source": "/static/images/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, must-revalidate"
+          "value": "public, max-age=180, must-revalidate"
         }
       ]
     },
     {
-      "source": "/style.css",
+      "source": "/static/style.css",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, must-revalidate"
+          "value": "public, max-age=180, must-revalidate"
         }
       ]
     }

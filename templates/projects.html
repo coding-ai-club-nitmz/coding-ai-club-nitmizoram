@@ -13,7 +13,9 @@
                 <p>{{ project.desc }}</p>
                 <div class="btn-group">
                     <a href="{{ project.github }}" target="_blank" class="contact-link color-drive">GitHub Repo</a>
+                    {% if project.live and project.live != '/' %}
                     <a href="{{ project.live }}" class="contact-link color-web">Live Version</a>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}
@@ -24,7 +26,7 @@
         <p>{{ projects.contribution.desc }}</p>
         <div class="event-container">
             {% for option in projects.contribution.options %}
-            <div class="event-card" onclick="window.location.href='/join'" style="cursor: pointer;" title="Open Application Form">
+            <div class="event-card clickable-card" onclick="window.location.href='/join?topic={{ option.prefill.topic | urlencode }}&message={{ option.prefill.message | urlencode }}'" title="Open Application Form">
                 <h3>{{ option.title }}</h3>
                 <p>{{ option.desc }}</p>
             </div>

@@ -1,15 +1,42 @@
 from flask import Flask, render_template, send_from_directory, request
 import os
-from data import TEAM_DATA, PROJECT_DATA, EVENT_DATA, RESOURCE_DATA, STATS_DATA, GLOBAL_DATA, ANNOUNCEMENTS, ABOUT_DATA, CONTACT_PAGE_DATA, HOME_DATA
+import importlib
+import time
+import data
+import threading
+from dotenv import load_dotenv
+from google_sheets import background_sync_worker
+
+# Load environment variables
+load_dotenv()
+
+
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
-static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '.'))
-print("DIAGNOSTIC - templates contents:", os.listdir(template_dir))
-app = Flask(__name__, static_folder=static_dir, static_url_path='', template_folder=template_dir)
+app = Flask(__name__, template_folder=template_dir)
+
+# Initialize data modification time tracker
+last_data_mtime = os.path.getmtime(os.path.join(app.root_path, 'data.py'))
+
+@app.before_request
+def reload_data_if_modified():
+    global last_data_mtime
+    try:
+        data_path = os.path.join(app.root_path, 'data.py')
+        mtime = os.path.getmtime(data_path)
+        if mtime != last_data_mtime:
+            importlib.reload(data)
+            last_data_mtime = mtime
+            time_diff = time.time() - mtime
+            threshold = data.SYSTEM_CONFIG.get("data_reload_threshold_seconds", 180)
+            was_updated_in_last_threshold = time_diff < threshold
+            print(f"data.py reloaded dynamically! Updated in last {threshold}s: {was_updated_in_last_threshold}")
+    except Exception as e:
+        print(f"Failed to dynamically reload data.py: {e}")
 
 # Context processor makes 'global_data' available in every template
 @app.context_processor
 def inject_global_data():
-    return dict(global_data=GLOBAL_DATA)
+    return dict(global_data=data.GLOBAL_DATA)
 
 # Configure caching based on request type: prevent caching for dynamic templates in development, but cache in production
 @app.after_request
@@ -17,7 +44,7 @@ def add_header(response):
     # Check if the request is for a static asset
     is_static = (
         request.endpoint == 'static' or 
-        request.path.startswith('/images/') or 
+        request.path.startswith('/static/') or 
         request.path.endswith(('.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.webp', '.woff', '.woff2', '.ttf'))
     )
     
@@ -25,9 +52,10 @@ def add_header(response):
     is_vercel = os.environ.get('VERCEL') == '1'
     
     if is_static:
-        # Cache static files in the browser for both local and production (24 hours)
+        # Cache static files in the browser (configured in data.py)
         # "must-revalidate" combined with a max-age tells the browser to cache files locally.
-        response.headers["Cache-Control"] = "public, max-age=86400, must-revalidate"
+        cache_age = data.SYSTEM_CONFIG.get("static_cache_max_age", 180)
+        response.headers["Cache-Control"] = f"public, max-age={cache_age}, must-revalidate"
         response.headers.pop("Pragma", None)
         response.headers.pop("Expires", None)
     elif is_vercel:
@@ -48,76 +76,98 @@ def add_header(response):
 @app.route('/')
 def index():
     # Only show 'featured' notices on the home page
-    featured_notices = [n for n in ANNOUNCEMENTS if n.get('featured')]
-    return render_template('index.html', stats=STATS_DATA, notices=featured_notices, home=HOME_DATA)
+    featured_notices = [n for n in data.ANNOUNCEMENTS if n.get('featured')]
+    return render_template('index.html', stats=data.STATS_DATA, notices=featured_notices, home=data.HOME_DATA)
 
 @app.route('/notices')
 def notices():
-    return render_template('notices.html', notices=ANNOUNCEMENTS)
+    return render_template('notices.html', notices=data.ANNOUNCEMENTS)
 
 @app.route('/notices/<id>')
 def notice_detail(id):
-    notice = next((n for n in ANNOUNCEMENTS if n['id'] == id), None)
+    notice = next((n for n in data.ANNOUNCEMENTS if n['id'] == id), None)
     if notice:
         return render_template('notice_detail.html', notice=notice)
     return render_template('404.html'), 404
 
 @app.route('/about')
 def about():
-    return render_template('about.html', about=ABOUT_DATA)
+    return render_template('about.html', about=data.ABOUT_DATA)
 
 @app.route('/events')
 def events():
-    return render_template('events.html', events=EVENT_DATA)
+    return render_template('events.html', events=data.EVENT_DATA)
 
 @app.route('/teams')
 def teams():
     return render_template('teams.html', 
-                           mentors=TEAM_DATA['mentors'], 
-                           guiders=TEAM_DATA['guiders'], 
-                           core=TEAM_DATA['core'])
+                           mentors=data.TEAM_DATA['mentors'], 
+                           guiders=data.TEAM_DATA['guiders'], 
+                           core=data.TEAM_DATA['core'])
 
 @app.route('/credits')
 def credits():
     return render_template('credits.html', 
-                           web_team=TEAM_DATA['web_team'], 
-                           volunteers=TEAM_DATA['volunteers'])
+                           web_team=data.TEAM_DATA['web_team'], 
+                           volunteers=data.TEAM_DATA['volunteers'])
 
 @app.route('/projects')
 def projects():
-    return render_template('projects.html', projects=PROJECT_DATA)
+    return render_template('projects.html', projects=data.PROJECT_DATA)
 
 @app.route('/resources')
 def resources():
-    return render_template('resources.html', resources=RESOURCE_DATA)
+    return render_template('resources.html', resources=data.RESOURCE_DATA)
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html', contact=CONTACT_PAGE_DATA)
+    return render_template('contact.html', contact=data.CONTACT_PAGE_DATA)
 
 @app.route('/join')
 def join():
-    return render_template('join.html')
+    return render_template('join.html', join_data=data.JOIN_PAGE_DATA)
 
-@app.route('/diagnostic')
-def diagnostic():
-    try:
-        files = os.listdir(template_dir)
-        return {
-            "template_dir": template_dir,
-            "exists": os.path.exists(template_dir),
-            "files": files
-        }
-    except Exception as e:
-        return {"error": str(e)}
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        roll = request.form.get('roll')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        branch = request.form.get('branch')
+        degree = request.form.get('degree')
+        year = request.form.get('year')
+        event_name = request.form.get('eventName')
+        skills = request.form.get('skills')
+        
+        # Log complete candidate details locally as an immutable backup log
+        app.logger.info(
+            f"EVENT REGISTRATION BACKUP: name={name}, roll={roll}, email={email}, "
+            f"phone={phone}, branch={branch}, degree={degree}, year={year}, "
+            f"event={event_name}, skills={skills}"
+        )
+        
+        # Trigger background thread for Google Sheets sync
+        threading.Thread(
+            target=background_sync_worker,
+            args=(name, roll, email, phone, branch, degree, year, event_name, skills),
+            daemon=True
+        ).start()
+            
+        return render_template('register_success.html', name=name, event_name=event_name)
+    
+    return render_template('register.html', events=data.EVENT_DATA)
+
+
+
 
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory(app.static_folder, 'robots.txt')
+    return send_from_directory(app.root_path, 'robots.txt')
 
 @app.route('/sitemap.xml')
 def sitemap():
-    return send_from_directory(app.static_folder, 'sitemap.xml')
+    return send_from_directory(app.root_path, 'sitemap.xml')
 
 # Fallback for 404 errors
 @app.errorhandler(404)

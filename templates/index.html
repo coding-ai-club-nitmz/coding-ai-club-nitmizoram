@@ -5,7 +5,7 @@
         <h2>{{ home.welcome_title }}</h2>
         <p>{{ home.welcome_desc }}</p>
         
-        <div class="banner-text" style="margin: 30px auto; max-width: 800px;">
+        <div class="banner-text home-banner">
             <h2>{{ home.banner_text }}</h2>
         </div>
 
@@ -14,61 +14,30 @@
         <!-- Dynamic Notice Board Section -->
         {% if notices %}
         <style>
-            .notices-scroll-container {
-                display: flex;
-                gap: 20px;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                padding: 15px 5px 30px 5px;
-                scrollbar-width: thin;
-                scrollbar-color: var(--accent) transparent;
-                scroll-behavior: smooth;
-                -webkit-overflow-scrolling: touch;
-            }
-            .notices-scroll-container::-webkit-scrollbar {
-                height: 6px;
-            }
-            .notices-scroll-container::-webkit-scrollbar-thumb {
-                background-color: var(--accent);
-                border-radius: 10px;
-            }
-            
             @media (min-width: 992px) {
                 .notices-scroll-container {
                     justify-content: {% if notices|length <= 3 %}center{% else %}flex-start{% endif %};
                 }
-                .notice-card-small {
-                    flex: 0 0 calc(33.333% - 14px);
-                    max-width: 380px;
-                }
-            }
-            @media (max-width: 991px) {
-                .notices-scroll-container {
-                    justify-content: flex-start;
-                }
-                .notice-card-small {
-                    flex: 0 0 290px;
-                }
             }
         </style>
         
-        <div style="margin-top: 50px;">
-            <div style="display: flex; justify-content: center; align-items: baseline; gap: 20px; margin-bottom: 25px;">
-                <h3 style="color: var(--primary); font-size: 1.4rem; margin: 0;">Latest Announcements</h3>
-                <a href="/notices" style="font-weight: bold; color: var(--accent); text-decoration: none; font-size: 0.9rem;">View All →</a>
+        <div class="home-announcements-section">
+            <div class="home-announcements-header">
+                <h3 class="home-announcements-title">Latest Announcements</h3>
+                <a href="/notices" class="home-view-all-link">View All →</a>
             </div>
             
             <div class="notices-scroll-container">
                 {% for notice in notices %}
-                <div class="notice-card-small" style="background: white; border: 1px solid var(--border); padding: 15px 20px; border-radius: 12px; box-shadow: var(--shadow-sm); border-top: 4px solid var(--accent); display: flex; flex-direction: column; justify-content: center; text-align: left; transition: transform 0.3s ease;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
-                        <div style="flex: 1; min-width: 0;">
-                            <h4 style="margin: 0; color: var(--primary); font-size: 0.95rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ notice.title }}</h4>
-                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;">{{ notice.summary }}</p>
+                <div class="notice-card-small">
+                    <div class="notice-card-small-content">
+                        <div class="notice-card-small-text">
+                            <h4 class="notice-card-small-title">{{ notice.title }}</h4>
+                            <p class="notice-card-small-summary">{{ notice.summary }}</p>
                         </div>
-                        <div style="text-align: right; min-width: 80px; flex-shrink: 0;">
-                            <span style="font-size: 0.65rem; color: #888; font-weight: 600; display: block;">{{ notice.date }}</span>
-                            <a href="/notices/{{ notice.id }}" style="font-size: 0.75rem; color: var(--accent); font-weight: bold; text-decoration: none;">View →</a>
+                        <div class="notice-card-small-meta">
+                            <span class="notice-card-small-date">{{ notice.date }}</span>
+                            <a href="/notices/{{ notice.id }}" class="notice-card-small-link">View →</a>
                         </div>
                     </div>
                 </div>

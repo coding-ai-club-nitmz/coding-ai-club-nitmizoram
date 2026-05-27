@@ -1,6 +1,11 @@
 # This file contains all the content for the website.
 # Future teams can simply edit these lists to add/update/delete items.
 
+SYSTEM_CONFIG = {
+    "static_cache_max_age": 180,           # Max-age for static assets in seconds (3 minutes)
+    "data_reload_threshold_seconds": 180,  # Threshold for reporting recent updates in seconds (3 minutes)
+}
+
 GLOBAL_DATA = {
     "club_name": "Coding & AI Club",
     "tagline": "Code . Create . Collaborate",
@@ -17,13 +22,29 @@ GLOBAL_DATA = {
 # To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
     {
+        "id": "technox-part-ii",
+        "featured": True,
+        "title": "Technox'2025-26 Part-II",
+        "date": "May 27, 2026",
+        "summary": "Registration is open for Technox Part-II events. Register now!",
+        "content": "The much-awaited Technox'2025-26 Part-II technical festival is starting soon! Get ready for exciting coding events, AI hackathons, hardware exhibitions, and tech quizzes. Registrations are now open for all students. Choose your target event and submit the registration form to confirm your participation.",
+        "registration_open": True,
+        "event_name": "Technox'2025-26 Part-II",
+        "link": "/register",
+        "link_text": "Register Now"
+    },
+    {
         "id": "core-team-recruitment",
         "featured": True,
         "title": "Core Team Recruitment 2026",
         "date": "May 16, 2026",
-        "summary": "We are currently recruiting for core team positions. Mail us to apply!",
-        "content": "The Coding & AI Club is officially recruiting for various Core Team positions for the academic session 2026-27. If you are passionate about software engineering, artificial intelligence, event management, design, or content creation, this is your chance to lead and shape the club's future! To apply, click the button below to mail us directly with your details. If selected, we will contact you for a brief interaction.",
-        "link": "mailto:coding.club@nitmz.ac.in",
+        "summary": "We are currently recruiting for core team positions. Apply now!",
+        "content": "The Coding & AI Club is officially recruiting for various Core Team positions for the academic session 2026-27. If you are passionate about software engineering, artificial intelligence, event management, design, or content creation, this is your chance to lead and shape the club's future! Click the button below to apply.",
+        "link": "/join",
+        "prefill": {
+            "topic": "Core Team Application - Coding & AI Club",
+            "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details:\n- Name:\n- Roll Number:\n- Branch/Sem:\n- Interested Role (Web/AI/Design/Events):\n- Why I want to join:"
+        },
         "link_text": "Join Us"
     },
     {
@@ -42,8 +63,12 @@ ANNOUNCEMENTS = [
         "title": "New Projects Starting Soon!",
         "date": "May 18, 2026",
         "summary": "Innovative projects are kicking off. Share your ideas with us!",
-        "content": "Several major club projects are set to start soon across web platforms and machine learning fields. If you have an exciting, innovative idea that you want to lead or collaborate on, we would love to hear it! Bring your technical concepts to our next session or click the button below to mail us your proposal directly.",
-        "link": "mailto:coding.club@nitmz.ac.in",
+        "content": "Several major club projects are set to start soon across web platforms and machine learning fields. If you have an exciting, innovative idea that you want to lead or collaborate on, we would love to hear it! Bring your technical concepts to our next session or click the button below to submit your project proposal.",
+        "link": "/join",
+        "prefill": {
+            "topic": "Project Proposal - Coding & AI Club",
+            "message": "Hello Coding & AI Club,\n\nI have a project idea to propose. Here are the details:\n- Project Title:\n- Brief Description:\n- Technical Stack:\n- Intended Use Case:"
+        },
         "link_text": "Propose an Idea"
     }
 ]
@@ -86,7 +111,7 @@ PROJECT_DATA = {
             "title": "Official Club Website",
             "desc": "The very website you are browsing! Designed and built from scratch by the Web Team to showcase our club's members, events, and projects.",
             "github": "https://github.com/coding-ai-club-nitmz",
-            "live": "/"
+            "live": None
         }
     ],
     "contribution": {
@@ -95,21 +120,30 @@ PROJECT_DATA = {
         "options": [
             {
                 "title": "Propose an Idea",
-                "desc": "Have a project concept? Bring it to our next session."
+                "desc": "Have a project concept? Bring it to our next session.",
+                "prefill": {
+                    "topic": "Project Proposal Idea",
+                    "message": "Hello Coding & AI Club,\n\nI want to propose a project idea. Here are the details:\n- Project Concept:\n- Description:"
+                }
             },
             {
                 "title": "Join a Team",
-                "desc": "Ongoing projects always welcome new contributors."
+                "desc": "Ongoing projects always welcome new contributors.",
+                "prefill": {
+                    "topic": "Join Project Team Request",
+                    "message": "Hello Coding & AI Club,\n\nI am interested in contributing to the ongoing projects. Here are my skills:\n- Tech stack skills:\n- Projects worked on:"
+                }
             }
         ]
     }
 }
 
 EVENT_DATA = [
-    {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg"},
-    {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg"},
-    {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg"},
-    {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg"}
+    {"title": "Technox'2025-26 Part-II", "desc": "The premier technical festival featuring advanced coding hacks, AI quizzes, and hardware exhibitions.", "image": "images/events/notpresent.jpg", "registration_open": True, "upcoming": True},
+    {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
+    {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
+    {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
+    {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False}
 ]
 
 RESOURCE_DATA = [
@@ -144,8 +178,12 @@ CONTACT_PAGE_DATA = {
         {
             "title": "Email Us",
             "desc": "Drop us a message for collaborations or queries.",
-            "link_text": "coding.club@nitmz.ac.in",
-            "link_type": "email"
+            "link_text": "Write a Message",
+            "link_type": "join",
+            "prefill": {
+                "topic": "General Collaboration Inquiry",
+                "message": "Hello Coding & AI Club,\n\nI would like to connect with you regarding:\n\n"
+            }
         },
         {
             "title": "Instagram",
@@ -174,3 +212,17 @@ HOME_DATA = {
     "banner_text": "Grow Together and Learn Together",
     "hero_desc": "We focus on practical engineering, collaborative projects, and peer-to-peer learning. Join us to turn your ideas into functional software."
 }
+
+JOIN_PAGE_DATA = {
+    "title": "Application & Proposal Portal",
+    "desc": "Please complete the application form below. Upon submission, a formalized email draft will be prepared for transmission to the club administration.",
+    "options": [
+        "Membership Registration",
+        "Core Team Application - Coding & AI Club",
+        "Project Proposal - Coding & AI Club",
+        "Join Project Team Request",
+        "General Collaboration Inquiry",
+        "General Inquiry"
+    ]
+}
+

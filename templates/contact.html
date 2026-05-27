@@ -9,8 +9,8 @@
             <div class="team-card">
                 <h3>{{ card.title }}</h3>
                 <p style="margin-bottom:6px;">{{ card.desc }}</p>
-                {% if card.link_type == 'email' %}
-                <a href="mailto:{{ global_data.social.email }}?subject=Official Inquiry regarding {{ card.title }} | {{ global_data.club_name }}, NIT Mizoram" class="contact-link color-email">{{ global_data.social.email }}</a>
+                {% if card.link_type == 'join' %}
+                <a href="/join?topic={{ card.prefill.topic | urlencode }}&message={{ card.prefill.message | urlencode }}" class="contact-link color-email">{{ card.link_text }}</a>
                 {% elif card.link_type == 'instagram' %}
                 <a href="{{ global_data.social.instagram }}" target="_blank" class="contact-link color-ig">{{ card.link_text }}</a>
                 {% elif card.link_type == 'linkedin' %}

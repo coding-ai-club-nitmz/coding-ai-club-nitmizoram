@@ -31,7 +31,8 @@ GLOBAL_DATA = {
 ### 2. Notices & Announcements (`ANNOUNCEMENTS`)
 A list of notice dictionaries. 
 *   **To display a notice on the Home Page**: Set `"featured": True`.
-*   **To link a button**: Set `"link"` to a path (e.g. `"/events"`, `"/join"`) or a `"mailto:..."` email string.
+*   **To link a button**: Set `"link"` to a path (e.g. `"/events"`, `"/join"`).
+*   **To prefill the Join/Inquiry form**: Include a `"prefill"` object containing `"topic"` and `"message"`.
 *   **No link action needed**: Set `"link": None`.
 
 ```python
@@ -40,9 +41,13 @@ A list of notice dictionaries.
     "featured": True,
     "title": "Core Team Recruitment 2026",
     "date": "May 16, 2026",
-    "summary": "We are currently recruiting for core team positions. Mail us to apply!",
+    "summary": "We are currently recruiting for core team positions. Apply now!",
     "content": "Full description of the recruitment drive goes here...",
-    "link": "mailto:coding.club@nitmz.ac.in",
+    "link": "/join",
+    "prefill": {
+        "topic": "Core Team Application - Coding & AI Club",
+        "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details..."
+    },
     "link_text": "Join Us"
 }
 ```
@@ -52,14 +57,17 @@ Organized by category lists (`mentors`, `guiders`, `core`, `web_team`, `voluntee
 ```python
 {"name": "Alice Smith", "role": "Developer", "badge": "Core", "image": "images/alice.jpg"}
 ```
+> [!NOTE]  
+> Store all member photographs in `static/images/`. The templates will automatically resolve local paths relative to the static directory or keep external URLs as is.
+> 
 > [!TIP]  
-> If a member's photograph is not ready, use the free UI Avatar utility: `"https://ui-avatars.com/api/?name=Alice+Smith&background=random&color=fff&size=200"`.
+> If a member's photograph is not ready or missing, the template will automatically fall back to initial letters from the UI Avatar service, or you can specify it directly: `"https://ui-avatars.com/api/?name=Alice+Smith&background=random&color=fff&size=200"`.
 
 ---
 
 ##  Design & CSS System
 
-All design rules are centralized in [style.css](./style.css). To maintain the website's professional and cohesive aesthetic, **always use the predefined CSS variables**:
+All design rules are centralized in [static/style.css](./static/style.css). To maintain the website's professional and cohesive aesthetic, **always use the predefined CSS variables**:
 
 ### Brand Color Tokens
 *   `--primary`: `#0a1f44` (Deep Premium Navy)
@@ -77,13 +85,13 @@ All design rules are centralized in [style.css](./style.css). To maintain the we
 
 ##  Professional Email Integration
 
-We have integrated a context-aware **dynamic email formatter** in [templates/contact.html](./templates/contact.html) and [templates/notice_detail.html](./templates/notice_detail.html).
+To protect our official email against automated spam-bots, we direct users through the local `/join` form instead of rendering direct `mailto` links on card CTAs.
 
-Whenever a user clicks a button that links to `mailto:`, the website automatically reads the context of the page/card and appends a professional subject line:
-```html
-mailto:{{ email }}?subject=Official Inquiry regarding {{ title }} | {{ club_name }}, NIT Mizoram
+Once the user completes the pre-filled form on `/join` and clicks submit, the website constructs a professional `mailto` query string combining their inputs and redirects them to their mail client:
+```javascript
+window.location.href = `mailto:coding.club@nitmz.ac.in?subject=${encodeURIComponent(topic)}&body=${body}`;
 ```
-This is extremely useful for the club's mailbox handlers to instantly filter, tag, and organize incoming queries about recruitments, events, or project proposals!
+This keeps spam harvesters from scraping the address directly while providing structured, context-aware emails for club organizers to easily filter and review!
 
 ---
 

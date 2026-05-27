@@ -10,7 +10,7 @@ This website serves as a modern, high-performance, and responsive hub to showcas
 
 *   **100% Data-Driven Architecture**: Managed entirely via central data structures. Zero HTML knowledge required to update the site.
 *   **Dynamic Notice Board**: A custom horizontal slider showcasing the 3 latest announcements side-by-side with smooth horizontal scrolling for more. Includes context-aware `/notices/<id>` detail routing.
-*   **Context-Aware Communication**: Smart `mailto:` links that auto-inject formalized subject lines depending on the specific notice or card clicked.
+*   **Context-Aware Communication**: Smart pre-filled join/inquiry forms that auto-load custom subject titles and template messages depending on the notice, project contribution, or contact option clicked.
 *   **Premium Visual Experience**: Harmony of HSL primary-navy and modern typography with absolute responsiveness on all device viewports.
 *   **Production & SEO Optimized**: Features high-fidelity dynamic Open Graph previews, custom dynamic meta tags for search engine bots, and valid `sitemap.xml` & `robots.txt` configurations.
 
@@ -60,7 +60,9 @@ The server will start running at **`http://127.0.0.1:8000/`**.
 ```bash
 ├── app.py              # Main Flask application (Route definitions & Context processors)
 ├── data.py             # Central Data Store (Single source of truth for all content)
-├── style.css           # Global CSS variables, layouts, and responsive media queries
+├── static/             # Static assets folder (Flask default)
+│   ├── style.css       # Global CSS variables, layouts, and responsive media queries
+│   └── images/         # Static logos, avatars, and event graphics
 ├── templates/          # Jinja2 HTML Templates
 │   ├── base.html       # Shell structure, dynamic SEO headers, Navbar, and Footer
 │   ├── index.html      # Homepage (Centered welcome & Horizontal Notice Board)
@@ -71,7 +73,6 @@ The server will start running at **`http://127.0.0.1:8000/`**.
 │   ├── notices.html    # Notice Board List view
 │   ├── notice_detail.html # Single Notice Deep-Link detail page
 │   └── contact.html    # Connect cards & NIT physical address
-├── images/             # Static logos, avatars, and event graphics
 ├── robots.txt          # SEO Crawling rules
 └── sitemap.xml         # SEO search index paths
 ```

@@ -44,3 +44,8 @@ jobs:
       run: |
         # Basic check to verify template folders are present and populated
         ls -F templates/
+
+    - name: Run Route Verification Unit Tests
+      run: |
+        # Execute unittest suite to verify all web routes return 200/404 correctly
+        PYTHONPATH=. python -m unittest discover -s tests -p "test_*.py"
