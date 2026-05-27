@@ -60,7 +60,7 @@ TEAM_DATA = {
         {"name": "Khush Katariya", "role": "Guider", "badge": "Guider", "image": "https://ui-avatars.com/api/?name=K&background=random&color=fff&size=200"}
     ],
     "core": [
-        {"name": "Rishabh Shukla", "role": "Club President", "badge": "President", "image": "https://ui-avatars.com/api/?name=R&background=random&color=fff&size=200"},
+        {"name": "Rishabh Shukla", "role": "Club President", "badge": "President", "image": "images/rishabh.jpg"},
         {"name": "Routhu Deva Varshini", "role": "Vice President", "badge": "VP", "image": "images/varshini.jpg"},
         {"name": "Mahak Singh", "role": "Event Manager", "badge": "Events", "image": "images/mahak.jpg"},
         {"name": "Ritika Kumari", "role": "Membership Chair", "badge": "Membership", "image": "images/ritika.jpg"},
