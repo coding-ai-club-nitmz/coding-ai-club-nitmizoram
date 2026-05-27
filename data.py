@@ -34,20 +34,6 @@ ANNOUNCEMENTS = [
 #        "link_text": "open soon"
 #   },
     {
-        "id": "core-team-recruitment",
-        "featured": True,
-        "title": "Core Team Recruitment 2026",
-        "date": "May 16, 2026",
-        "summary": "We are currently recruiting for core team positions. Apply now!",
-        "content": "The Coding & AI Club is officially recruiting for various Core Team positions for the academic session 2026-27. If you are passionate about software engineering, artificial intelligence, event management, design, or content creation, this is your chance to lead and shape the club's future! Click the button below to apply.",
-        "link": "/join",
-        "prefill": {
-            "topic": "Core Team Application - Coding & AI Club",
-            "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details:\n- Name:\n- Roll Number:\n- Branch/Sem:\n- Interested Role (Web/AI/Design/Events):\n- Why I want to join:"
-        },
-        "link_text": "Join Us"
-    },
-    {
         "id": "upcoming-projects",
         "featured": True,
         "title": "New Projects Starting Soon!",
@@ -60,6 +46,20 @@ ANNOUNCEMENTS = [
             "message": "Hello Coding & AI Club,\n\nI have a project idea to propose. Here are the details:\n- Project Title:\n- Brief Description:\n- Technical Stack:\n- Intended Use Case:"
         },
         "link_text": "Propose an Idea"
+    },
+    {
+        "id": "core-team-recruitment",
+        "featured": True,
+        "title": "Core Team Recruitment 2026",
+        "date": "May 16, 2026",
+        "summary": "We are currently recruiting for core team positions. Apply now!",
+        "content": "The Coding & AI Club is officially recruiting for various Core Team positions for the academic session 2026-27. If you are passionate about software engineering, artificial intelligence, event management, design, or content creation, this is your chance to lead and shape the club's future! Click the button below to apply.",
+        "link": "/join",
+        "prefill": {
+            "topic": "Core Team Application - Coding & AI Club",
+            "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details:\n- Name:\n- Roll Number:\n- Branch/Sem:\n- Interested Role (Web/AI/Design/Events):\n- Why I want to join:"
+        },
+        "link_text": "Join Us"
     },
     {
         "id": "hackathon-closed",
