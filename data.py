@@ -48,16 +48,6 @@ ANNOUNCEMENTS = [
         "link_text": "Join Us"
     },
     {
-        "id": "hackathon-closed",
-        "featured": True,
-        "title": "24 Hours Hackathon Closed!",
-        "date": "May 15, 2026",
-        "summary": "The hackathon has officially concluded. Final results have been sent to student emails.",
-        "content": "The annual 24 Hours Hackathon has successfully concluded! We witnessed outstanding project prototypes built in just a single day. The evaluation phase is now complete, and the official results and feedback have been dispatched directly to the registered email addresses of all student participants. Thank you to all the mentors, judges, and teams for making this event a spectacular success!",
-        "link": None,
-        "link_text": ""
-    },
-    {
         "id": "upcoming-projects",
         "featured": True,
         "title": "New Projects Starting Soon!",
@@ -70,6 +60,16 @@ ANNOUNCEMENTS = [
             "message": "Hello Coding & AI Club,\n\nI have a project idea to propose. Here are the details:\n- Project Title:\n- Brief Description:\n- Technical Stack:\n- Intended Use Case:"
         },
         "link_text": "Propose an Idea"
+    },
+    {
+        "id": "hackathon-closed",
+        "featured": True,
+        "title": "24 Hours Hackathon Closed!",
+        "date": "May 15, 2026",
+        "summary": "The hackathon has officially concluded. Final results have been sent to student emails.",
+        "content": "The annual 24 Hours Hackathon has successfully concluded! We witnessed outstanding project prototypes built in just a single day. The evaluation phase is now complete, and the official results and feedback have been dispatched directly to the registered email addresses of all student participants. Thank you to all the mentors, judges, and teams for making this event a spectacular success!",
+        "link": None,
+        "link_text": ""
     }
 ]
 
