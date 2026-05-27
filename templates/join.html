@@ -21,53 +21,53 @@
             // Persist form data in localStorage so refresh does not lose it
             const form = document.getElementById('joinForm');
             const fields = ['userName', 'userTopic', 'userMessage'];
-            // Load saved data on page load
-            window.addEventListener('load', () => {
-                fields.forEach(id => {
-                    try {
-                        const saved = localStorage.getItem('join_' + id);
-                        if (saved !== null) {
-                            const el = document.getElementById(id);
-                            if (el) el.value = saved;
-                        }
-                    } catch(e) {}
-                });
-
-                // Override with query parameters if present
-                const urlParams = new URLSearchParams(window.location.search);
-                const topic = urlParams.get('topic');
-                const message = urlParams.get('message');
-                if (topic) {
-                    const el = document.getElementById('userTopic');
-                    if (el) {
-                        let optionExists = false;
-                        for (let i = 0; i < el.options.length; i++) {
-                            if (el.options[i].value === topic) {
-                                optionExists = true;
-                                break;
-                            }
-                        }
-                        if (!optionExists) {
-                            const newOpt = document.createElement('option');
-                            newOpt.value = topic;
-                            newOpt.text = topic;
-                            el.add(newOpt);
-                        }
-                        el.value = topic;
+            // Load saved data immediately on execution (no need to wait for full page load)
+            fields.forEach(id => {
+                try {
+                    const saved = localStorage.getItem('join_' + id);
+                    if (saved !== null) {
+                        const el = document.getElementById(id);
+                        if (el) el.value = saved;
                     }
-                }
-                if (message) {
-                    const el = document.getElementById('userMessage');
-                    if (el) el.value = message;
-                }
-                
-                // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
-                if (topic || message) {
-                    try {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    } catch (e) {}
-                }
+                } catch(e) {}
             });
+
+            // Override with query parameters if present
+            const urlParams = new URLSearchParams(window.location.search);
+            const topic = urlParams.get('topic');
+            const message = urlParams.get('message');
+            if (topic) {
+                const el = document.getElementById('userTopic');
+                if (el) {
+                    let optionExists = false;
+                    for (let i = 0; i < el.options.length; i++) {
+                        if (el.options[i].value === topic) {
+                            optionExists = true;
+                            break;
+                        }
+                    }
+                    if (!optionExists) {
+                        const newOpt = document.createElement('option');
+                        newOpt.value = topic;
+                        newOpt.text = topic;
+                        el.add(newOpt);
+                    }
+                    el.value = topic;
+                }
+            }
+            if (message) {
+                const el = document.getElementById('userMessage');
+                if (el) el.value = message;
+            }
+            
+            // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
+            if (topic || message) {
+                setTimeout(() => {
+                    try {
+                        window.history.replaceState(window.history.state, document.title, window.location.pathname);
+                    } catch (e) {}
+                }, 200);
+            }
             // Save data on each input change
             fields.forEach(id => {
                 const el = document.getElementById(id);

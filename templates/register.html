@@ -69,47 +69,48 @@
             // Persist registration form in localStorage so refreshes don't wipe it
             const fields = ['candName', 'candRoll', 'candEmail', 'candPhone', 'candBranch', 'candDegree', 'candYear', 'candEvent', 'candSkills'];
             
-            window.addEventListener('load', () => {
-                fields.forEach(id => {
-                    try {
-                        const saved = localStorage.getItem('reg_' + id);
-                        if (saved !== null) {
-                            const el = document.getElementById(id);
-                            if (el) el.value = saved;
-                        }
-                    } catch(e) {}
-                });
-
-                // Check for query parameter prefill for target event
-                const urlParams = new URLSearchParams(window.location.search);
-                const eventParam = urlParams.get('event');
-                if (eventParam) {
-                    const el = document.getElementById('candEvent');
-                    if (el) {
-                        let optionExists = false;
-                        for (let i = 0; i < el.options.length; i++) {
-                            if (el.options[i].value === eventParam) {
-                                optionExists = true;
-                                break;
-                            }
-                        }
-                        if (!optionExists) {
-                            const newOpt = document.createElement('option');
-                            newOpt.value = eventParam;
-                            newOpt.text = eventParam;
-                            el.add(newOpt);
-                        }
-                        el.value = eventParam;
+            // Load saved data immediately on execution (no need to wait for full page load)
+            fields.forEach(id => {
+                try {
+                    const saved = localStorage.getItem('reg_' + id);
+                    if (saved !== null) {
+                        const el = document.getElementById(id);
+                        if (el) el.value = saved;
                     }
-                }
-                
-                // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
-                if (eventParam) {
-                    try {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    } catch (e) {}
-                }
+                } catch(e) {}
             });
+
+            // Check for query parameter prefill for target event
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventParam = urlParams.get('event');
+            if (eventParam) {
+                const el = document.getElementById('candEvent');
+                if (el) {
+                    let optionExists = false;
+                    for (let i = 0; i < el.options.length; i++) {
+                        if (el.options[i].value === eventParam) {
+                            optionExists = true;
+                            break;
+                        }
+                    }
+                    if (!optionExists) {
+                        const newOpt = document.createElement('option');
+                        newOpt.value = eventParam;
+                        newOpt.text = eventParam;
+                        el.add(newOpt);
+                    }
+                    el.value = eventParam;
+                }
+            }
+            
+            // Clean up query parameters from the browser address bar so refreshing doesn't overwrite input
+            if (eventParam) {
+                setTimeout(() => {
+                    try {
+                        window.history.replaceState(window.history.state, document.title, window.location.pathname);
+                    } catch (e) {}
+                }, 200);
+            }
 
             // Save data on each input change
             fields.forEach(id => {
