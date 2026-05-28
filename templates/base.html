@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- SEO Meta Tags (Hidden from normal view, read by GoogleBot) -->
-    <meta name="description" content="{% block meta_description %}Official website of the Coding & AI Club at NIT Mizoram. A community of student engineers building real-world AI and software projects.{% endblock %}">
-    <meta name="keywords" content="Coding Club, AI Club, NIT Mizoram, Programming, Artificial Intelligence, Software Engineering, Student Tech Club">
+    <meta name="description"
+        content="{% block meta_description %}Official website of the Coding & AI Club at NIT Mizoram. A community of student engineers building real-world AI and software projects.{% endblock %}">
+    <meta name="keywords"
+        content="Coding Club, AI Club, NIT Mizoram, Programming, Artificial Intelligence, Software Engineering, Student Tech Club">
     <meta name="author" content="{{ global_data.club_name }}">
     <meta name="robots" content="index, follow">
-    <meta name="google-site-verification" content="4dNqM0TtEb4A7aOFB2MSkUmbGQDNgp_LQh-ML7iVqJw" />
     <title>{% block title %}{{ global_data.club_name }}{% endblock %}</title>
-    
+
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="{% block og_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
+    <meta property="og:description"
+        content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
     <meta property="og:image" content="/static/images/club-logo.png">
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#0a1f44">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/images/club-logo.png" type="image/png">
-    
+
     <!-- Performance Optimization Script: Includes Image Cache Recovery and Hover-based Page Prefetching -->
     <script>
         // 1. Image Cache Recovery: Auto-retries failed cached images directly from server
-        document.addEventListener('error', function(event) {
+        document.addEventListener('error', function (event) {
             var element = event.target;
             if (element.tagName === 'IMG') {
                 if (!element.dataset.retried) {
@@ -37,14 +40,14 @@
         }, true); // Use capture phase because image error events do not bubble
 
         // 2. Hover Prefetching: Prefetches links on hover/touch, making page transitions feel instant (<0ms!)
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             var links = document.querySelectorAll('nav a, header a, .navbar a');
             var preloaded = {};
-            links.forEach(function(link) {
+            links.forEach(function (link) {
                 var href = link.getAttribute('href');
                 // Only prefetch internal navigation links
                 if (href && href.startsWith('/') && href !== '/' && !href.startsWith('mailto:')) {
-                    var handlePrefetch = function() {
+                    var handlePrefetch = function () {
                         if (!preloaded[href]) {
                             preloaded[href] = true;
                             var preloadLink = document.createElement('link');
@@ -61,6 +64,7 @@
         });
     </script>
 </head>
+
 <body>
     <header class="header top-header">
         <a href="/"><img src="/static/images/nitmz-logo.png" alt="Institute Logo" class="logo"></a>
@@ -100,8 +104,10 @@
             {% set d_aria_about = 'aria-current=page' if request.path == '/about' else '' %}
             <a href="/about" class="{{ d_active_about }}" {{ d_aria_about }}>About</a>
 
-            {% set d_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
-            {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
+            {% set d_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/'))
+            else '' %}
+            {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or
+            request.path.startswith('/notices/')) else '' %}
             <a href="/notices" class="{{ d_active_notices }}" {{ d_aria_notices }}>Notice Board</a>
 
             {% set d_active_events = 'active' if request.path == '/events' else '' %}
@@ -140,7 +146,7 @@
             links.classList.toggle("show");
             navbar.classList.toggle("expanded");
         }
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             var navbar = document.getElementById("mainNavbar");
             var links = document.getElementById("navbarLinks");
             if (!navbar.contains(event.target) && links.classList.contains("show")) {
@@ -158,4 +164,5 @@
         <p class="sub-text">Built with care by the {{ global_data.club_name }} web &amp; social media team.</p>
     </footer>
 </body>
+
 </html>
