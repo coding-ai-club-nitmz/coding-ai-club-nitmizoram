@@ -1,3 +1,13 @@
+import socket
+
+# --- IPv4 Workaround for College Network Timeout Issues ---
+# Forces Python to use IPv4 instead of IPv6 to prevent Google API timeouts
+old_getaddrinfo = socket.getaddrinfo
+def new_getaddrinfo(*args, **kwargs):
+    responses = old_getaddrinfo(*args, **kwargs)
+    return [res for res in responses if res[0] == socket.AF_INET]
+socket.getaddrinfo = new_getaddrinfo
+
 from flask import Flask, render_template, send_from_directory, request
 import os
 import importlib
@@ -130,29 +140,43 @@ def join():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        name = request.form.get('name')
-        roll = request.form.get('roll')
-        email = request.form.get('email')
-        phone = request.form.get('phone')
-        branch = request.form.get('branch')
-        degree = request.form.get('degree')
-        year = request.form.get('year')
-        event_name = request.form.get('eventName')
-        skills = request.form.get('skills')
+        name = request.form.get('name', '').upper()
+        roll = request.form.get('roll', '').upper()
+        email = request.form.get('email', '').lower()
+        
+        # Format phone number
+        phone = request.form.get('phone', '')
+        import re
+        phone = re.sub(r'\D', '', phone)
+        if len(phone) >= 12 and phone.startswith('91'):
+            phone = phone[2:]
+        elif len(phone) >= 11 and phone.startswith('0'):
+            phone = phone[1:]
+        phone = phone[:10]
+        
+        branch = request.form.get('branch', '').upper()
+        degree = request.form.get('degree', '').upper()
+        year = request.form.get('year', '').upper()
+        event_name = request.form.get('eventName', '') # Don't uppercase event name because it's used for file matching
+        skills = request.form.get('skills', '').upper()
+        
+        # Capture the user's IP Address (handles Vercel/Cloudflare proxies too)
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if ip_address:
+            ip_address = ip_address.split(',')[0].strip()
         
         # Log complete candidate details locally as an immutable backup log
         app.logger.info(
             f"EVENT REGISTRATION BACKUP: name={name}, roll={roll}, email={email}, "
             f"phone={phone}, branch={branch}, degree={degree}, year={year}, "
-            f"event={event_name}, skills={skills}"
+            f"event={event_name}, skills={skills}, ip={ip_address}"
         )
         
-        # Trigger background thread for Google Sheets sync
-        threading.Thread(
-            target=background_sync_worker,
-            args=(name, roll, email, phone, branch, degree, year, event_name, skills),
-            daemon=True
-        ).start()
+        # Synchronous Google Sheets sync (Safe for Vercel/Serverless)
+        res = background_sync_worker(name, roll, email, phone, branch, degree, year, event_name, skills, ip_address)
+        
+        if res and res.get("status") == "duplicate":
+            return render_template('register_duplicate.html', name=name, event_name=event_name)
             
         return render_template('register_success.html', name=name, event_name=event_name)
     

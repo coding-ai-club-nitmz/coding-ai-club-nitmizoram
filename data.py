@@ -123,7 +123,7 @@ PROJECT_DATA = {
                 "desc": "Have a project concept? Bring it to our next session.",
                 "prefill": {
                     "topic": "Project Proposal Idea",
-                    "message": "Hello Coding & AI Club,\n\nI want to propose a project idea. Here are the details:\n- Project Concept:\n- Description:"
+                    "message": "Respected Team,\n\nI want to propose a project idea. Here are the details:\n- Project Concept:\n- Description:"
                 }
             },
             {
@@ -131,7 +131,7 @@ PROJECT_DATA = {
                 "desc": "Ongoing projects always welcome new contributors.",
                 "prefill": {
                     "topic": "Join Project Team Request",
-                    "message": "Hello Coding & AI Club,\n\nI am interested in contributing to the ongoing projects. Here are my skills:\n- Tech stack skills:\n- Projects worked on:"
+                    "message": "Respected Team,\n\nI am interested in contributing to the ongoing projects. Here are my skills:\n- Tech stack skills:\n- Projects worked on:"
                 }
             }
         ]

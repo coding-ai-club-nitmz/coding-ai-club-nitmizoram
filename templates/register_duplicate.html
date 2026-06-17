@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Already Registered – Coding &amp; AI Club{% endblock %}
+{% block content %}
+    <section class="section">
+        <div class="success-container">
+            <svg class="success-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <h2 class="success-title">Already Registered!</h2>
+            <p class="success-message">
+                It looks like you, <strong>{{ name }}</strong>, have already registered for <strong>{{ event_name }}</strong>.
+            </p>
+            <p class="success-subtext">
+                Your previous registration is safely stored in our database. You don't need to register again. 
+                Keep an eye on your email for further updates!
+            </p>
+            <a href="/" class="notice-detail-btn">Return to Home Page</a>
+        </div>
+    </section>
+{% endblock %}

@@ -25,7 +25,7 @@
 
 /* ─── Reset & Base ────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 /* Custom Scrollbar for Premium Feel */
 ::-webkit-scrollbar {
@@ -51,6 +51,8 @@ body {
     min-height: 100vh;
     line-height: 1.7;
     overflow-x: hidden; /* Prevents horizontal scrollbar */
+    width: 100%;
+    max-width: 100vw;
 }
 
 /* ─── Header ──────────────────────────────────── */
@@ -83,7 +85,7 @@ body {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 20px;
+    gap: clamp(6px, 1.5vw, 20px);
     padding: 18px 5%;
     text-align: center;
 }
@@ -95,7 +97,7 @@ body {
     position: relative;
 }
 .header-text .tagline {
-    font-size: 0.88rem;
+    font-size: clamp(0.65rem, 2vw, 0.88rem);
     opacity: 0.78;
     letter-spacing: 0.5px;
     position: relative;
@@ -103,7 +105,7 @@ body {
 }
 .header-text .hindi-text {
     font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
-    font-size: 1.55rem; 
+    font-size: clamp(0.8rem, 3vw, 1.55rem);
     color: var(--accent);
     letter-spacing: 0.5px;
     margin-top: 4px;
@@ -112,7 +114,7 @@ body {
     font-weight: 600;
 }
 .logo {
-    width: 125px;
+    width: clamp(40px, 10vw, 125px);
     height: auto;
     position: relative;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
@@ -167,7 +169,7 @@ body {
 
 /* ─── Sections ────────────────────────────────── */
 .section {
-    padding: 60px 40px;
+    padding: clamp(30px, 6vh, 60px) clamp(12px, 4vw, 40px);
     text-align: center;
     animation: fadeUp 0.7s ease both;
     flex: 1;
@@ -211,7 +213,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 24px;
+    gap: clamp(16px, 2.5vw, 24px);
     margin-top: 32px;
 }
 .team-card, .event-card {
@@ -220,7 +222,8 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
-    width: 220px;
+    flex: 1 1 200px;
+    max-width: 280px;
     text-align: center;
     transition: transform var(--transition), box-shadow var(--transition);
     position: relative;
@@ -271,10 +274,14 @@ body {
     margin-bottom: 10px;
     line-height: 1.5;
 }
-.event-card { width: 260px; }
+.event-card { 
+    flex: 1 1 240px; 
+    max-width: 320px; 
+}
 .event-card img {
     width: 100%;
-    height: 300px;
+    aspect-ratio: 4 / 5;
+    max-height: 300px;
     border-radius: 10px;
     object-fit: cover;
     margin-bottom: 14px;
@@ -354,12 +361,11 @@ body {
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    padding: 35px 20px;
+    padding: clamp(20px, 4vw, 35px) clamp(12px, 3vw, 20px);
     text-align: center;
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 800px;
+    width: min(800px, 100% - 32px);
     margin: 0 auto;
 }
 .banner-text h2 {
@@ -374,23 +380,26 @@ body {
 .technox-bar {
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     color: var(--accent);
-    padding: 15px 40px;
+    padding: 15px clamp(16px, 4vw, 40px);
     border-radius: var(--radius);
     margin: 0 auto 30px;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: clamp(1px, 0.3vw, 3px);
     font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
+    font-size: clamp(1.1rem, 3.5vw, 1.8rem);
     font-weight: 700;
     box-shadow: var(--shadow-md);
     display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
 }
 
 .marquee-container {
-    width: 100vw; /* Forces it to be full screen width */
+    width: 100%; /* Use 100% instead of 100vw to prevent overflow in desktop mode */
     position: relative;
     left: 50%;
-    transform: translateX(-50%); /* Perfectly centers the full-screen width */
+    transform: translateX(-50%);
+    max-width: 100vw; /* Safety cap to never exceed viewport */
     overflow: hidden;
     white-space: nowrap;
     padding: 20px 0;
@@ -410,8 +419,8 @@ body {
 }
 
 .marquee-track img {
-    height: 180px;
-    width: 280px;
+    height: clamp(110px, 15vw, 180px);
+    width: clamp(180px, 22vw, 280px);
     object-fit: cover;
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
@@ -439,22 +448,22 @@ body {
 .info-strip {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
-    padding: 24px 40px;
+    padding: 24px clamp(16px, 4vw, 40px);
     display: flex;
     justify-content: center;
-    gap: 60px;
+    gap: clamp(20px, 5vw, 60px);
     flex-wrap: wrap;
 }
 .info-strip .stat { text-align: center; }
 .info-strip .stat-num {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--accent);
     display: block;
 }
 .info-strip .stat-label {
-    font-size: 0.82rem;
+    font-size: clamp(0.72rem, 1.5vw, 0.82rem);
     opacity: 0.75;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -465,7 +474,7 @@ body {
     background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
     color: rgba(255,255,255,0.9);
     text-align: center;
-    padding: 28px 20px;
+    padding: clamp(20px, 3vw, 28px) clamp(16px, 3vw, 20px);
     margin-top: auto;
     position: relative;
 }
@@ -502,26 +511,9 @@ body {
 .team-container .team-card:nth-child(5), .event-container .event-card:nth-child(5) { animation: fadeUp 0.5s 0.5s ease both; }
 .team-container .team-card:nth-child(6), .event-container .event-card:nth-child(6) { animation: fadeUp 0.5s 0.6s ease both; }
 
+
 /* ─── Mobile Responsiveness ───────────────────── */
 @media screen and (max-width: 768px) {
-    
-    /* 1. KEEPS THE LOGO -> TEXT -> LOGO LAYOUT IN ONE ROW */
-    .top-header { 
-        grid-template-columns: auto 1fr auto; /* Forces 3 columns */
-        gap: 8px; /* Tighter gap for small screens */
-        padding: 15px 10px; 
-    }
-    
-    /* 2. DYNAMIC LOGO SIZE - Shrinks based on screen width */
-    .logo { 
-        width: clamp(45px, 12vw, 75px); 
-    }
-    
-    /* 3. DYNAMIC TEXT SIZE - Shrinks to fit between the logos */
-    .header-text h1 { font-size: clamp(1rem, 4.5vw, 1.5rem); letter-spacing: 0.5px; }
-    .header-text .tagline { font-size: clamp(0.65rem, 2vw, 0.8rem); }
-    .header-text .hindi-text { font-size: clamp(0.85rem, 3.5vw, 1.25rem); margin-top: 2px;}
-
     /* 4. PREMIUM HAMBURGER MENU */
     .navbar-mobile-row {
         display: flex !important;
@@ -606,20 +598,15 @@ body {
         transform: translateY(-7px) rotate(-45deg);
     }
 
-    /* General Mobile Fixes */
-    .section { padding: 40px 20px; }
-    .team-card { width: 100%; max-width: 280px; }
-    .event-card { width: 100%; max-width: 320px; }
-    .info-strip { gap: 30px; }
-    .marquee-track img { width: 220px; height: 140px; }
 }
 
-    /* Desktop navbar hide for mobile row (B1) */
-    @media screen and (min-width: 769px) {
-        .navbar-mobile-row {
-            display: none !important;
-        }
+
+/* Desktop navbar hide for mobile row */
+@media screen and (min-width: 769px) {
+    .navbar-mobile-row {
+        display: none !important;
     }
+}
 
 /* ─── Contact Forms ───────────────────────────── */
 .contact-form {
@@ -628,7 +615,7 @@ body {
     border-radius: var(--radius);
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
-    max-width: 500px;
+    width: min(500px, 100% - 32px);
     margin: 40px auto 0;
     display: flex;
     flex-direction: column;
@@ -691,14 +678,13 @@ body {
 }
 
 .notice-card-full {
-    flex: 1;
-    min-width: 300px;
+    flex: 1 1 300px;
     max-width: 380px;
     min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 30px;
+    padding: clamp(20px, 3vw, 30px);
     text-align: left;
     background: white;
     border: 1px solid var(--border);
@@ -790,12 +776,22 @@ body {
         max-width: 380px;
     }
 }
-@media (max-width: 991px) {
+@media (max-width: 991px) and (min-width: 769px) {
+    /* iPad range: show 2 cards nicely */
     .notices-scroll-container {
         justify-content: flex-start;
     }
     .notice-card-small {
-        flex: 0 0 290px;
+        flex: 0 0 calc(50% - 12px);
+        min-width: 0;
+    }
+}
+@media (max-width: 768px) {
+    .notices-scroll-container {
+        justify-content: flex-start;
+    }
+    .notice-card-small {
+        flex: 0 0 min(290px, 85vw);
     }
 }
 
@@ -842,7 +838,7 @@ body {
     color: var(--text-main);
     font-size: 1.1rem;
     background: rgba(255, 255, 255, 0.6);
-    padding: 30px;
+    padding: clamp(16px, 3vw, 30px);
     border-radius: 12px;
     box-shadow: var(--shadow-sm);
     text-align: left;
@@ -908,8 +904,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: baseline;
-    gap: 20px;
+    gap: clamp(10px, 2vw, 20px);
     margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 .home-announcements-title {
     color: var(--primary);
@@ -982,9 +979,9 @@ body {
 
 /* ─── Success Page Elements ───────────────────── */
 .success-container {
-    max-width: 600px;
-    margin: 60px auto;
-    padding: 40px;
+    width: min(600px, 100% - 32px);
+    margin: clamp(40px, 6vh, 60px) auto;
+    padding: clamp(28px, 4vw, 40px);
     background: white;
     border-radius: var(--radius);
     box-shadow: var(--shadow-md);
@@ -992,10 +989,11 @@ body {
     text-align: center;
 }
 .success-icon {
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
     stroke: var(--accent);
-    margin-bottom: 20px;
+    margin: 0 auto 20px auto;
+    display: block;
 }
 .success-title {
     margin-bottom: 15px;
