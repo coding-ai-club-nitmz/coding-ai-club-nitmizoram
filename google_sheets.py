@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved.
 import os
 import re
 import time

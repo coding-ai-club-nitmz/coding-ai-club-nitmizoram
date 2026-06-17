@@ -1,4 +1,4 @@
-# ️ Future Web Team Guide — Coding & AI Club
+#  Future Web Team Guide — Coding & AI Club
 
 Hey there, future Web Team!  Welcome to the maintenance and development manual for the **Coding & AI Club NIT Mizoram** website. 
 
@@ -19,7 +19,7 @@ GLOBAL_DATA = {
     "club_name": "Coding & AI Club",
     "tagline": "Code . Create . Collaborate",
     "hindi_name": "राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम",
-    "copyright": "© 2026 Coding & AI Club",
+    "copyright": " 2026 Coding & AI Club",
     "social": {
         "email": "coding.club@nitmz.ac.in",
         "instagram": "https://www.instagram.com/codingclub_nitmz",

@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved.
 # This file contains all the content for the website.
 # Future teams can simply edit these lists to add/update/delete items.
 
@@ -10,7 +11,7 @@ GLOBAL_DATA = {
     "club_name": "Coding & AI Club",
     "tagline": "Code . Create . Collaborate",
     "hindi_name": "राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम",
-    "copyright": "© 2026 Coding & AI Club",
+    "copyright": " 2026 Coding & AI Club",
     "social": {
         "email": "coding.club@nitmz.ac.in",
         "instagram": "https://www.instagram.com/codingclub_nitmz",

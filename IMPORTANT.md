@@ -1,4 +1,4 @@
-# 🚨 IMPORTANT PROJECT GUIDELINES 🚨
+#  IMPORTANT PROJECT GUIDELINES 
 
 Please read this document carefully before managing events or modifying the Google Sheets integration.
 

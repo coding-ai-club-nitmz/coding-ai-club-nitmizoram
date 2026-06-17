@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved.
 import socket
 
 # --- IPv4 Workaround for College Network Timeout Issues ---
