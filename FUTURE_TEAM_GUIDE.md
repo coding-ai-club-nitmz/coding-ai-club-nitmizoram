@@ -139,6 +139,19 @@ To create a new page:
 
 ---
 
+##  Google Sheets Registration Backend
+
+The website features a fully automated Google Sheets backend for live event registrations. 
+When creating a new event, future teams **must** follow these steps:
+1. Create a blank Google Sheet in the designated Club Google Drive folder.
+2. Name the Sheet **exactly** matching the `event_name` value submitted in the frontend form.
+3. The backend `google_sheets.py` script will automatically locate the sheet, format the headers, normalize the user data (capitalization, phone sanitization), and append the rows.
+4. **Duplicate Prevention:** The backend automatically checks Column 4 (Roll Number) to prevent students from registering multiple times.
+
+*Note: Never expose the `GOOGLE_CLIENT_EMAIL` or `GOOGLE_PRIVATE_KEY` in the public repository. Always use Vercel Environment Variables for production.*
+
+---
+
 ### Automated GitHub CI Pipeline
 
 To prevent broken or syntax-faulty code from being merged into production, we have set up an automated **GitHub Action workflow** located at `.github/workflows/ci.yml`.
