@@ -96,7 +96,8 @@ TEAM_DATA = {
         {"name": "Dilip Sahu", "role": "Team Head", "badge": "Web Team", "image": "images/dilip.jpg"},
         {"name": "Chandan Kumar", "role": "Developer", "badge": "Web Team", "image": "images/chandan.jpg"},
         {"name": "Aditya Kumar", "role": "Designer", "badge": "Web Team", "image": "images/aditya.jpg"},
-        {"name": "V. Vyshnavi", "role": "Content Creator", "badge": "Web Team", "image": "images/vyshnavi.jpg"}
+        {"name": "V. Vyshnavi", "role": "Content Creator", "badge": "Web Team", "image": "images/vyshnavi.jpg"},
+        {"name": "Chandan Kumar", "role": "Web Developer", "badge": "Web Team", "image": "images/chandankumar.jpg"}
     ],
     "volunteers": [
         {"name": "Aditya Kumar Ranjan", "role": "Design Support", "badge": "Contributor", "image": "https://ui-avatars.com/api/?name=A&background=random&color=fff&size=200"},
