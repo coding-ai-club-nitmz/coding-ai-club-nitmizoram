@@ -34,18 +34,18 @@ ANNOUNCEMENTS = [
 #        "link": "/register",
 #        "link_text": "open soon"
 #   },
-    {
-        "id": "oa-helper-collaboration",
-        "featured": True,
-        "title": "OA Helper x Coding & AI Club: Online Assessment Prep",
-        "date": "July 20, 2026",
-        "summary": "Registration is open for the OA Helper initiative. Prepare for company-specific and topic-based MNC Online Assessments!",
-        "content": "The Coding & AI Club, NIT Mizoram is thrilled to announce our collaboration with OA Helper! Gear up for the upcoming placement season with our specialized Online Assessment (OA) preparation series. This comprehensive program is specifically designed to help students master both company-specific test patterns and topic-based coding rounds of top MNCs. Registrations are now officially open. Join us to elevate your problem-solving skills and ace your upcoming technical assessments.",
-        "registration_open": True,
-        "event_name": "OA Helper Preparation Series",
-        "link": "/register",
-        "link_text": "Register Now"
-    },
+#    {
+#        "id": "oa-helper-collaboration",
+#        "featured": True,
+#        "title": "OA Helper x Coding & AI Club: Online Assessment Prep",
+#        "date": "July 20, 2026",
+#        "summary": "Registration is open for the OA Helper initiative. Prepare for company-specific and topic-based MNC Online Assessments!",
+#        "content": "The Coding & AI Club, NIT Mizoram is thrilled to announce our collaboration with OA Helper! Gear up for the upcoming placement season with our specialized Online Assessment (OA) preparation series. This comprehensive program is specifically designed to help students master both company-specific test patterns and topic-based coding rounds of top MNCs. Registrations are now officially open. Join us to elevate your problem-solving skills and ace your upcoming technical assessments.",
+#        "registration_open": True,
+#        "event_name": "OA Helper Preparation Series",
+#        "link": "/register",
+#        "link_text": "Register Now"
+#    },
     {
         "id": "upcoming-projects",
         "featured": True,
