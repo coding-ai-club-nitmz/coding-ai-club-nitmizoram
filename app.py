@@ -130,6 +130,10 @@ def projects():
 def resources():
     return render_template('resources.html', resources=data.RESOURCE_DATA)
 
+@app.route('/collaborate')
+def collaborate():
+    return render_template('collaborate.html', collaborate=data.COLLABORATE_DATA)
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html', contact=data.CONTACT_PAGE_DATA)

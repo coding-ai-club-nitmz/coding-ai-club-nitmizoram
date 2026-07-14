@@ -220,6 +220,134 @@ CONTACT_PAGE_DATA = {
     }
 }
 
+COLLABORATE_DATA = {
+    "hero": {
+        "title": "Let's Build Something Together",
+        "subtitle": "We partner with university clubs, industry sponsors, AI platforms, and competition organizers to run better hackathons, build stronger open-source projects, and create hands-on learning experiences for our members.",
+    },
+
+    "why_partner": [
+        {
+            "title": "An Active Builder Community",
+            "desc": "30+ members engaged in AI/ML, full-stack development, and competitive programming — building real projects, not just attending talks."
+        },
+        {
+            "title": "End-to-End Event Execution",
+            "desc": "We don't just share posters. Our team plans, runs, and follows through on events end-to-end — from 24-hour hackathons like Samyuga to recurring technical bootcamps."
+        },
+        {
+            "title": "Institute-Recognized & Reliable",
+            "desc": "As an officially recognized club at NIT Mizoram, we have the backing to coordinate logistics, venues, and cross-department support for large-scale technical events."
+        },
+        {
+            "title": "Built by Engineers, for Engineers",
+            "desc": "Our core and web teams are technical by default — API integrations, platform-specific requirements, and custom tooling are things we can actually build, not just talk about."
+        },
+    ],
+
+    "stats": [
+        {"label": "Active Members", "value": "30+"},
+        {"label": "Events Hosted", "value": "5+"},
+        {"label": "Projects Launched", "value": "1+"},
+        {"label": "Established", "value": "2025"},
+    ],
+
+    "categories": [
+        {
+            "title": "University Clubs",
+            "desc": "Co-host inter-college hackathons, joint workshops, and peer learning exchanges.",
+            "we_offer": "Shared event planning, combined participant pools, and collaborative technical content.",
+            "looking_for": "Clubs interested in running cross-campus coding contests, AI workshops, or knowledge-sharing sessions."
+        },
+        {
+            "title": "Industry & Startups",
+            "desc": "Sponsor hackathon problem statements, deliver guest lectures, or provide APIs and dev tools for our members to build with.",
+            "we_offer": "A focused technical audience for your product demos, sponsored challenges at Samyuga/Technox, and real-world project integrations using your APIs.",
+            "looking_for": "Companies willing to sponsor hackathon tracks, mentor student teams, or provide sandbox access to their developer tools."
+        },
+        {
+            "title": "AI Platforms & Tools",
+            "desc": "Provide compute credits, model access, or early-stage tools that our members can use in their AI/ML projects.",
+            "we_offer": "Genuine usage, feedback, and project showcases from students actively building with ML frameworks and LLM pipelines.",
+            "looking_for": "Platforms offering compute credits, beta access, or educational licenses worth putting in front of a builder community."
+        },
+        {
+            "title": "Competition & Hackathon Platforms",
+            "desc": "Host our coding contests and hackathons on your platform, or run structured prep programs for our members.",
+            "we_offer": "A ready cohort of competitive programmers for pilot contests, mock rounds, or co-branded coding challenges.",
+            "looking_for": "Platforms looking to onboard active student users or co-host competitive programming events."
+        },
+    ],
+
+    "process": [
+        {
+            "step": "Reach Out",
+            "desc": "Send us a proposal using the form below or email us directly."
+        },
+        {
+            "step": "Discovery Call",
+            "desc": "A quick call to understand your goals and explore how our community fits."
+        },
+        {
+            "step": "Scope & Plan",
+            "desc": "We define the collaboration together — format, timeline, and deliverables from each side."
+        },
+        {
+            "step": "Execute",
+            "desc": "We run the event, workshop, or integration with our core and web teams."
+        },
+        {
+            "step": "Review",
+            "desc": "We share outcomes and feedback, and discuss whether to continue or expand."
+        },
+    ],
+
+    "past_collaborations": {
+        "status": "onboarding",
+        "message": "Our first partnerships are currently being formalized. This section will be updated as collaborations go live.",
+        "items": []
+    },
+
+    "faq": [
+        {
+            "q": "Is there any cost involved?",
+            "a": "Most partnerships are mutual — value exchanged through visibility, access, or resources rather than direct payment. If there is a financial component (e.g., hackathon sponsorship), it is discussed and agreed upon explicitly before proceeding."
+        },
+        {
+            "q": "Can we do a one-time event instead of a long-term partnership?",
+            "a": "Absolutely. We're open to both — a single guest lecture, a one-off hackathon track sponsorship, or an ongoing tool partnership."
+        },
+        {
+            "q": "Who handles coordination on your end?",
+            "a": "All inquiries go through our official club email and are handled by our core team. Leadership transitions are documented, so continuity is maintained year to year."
+        },
+        {
+            "q": "What kind of collaborations work best?",
+            "a": "The most impactful ones give our members something to build with — a real problem statement, an API to integrate, compute credits to train models, or a platform to compete on. We handle the event logistics; you bring the technical substance."
+        },
+    ],
+
+    "cta": {
+        "text": "Propose a Collaboration",
+        "email": "coding.club@nitmz.ac.in",
+        "link": "/join",
+        "prefill": {
+            "topic": "Collaboration Proposal - Coding & AI Club",
+            "message": (
+                "Hello Coding & AI Club,\n\n"
+                "We are interested in collaborating with your club. Here are the details:\n\n"
+                "- Organization / Club Name:\n"
+                "- Type of Collaboration (e.g., Hackathon Sponsorship, Guest Lecture, API/Tool Access, Joint Event):\n"
+                "- What We're Proposing:\n"
+                "- Expected Timeline:\n"
+                "- Any Resource / Cost Involvement:\n"
+                "- Additional Details:\n\n"
+                "Looking forward to your response."
+            )
+        }
+    }
+}
+
 HOME_DATA = {
     "welcome_title": "Welcome to the Club",
     "welcome_desc": "The official home of the Coding & AI Club — a student-driven community building real-world technology at NIT Mizoram.",
@@ -235,6 +363,7 @@ JOIN_PAGE_DATA = {
         "Core Team Application - Coding & AI Club",
         "Project Proposal - Coding & AI Club",
         "Join Project Team Request",
+        "Collaboration Proposal - Coding & AI Club",
         "General Collaboration Inquiry",
         "General Inquiry"
     ]

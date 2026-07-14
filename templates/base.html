@@ -90,6 +90,10 @@
             {% set m_aria_teams = 'aria-current=page' if request.path == '/teams' else '' %}
             <a href="/teams" class="mobile-nav-link {{ m_active_teams }}" {{ m_aria_teams }}>Team</a>
 
+            {% set m_active_collab = 'active' if request.path == '/collaborate' else '' %}
+            {% set m_aria_collab = 'aria-current=page' if request.path == '/collaborate' else '' %}
+            <a href="/collaborate" class="mobile-nav-link {{ m_active_collab }}" {{ m_aria_collab }}>Collaborate</a>
+
             <button class="navbar-toggle" onclick="toggleNavbar()" aria-label="Toggle Menu">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
@@ -130,6 +134,10 @@
             {% set d_active_resources = 'active' if request.path == '/resources' else '' %}
             {% set d_aria_resources = 'aria-current=page' if request.path == '/resources' else '' %}
             <a href="/resources" class="{{ d_active_resources }}" {{ d_aria_resources }}>Resources</a>
+
+            {% set d_active_collab = 'active' if request.path == '/collaborate' else '' %}
+            {% set d_aria_collab = 'aria-current=page' if request.path == '/collaborate' else '' %}
+            <a href="/collaborate" class="{{ d_active_collab }}" {{ d_aria_collab }}>Collaborate</a>
 
             {% set d_active_contact = 'active' if request.path == '/contact' else '' %}
             {% set d_aria_contact = 'aria-current=page' if request.path == '/contact' else '' %}

@@ -1,0 +1,107 @@
+<!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
+{% extends "base.html" %}
+{% block title %}Collaborate – Coding & AI Club{% endblock %}
+{% block meta_description %}Partner with the Coding & AI Club at NIT Mizoram. Sponsor hackathons, co-host workshops, provide APIs, or mentor student teams building AI and software projects.{% endblock %}
+{% block content %}
+
+    <!-- ═══ HERO + STATS (Single unified strip) ═══ -->
+    <div class="info-strip" style="flex-direction: column; gap: 20px; padding: clamp(30px, 5vw, 50px) clamp(16px, 4vw, 40px); text-align: center;">
+        <h2 style="color: white; font-family: 'Rajdhani', sans-serif; font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; letter-spacing: 1.5px; margin: 0;">{{ collaborate.hero.title }}</h2>
+        <p style="color: rgba(255,255,255,0.78); font-size: clamp(0.85rem, 1.8vw, 1rem); max-width: 720px; margin: 0 auto; line-height: 1.6;">{{ collaborate.hero.subtitle }}</p>
+        <a href="{{ collaborate.cta.link }}?topic={{ collaborate.cta.prefill.topic | urlencode }}&message={{ collaborate.cta.prefill.message | urlencode }}" 
+           style="display: inline-block; padding: 7px 18px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.92rem; letter-spacing: 0.5px; color: white; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; text-decoration: none; transition: background 0.3s;">{{ collaborate.cta.text }} →</a>
+        <!-- Inline stats -->
+        <div style="display: flex; justify-content: center; gap: clamp(20px, 5vw, 60px); flex-wrap: wrap; margin-top: 8px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12);">
+            {% for stat in collaborate.stats %}
+            <div class="stat"><span class="stat-num">{{ stat.value }}</span><span class="stat-label">{{ stat.label }}</span></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ═══ WHY PARTNER WITH US ═══ -->
+    <section class="section">
+        <h2>Why Partner With Us</h2>
+        <p>What makes our club a reliable, execution-ready partner for your next initiative.</p>
+        <div class="event-container">
+            {% for item in collaborate.why_partner %}
+            <div class="event-card">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.desc }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ═══ COLLABORATION CATEGORIES ═══ -->
+    <section class="section">
+        <h2>Who We Collaborate With</h2>
+        <p>We work with four types of partners. Find where you fit.</p>
+        <div class="event-container" style="gap: clamp(20px, 3vw, 28px);">
+            {% for cat in collaborate.categories %}
+            <div class="event-card" style="flex: 1 1 400px; max-width: 520px; text-align: left; padding: clamp(22px, 3vw, 32px);">
+                <h3 style="text-align: left; width: 100%;">{{ cat.title }}</h3>
+                <p style="max-width: none; margin: 0 0 16px 0; text-align: left;">{{ cat.desc }}</p>
+                <div style="width: 100%; border-top: 1px solid var(--border); padding-top: 14px; margin-top: auto;">
+                    <span style="display: block; font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--primary); font-size: 1.05rem; margin-bottom: 2px;">We Offer</span>
+                    <p style="max-width: none; margin: 0 0 14px 0; font-size: 0.88rem; text-align: left;">{{ cat.we_offer }}</p>
+                    <span style="display: block; font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--primary); font-size: 1.05rem; margin-bottom: 2px;">Looking For</span>
+                    <p style="max-width: none; margin: 0; font-size: 0.88rem; text-align: left;">{{ cat.looking_for }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ═══ HOW IT WORKS ═══ -->
+    <div class="info-strip" style="flex-direction: column; gap: 0; padding: clamp(30px, 5vw, 50px) clamp(16px, 4vw, 40px); text-align: center;">
+        <h2 style="color: white; font-family: 'Rajdhani', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin: 0 0 28px 0;">How It Works</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 4vw, 40px); max-width: 1000px; margin: 0 auto;">
+            {% for step in collaborate.process %}
+            <div style="flex: 1 1 140px; max-width: 170px; text-align: center;">
+                <span class="stat-num" style="display: block; margin-bottom: 6px;">0{{ loop.index }}</span>
+                <span style="color: var(--accent); font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.05rem; display: block; margin-bottom: 6px;">{{ step.step }}</span>
+                <span style="font-size: 0.8rem; opacity: 0.82; line-height: 1.5; display: block;">{{ step.desc }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ═══ PAST & ONGOING COLLABORATIONS ═══ -->
+    <section class="section">
+        <h2>Collaborations</h2>
+        {% if collaborate.past_collaborations['items'] %}
+            <div class="team-container">
+                {% for item in collaborate.past_collaborations['items'] %}
+                <div class="team-card">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.desc }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>{{ collaborate.past_collaborations.message }}</p>
+        {% endif %}
+    </section>
+
+    <!-- ═══ FAQ ═══ -->
+    <section class="section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="event-container" style="max-width: 900px; margin-left: auto; margin-right: auto;">
+            {% for faq in collaborate.faq %}
+            <div class="event-card" style="flex: 1 1 100%; max-width: 100%; text-align: left;">
+                <h3>{{ faq.q }}</h3>
+                <p>{{ faq.a }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- ═══ FINAL CTA ═══ -->
+    <div class="info-strip" style="flex-direction: column; gap: 10px; padding: clamp(28px, 5vw, 40px) clamp(16px, 4vw, 40px); text-align: center;">
+        <h2 style="color: white; font-family: 'Rajdhani', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin: 0;">Ready to Work Together?</h2>
+        <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; margin: 0;">Email us at <a href="mailto:{{ collaborate.cta.email }}" style="color: var(--accent); text-decoration: underline;">{{ collaborate.cta.email }}</a> or use the form below.</p>
+        <a href="{{ collaborate.cta.link }}?topic={{ collaborate.cta.prefill.topic | urlencode }}&message={{ collaborate.cta.prefill.message | urlencode }}" 
+           style="display: inline-block; margin-top: 5px; padding: 7px 18px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.92rem; letter-spacing: 0.5px; color: white; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; text-decoration: none; transition: background 0.3s;">{{ collaborate.cta.text }} →</a>
+    </div>
+
+{% endblock %}
