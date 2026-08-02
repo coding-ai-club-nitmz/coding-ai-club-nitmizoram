@@ -14,7 +14,10 @@
             <p class="success-subtext">
                 A confirmation has been logged by our systems. Further updates, rulebooks, and event access links will be sent directly to your registered email address.
             </p>
-            <a href="/" class="notice-detail-btn">Return to Home Page</a>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="window.history.back()" class="notice-detail-btn" style="background-color: transparent; border: 2px solid var(--primary); color: var(--primary); cursor: pointer;">&larr; Back</button>
+                <a href="/" class="notice-detail-btn">Return to Home Page</a>
+            </div>
         </div>
     </section>
 {% endblock %}

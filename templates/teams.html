@@ -18,10 +18,10 @@
             {% endfor %}
         </div>
         <hr>
-        <h2>Club Guiders</h2>
-        <p>Senior members who lead the learning and project culture of the club.</p>
+        <h2>Core Committee</h2>
+        <p>The elected committee that drives the club's operations and vision.</p>
         <div class="team-container">
-            {% for person in guiders %}
+            {% for person in core %}
             <div class="team-card">
                 <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
                      alt="{{ person.name }}"
@@ -33,10 +33,10 @@
             {% endfor %}
         </div>
         <hr>
-        <h2>Core Committee</h2>
-        <p>The elected committee that drives the club's operations and vision.</p>
+        <h2>Coordinators</h2>
+        <p>The dedicated individuals who ensure smooth execution of projects, events, and club activities.</p>
         <div class="team-container">
-            {% for person in core %}
+            {% for person in coordinators %}
             <div class="team-card">
                 <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
                      alt="{{ person.name }}"

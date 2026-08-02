@@ -121,11 +121,7 @@
 
             {% set d_active_teams = 'active' if request.path == '/teams' else '' %}
             {% set d_aria_teams = 'aria-current=page' if request.path == '/teams' else '' %}
-            <a href="/teams" class="{{ d_active_teams }}" {{ d_aria_teams }}>Core Team</a>
-
-            {% set d_active_credits = 'active' if request.path == '/credits' else '' %}
-            {% set d_aria_credits = 'aria-current=page' if request.path == '/credits' else '' %}
-            <a href="/credits" class="{{ d_active_credits }}" {{ d_aria_credits }}>Web Team</a>
+            <a href="/teams" class="{{ d_active_teams }}" {{ d_aria_teams }}>Team</a>
 
             {% set d_active_projects = 'active' if request.path == '/projects' else '' %}
             {% set d_aria_projects = 'aria-current=page' if request.path == '/projects' else '' %}

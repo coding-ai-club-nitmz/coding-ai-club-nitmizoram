@@ -8,8 +8,9 @@ from datetime import datetime
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import gspread
+import fcntl
 
-# Global thread lock to prevent race conditions during concurrent writing
+# Global thread lock to prevent race conditions during concurrent writing within a single process
 sheets_api_lock = threading.Lock()
 
 # --- GLOBAL CACHES (Massive Speedup for Synchronous Syncs) ---
@@ -84,7 +85,7 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
         return {"status": "skipped", "message": "GOOGLE_DRIVE_FOLDER_ID is not configured."}
         
     if not (client_email and private_key) and not creds_json and (not creds_file or not os.path.exists(creds_file)):
-        return {"status": "error", "message": "Credentials not found. Please set GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY in your .env"}
+        return {"status": "skipped", "message": "Credentials not found. Please set GOOGLE_CLIENT_EMAIL and GOOGLE_PRIVATE_KEY in your .env"}
 
     try:
         # Sanitize all form inputs before processing
@@ -101,9 +102,14 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
         # Load API clients globally (instant if already loaded)
         gspread_client, drive_service = get_google_clients(creds_file)
         
-        with sheets_api_lock:
-            is_new = False
-            spreadsheet_id = _spreadsheet_cache.get(event_name)
+        # Cross-process locking (for Gunicorn/Multi-process setups)
+        lock_fd = os.open('/tmp/google_sheets_sync.lock', os.O_CREAT | os.O_RDWR)
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        
+        try:
+            with sheets_api_lock:
+                is_new = False
+                spreadsheet_id = _spreadsheet_cache.get(event_name)
             
             # If not in cache, query Google Drive API (Takes ~1 second)
             if not spreadsheet_id:
@@ -170,6 +176,11 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
             
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
         
+        finally:
+            # Release cross-process lock
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+            os.close(lock_fd)
+            
     except Exception as e:
         error_msg = str(e)
         if "Quota exceeded" in error_msg or "403" in error_msg:
@@ -206,3 +217,124 @@ def background_sync_worker(name, roll, email, phone, branch, degree, year, event
                 time.sleep(delay)
             else:
                 print("Max retries reached. Sync failed.")
+
+def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l_name, l_roll, l_email, l_phone, m2_name, m2_roll, m2_email, m3_name, m3_roll, m3_email, m4_name, m4_roll, m4_email):
+    folder_id = os.environ.get('GOOGLE_DRIVE_FOLDER_ID')
+    creds_file = os.environ.get('GOOGLE_SERVICE_ACCOUNT_FILE')
+    client_email = os.environ.get('GOOGLE_CLIENT_EMAIL')
+    private_key = os.environ.get('GOOGLE_PRIVATE_KEY')
+    creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
+    
+    if not folder_id:
+        return {"status": "skipped", "message": "GOOGLE_DRIVE_FOLDER_ID is not configured."}
+        
+    try:
+        # Sanitize all form inputs
+        s = sanitize_for_sheet
+        t_name, t_track, l_n, l_r, l_e, l_p = s(team_name), s(track), s(l_name), s(l_roll), s(l_email), s(l_phone)
+        m2_n, m2_r, m2_e = s(m2_name), s(m2_roll), s(m2_email)
+        m3_n, m3_r, m3_e = s(m3_name), s(m3_roll), s(m3_email)
+        m4_n, m4_r, m4_e = s(m4_name), s(m4_roll), s(m4_email)
+        
+        gspread_client, drive_service = get_google_clients(creds_file)
+        
+        lock_fd = os.open('/tmp/google_sheets_sync.lock', os.O_CREAT | os.O_RDWR)
+        fcntl.flock(lock_fd, fcntl.LOCK_EX)
+        
+        try:
+            with sheets_api_lock:
+                is_new = False
+                spreadsheet_id = _spreadsheet_cache.get(event_name)
+            
+            if not spreadsheet_id:
+                query = f"name = '{event_name}' and '{folder_id}' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false"
+                results = drive_service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
+                files = results.get('files', [])
+                
+                if files:
+                    spreadsheet_id = files[0]['id']
+                else:
+                    ss = gspread_client.create(event_name)
+                    spreadsheet_id = ss.id
+                    is_new = True
+                    
+                    file_meta = drive_service.files().get(fileId=spreadsheet_id, fields='parents').execute()
+                    previous_parents = ",".join(file_meta.get('parents', []))
+                    
+                    drive_service.files().update(
+                        fileId=spreadsheet_id, addParents=folder_id, removeParents=previous_parents, fields='id, parents'
+                    ).execute()
+                    
+                    try:
+                        permission = {'type': 'user', 'role': 'writer', 'emailAddress': 'coding.club@nitmz.ac.in'}
+                        drive_service.permissions().create(fileId=spreadsheet_id, body=permission, fields='id').execute()
+                    except Exception: pass
+                
+                _spreadsheet_cache[event_name] = spreadsheet_id
+                
+            ss = gspread_client.open_by_key(spreadsheet_id)
+            sheet = ss.sheet1
+            
+            # Check Duplicates across all roll numbers
+            try:
+                existing_rolls = []
+                try: existing_rolls.extend(sheet.col_values(6)[1:]) # Leader Roll
+                except Exception: pass
+                try: existing_rolls.extend(sheet.col_values(10)[1:]) # M2 Roll
+                except Exception: pass
+                try: existing_rolls.extend(sheet.col_values(13)[1:]) # M3 Roll
+                except Exception: pass
+                try: existing_rolls.extend(sheet.col_values(16)[1:]) # M4 Roll
+                except Exception: pass
+                
+                existing_rolls = [r.upper() for r in existing_rolls if r.strip()]
+                
+                submitted_rolls = [l_r, m2_r, m3_r, m4_r]
+                submitted_rolls = [r.upper() for r in submitted_rolls if r.strip()]
+                
+                for s_roll in submitted_rolls:
+                    if s_roll in existing_rolls:
+                        return {"status": "duplicate", "message": f"Registration Denied: A participant may only register for one team. Our records indicate that roll number {s_roll} is already associated with an existing team."}
+            except Exception: pass
+                
+            if spreadsheet_id not in _headers_initialized:
+                try:
+                    if not sheet.row_values(1):
+                        sheet.append_row([
+                            "Timestamp", "IP Address", "Team Name", "Track/Domain", "Leader Name", "Leader Roll", "Leader Email", "Leader Phone", 
+                            "Member 2 Name", "Member 2 Roll", "Member 2 Email", "Member 3 Name", "Member 3 Roll", "Member 3 Email", 
+                            "Member 4 Name", "Member 4 Roll", "Member 4 Email"
+                        ])
+                except Exception: pass
+                _headers_initialized.add(spreadsheet_id)
+                
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            sheet.append_row([
+                timestamp, ip_address, t_name, t_track, l_n, l_r, l_e, l_p, m2_n, m2_r, m2_e, m3_n, m3_r, m3_e, m4_n, m4_r, m4_e
+            ])
+            
+            return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
+        
+        finally:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+            os.close(lock_fd)
+            
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+def background_sync_team_worker(ip_address, event_name, team_name, track, l_name, l_roll, l_email, l_phone, m2_name, m2_roll, m2_email, m3_name, m3_roll, m3_email, m4_name, m4_roll, m4_email):
+    max_retries = 5
+    base_delay = 2.0
+    
+    for attempt in range(max_retries):
+        res = sync_team_registration_to_folder(
+            ip_address, event_name, team_name, track, l_name, l_roll, l_email, l_phone, m2_name, m2_roll, m2_email, m3_name, m3_roll, m3_email, m4_name, m4_roll, m4_email
+        )
+        if res["status"] in ["success", "duplicate", "skipped", "fatal_error"]:
+            return res
+        else:
+            if attempt < max_retries - 1:
+                time.sleep((base_delay ** attempt) + random.uniform(0.5, 1.5))
+            else:
+                return res
+

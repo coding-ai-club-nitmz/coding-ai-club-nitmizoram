@@ -10,9 +10,13 @@ def new_getaddrinfo(*args, **kwargs):
 socket.getaddrinfo = new_getaddrinfo
 
 from flask import Flask, render_template, send_from_directory, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
 import os
 import importlib
 import time
+import re
 import data
 import threading
 from dotenv import load_dotenv
@@ -24,6 +28,24 @@ load_dotenv()
 
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
 app = Flask(__name__, template_folder=template_dir)
+
+# Initialize Security Headers (Talisman)
+csp = {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", "'unsafe-inline'"],
+    'style-src': ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+    'font-src': ["'self'", "https://fonts.gstatic.com"],
+    'img-src': ["'self'", "data:", "https://ui-avatars.com"]
+}
+talisman = Talisman(app, content_security_policy=csp, force_https=False)
+
+# Initialize Rate Limiting
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["100 per minute"],
+    storage_uri="memory://"
+)
 
 # Initialize data modification time tracker
 last_data_mtime = os.path.getmtime(os.path.join(app.root_path, 'data.py'))
@@ -113,14 +135,8 @@ def events():
 def teams():
     return render_template('teams.html', 
                            mentors=data.TEAM_DATA['mentors'], 
-                           guiders=data.TEAM_DATA['guiders'], 
-                           core=data.TEAM_DATA['core'])
-
-@app.route('/credits')
-def credits():
-    return render_template('credits.html', 
-                           web_team=data.TEAM_DATA['web_team'], 
-                           volunteers=data.TEAM_DATA['volunteers'])
+                           core=data.TEAM_DATA['core'],
+                           coordinators=data.TEAM_DATA['coordinators'])
 
 @app.route('/projects')
 def projects():
@@ -143,6 +159,7 @@ def join():
     return render_template('join.html', join_data=data.JOIN_PAGE_DATA)
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("5 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
 def register():
     if request.method == 'POST':
         name = request.form.get('name', '').upper()
@@ -177,15 +194,82 @@ def register():
             f"event={event_name}, skills={skills}, ip={ip_address}"
         )
         
-        # Synchronous Google Sheets sync (Safe for Vercel/Serverless)
         res = background_sync_worker(name, roll, email, phone, branch, degree, year, event_name, skills, ip_address)
         
-        if res and res.get("status") == "duplicate":
+        if res and res.get("status") == "success":
+            return render_template('register_success.html', name=name, event_name=event_name)
+        elif res and res.get("status") == "duplicate":
             return render_template('register_duplicate.html', name=name, event_name=event_name)
-            
-        return render_template('register_success.html', name=name, event_name=event_name)
+        else:
+            error_msg = res.get("message", "A network or server error occurred.") if res else "A network or server error occurred."
+            return render_template('register_error.html', name=name, event_name=event_name, error_msg=error_msg)
     
     return render_template('register.html', events=data.EVENT_DATA)
+
+def process_team_registration(request, event_title):
+    if request.method == 'POST':
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if ip_address: ip_address = ip_address.split(',')[0].strip()
+        
+        team_name = request.form.get('team_name', '').upper()
+        track = request.form.get('track', '')
+        
+        l_name = request.form.get('l_name', '').upper()
+        l_roll = request.form.get('l_roll', '').upper()
+        l_email = request.form.get('l_email', '').lower()
+        
+        l_phone = request.form.get('l_phone', '')
+        l_phone = re.sub(r'\D', '', l_phone)
+        if len(l_phone) >= 12 and l_phone.startswith('91'): l_phone = l_phone[2:]
+        elif len(l_phone) >= 11 and l_phone.startswith('0'): l_phone = l_phone[1:]
+        l_phone = l_phone[:10]
+        
+        m2_name = request.form.get('m2_name', '').upper()
+        m2_roll = request.form.get('m2_roll', '').upper()
+        m2_email = request.form.get('m2_email', '').lower()
+        
+        m3_name = request.form.get('m3_name', '').upper()
+        m3_roll = request.form.get('m3_roll', '').upper()
+        m3_email = request.form.get('m3_email', '').lower()
+        
+        m4_name = request.form.get('m4_name', '').upper()
+        m4_roll = request.form.get('m4_roll', '').upper()
+        m4_email = request.form.get('m4_email', '').lower()
+
+        # Import locally to avoid circular dependency issues at top level
+        from google_sheets import background_sync_team_worker
+        
+        res = background_sync_team_worker(
+            ip_address, event_title, team_name, track, 
+            l_name, l_roll, l_email, l_phone, 
+            m2_name, m2_roll, m2_email, 
+            m3_name, m3_roll, m3_email, 
+            m4_name, m4_roll, m4_email
+        )
+        
+        if res and res.get("status") == "success":
+            return render_template('register_success.html', name=l_name, event_name=event_title)
+        elif res and res.get("status") == "duplicate":
+            return render_template('register_duplicate.html', name=l_name, event_name=event_title, duplicate_msg=res.get("message"))
+        else:
+            error_msg = res.get("message", "A network or server error occurred.") if res else "A network or server error occurred."
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg=error_msg)
+
+@app.route('/register/idea-pitching', methods=['GET', 'POST'])
+@limiter.limit("5 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
+def register_idea_pitching():
+    event_title = "Idea Pitching Competition"
+    if request.method == 'POST':
+        return process_team_registration(request, event_title)
+    return render_template('register_team.html', form_type='idea', event_title=event_title, submit_url='/register/idea-pitching')
+
+@app.route('/register/aiml', methods=['GET', 'POST'])
+@limiter.limit("5 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
+def register_aiml():
+    event_title = "AI/ML Competition 2026"
+    if request.method == 'POST':
+        return process_team_registration(request, event_title)
+    return render_template('register_team.html', form_type='aiml', event_title=event_title, submit_url='/register/aiml')
 
 
 

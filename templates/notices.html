@@ -18,6 +18,10 @@
                     <a href="/notices/{{ notice.id }}" class="notice-action-link notice-action-primary">Full Details</a>
                     {% if notice.registration_open %}
                     <a href="/register?event={{ notice.event_name | urlencode }}" class="notice-action-link notice-action-accent">Register Now</a>
+                    {% elif notice.links %}
+                    {% for lnk in notice.links %}
+                    <a href="{{ lnk.url }}" target="_blank" class="notice-action-link notice-action-accent">{{ lnk.text }}</a>
+                    {% endfor %}
                     {% elif notice.link %}
                     <a href="{% if notice.prefill %}/join?topic={{ notice.prefill.topic | urlencode }}&message={{ notice.prefill.message | urlencode }}{% else %}{{ notice.link }}{% endif %}" class="notice-action-link notice-action-accent">{{ notice.link_text }}</a>
                     {% endif %}

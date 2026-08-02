@@ -22,6 +22,19 @@ GLOBAL_DATA = {
 # Announcements / Notice Board
 # To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
+    {
+        "id": "ai-startup-challenge-2026",
+        "featured": True,
+        "title": "AI & Startup Challenge 2026: Pitch, Code, Win!",
+        "date": "August 3, 2026",
+        "summary": "Join our massive AI/ML and Idea Pitching competitions! Win up to ₹20,000 in prizes.",
+        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organizers:</strong> IIC NIT Mizoram in association with the Coding & AI Club, NIT Mizoram.</div><p>Are you ready to push the limits of Artificial Intelligence? We are excited to announce two massive competitions designed to test both your venture-building capabilities and your technical machine-learning skills.</p></div><h4>Event 1: Idea Pitching Competition</h4><ul><li><strong>Theme:</strong> Using AI for Fundraising and Investor Pitch Preparation.</li><li><strong>The Challenge:</strong> Design an AI-powered startup concept that solves a real-world problem and deliver a professional 5-minute investor pitch.</li><li><strong>Submission Requirements:</strong> You must submit a pitch deck of under 10 slides, a 1-page executive summary, and a detailed \"AI Usage Log\".</li><li><strong>Prize Pool:</strong> Up to Rs. 10,000 for the top 3 participants/teams.</li></ul><h4>Event 2: AI/ML Competition 2026</h4><ul><li><strong>Theme:</strong> Build working ML/AI prototypes for real-world problem statements.</li><li><strong>The Challenge:</strong> Choose from four official problem statements and build a complete solution from scratch.</li><li><strong>Submission Requirements:</strong> Every team must maintain a GitHub repository, submit their code, and present a live demo to the judging panel.</li><li><strong>Prize Pool:</strong> Up to Rs. 10,000 for the top 3 teams.</li></ul><hr><h4>Eligibility & Registration Details</h4><ul><li><strong>Who Can Participate:</strong> Open to all (BTech, MTech, PhD) at NIT Mizoram.</li><li><strong>Team Composition:</strong> Individual or team (1-4 members) allowed. Cross-branch and cross-year teams are highly encouraged.</li><li><strong>Registration Fee:</strong> Free to participate.</li></ul>",
+        "links": [
+            {"url": "/register/idea-pitching", "text": "Register Event 1"},
+            {"url": "/register/aiml", "text": "Register Event 2"},
+            {"url": "#", "text": "Event 2 Base PPT (Coming Soon)"}
+        ]
+    },
 #    {
 #        "id": "technox-part-ii",
 #        "featured": False,
@@ -65,14 +78,10 @@ ANNOUNCEMENTS = [
         "featured": True,
         "title": "Core Team Recruitment 2026",
         "date": "May 16, 2026",
-        "summary": "We are currently recruiting for core team positions. Apply now!",
-        "content": "The Coding & AI Club is officially recruiting for various Core Team positions for the academic session 2026-27. If you are passionate about software engineering, artificial intelligence, event management, design, or content creation, this is your chance to lead and shape the club's future! Click the button below to apply.",
-        "link": "/join",
-        "prefill": {
-            "topic": "Core Team Application - Coding & AI Club",
-            "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details:\n- Name:\n- Roll Number:\n- Branch/Sem:\n- Interested Role (Web/AI/Design/Events):\n- Why I want to join:"
-        },
-        "link_text": "Join Us"
+        "summary": "Core team recruitment for the 2026-27 session is now closed.",
+        "content": "The Coding & AI Club officially recruited for various Core Team positions for the academic session 2026-27. Thank you to everyone who applied! The application window is now closed.",
+        "link": "#",
+        "link_text": "Registration Closed"
     },
     {
         "id": "hackathon-closed",
@@ -91,30 +100,25 @@ TEAM_DATA = {
         {"name": "Dr. Suakanta Roy", "role": "Faculty Mentor", "badge": "Faculty", "image": "https://ui-avatars.com/api/?name=S&background=random&color=fff&size=200"},
         {"name": "Mr. Bishal Sinha", "role": "PhD Mentor", "badge": "Research", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"}
     ],
-    "guiders": [
-        {"name": "Tanmay Kumar", "role": "Guider", "badge": "Guider", "image": "https://ui-avatars.com/api/?name=T&background=random&color=fff&size=200"},
-        {"name": "Suman Singh", "role": "Guider", "badge": "Guider", "image": "images/suman.jpg"},
-        {"name": "Pragya Tripathi", "role": "Guider", "badge": "Guider", "image": "images/pragya.jpg"},
-        {"name": "Khush Katariya", "role": "Guider", "badge": "Guider", "image": "https://ui-avatars.com/api/?name=K&background=random&color=fff&size=200"}
-    ],
     "core": [
-        {"name": "Rishabh Shukla", "role": "Club President", "badge": "President", "image": "images/rishabh.jpg"},
-        {"name": "Routhu Deva Varshini", "role": "Vice President", "badge": "VP", "image": "images/varshini.jpg"},
-        {"name": "Mahak Singh", "role": "Event Manager", "badge": "Events", "image": "images/mahak.jpg"},
-        {"name": "Ritika Kumari", "role": "Membership Chair", "badge": "Membership", "image": "images/ritika.jpg"},
-        {"name": "Vivek Kumar", "role": "Coordinator", "badge": "Coord.", "image": "images/vivek.jpg"}
+        {"name": "Routhu Deva Varshini", "role": "President", "badge": "President", "image": "images/varshini.jpg"},
+        {"name": "Dilip Sahu", "role": "Vice-President", "badge": "VP", "image": "images/dilip.jpg"},
+        {"name": "Mahak Singh", "role": "General Secretary", "badge": "Gen. Sec.", "image": "images/mahak.jpg"},
+        {"name": "Chandan Kumar", "role": "CP & Competitions Lead", "badge": "Lead", "image": "images/chandan.jpg"},
+        {"name": "Vivek Kumar", "role": "Projects & Mentorship Lead", "badge": "Lead", "image": "images/vivek.jpg"},
+        {"name": "V. Vyshnavi", "role": "Development & Media Lead", "badge": "Lead", "image": "images/vyshnavi.jpg"},
+        {"name": "Aditya Kumar", "role": "Finance & Operations Lead", "badge": "Lead", "image": "images/aditya.jpg"},
+        {"name": "Bijjala Thanmai", "role": "Events & Logistics Lead", "badge": "Lead", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"},
+        {"name": "Manoranjan Kumar", "role": "PR & Partnerships Lead", "badge": "Lead", "image": "https://ui-avatars.com/api/?name=M&background=random&color=fff&size=200"}
     ],
-    "web_team": [
-        {"name": "Dilip Sahu", "role": "Team Head", "badge": "Web Team", "image": "images/dilip.jpg"},
-        {"name": "Chandan Kumar", "role": "Developer", "badge": "Web Team", "image": "images/chandan.jpg"},
-        {"name": "Aditya Kumar", "role": "Designer", "badge": "Web Team", "image": "images/aditya.jpg"},
-        {"name": "V. Vyshnavi", "role": "Content Creator", "badge": "Web Team", "image": "images/vyshnavi.jpg"},
-        {"name": "Chandan Kumar", "role": "Web Developer", "badge": "Web Team", "image": "images/chandankumar.jpg"}
-    ],
-    "volunteers": [
-        {"name": "Aditya Kumar Ranjan", "role": "Design Support", "badge": "Contributor", "image": "https://ui-avatars.com/api/?name=A&background=random&color=fff&size=200"},
-        {"name": "Vivek Kumar", "role": "Design Support", "badge": "Contributor", "image": "images/vivek.jpg"},
-        {"name": "Bijjla Thanmai", "role": "Design Support", "badge": "Contributor", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"}
+    "coordinators": [
+        {"name": "Anand", "role": "CP Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=A&background=random&color=fff&size=200"},
+        {"name": "Mashood", "role": "Open Source Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=M&background=random&color=fff&size=200"},
+        {"name": "Saurabh Kumar Gupta", "role": "Web Development Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=S&background=random&color=fff&size=200"},
+        {"name": "Chandan Kumar", "role": "Web Development Coordinator", "badge": "Coord.", "image": "images/chandankumar.jpg"},
+        {"name": "Raunak Kumar", "role": "Membership Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=R&background=random&color=fff&size=200"},
+        {"name": "S. Veerswar", "role": "Social Media Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=S&background=random&color=fff&size=200"},
+        {"name": "Dibyanshu Jha", "role": "Photography Coordinator", "badge": "Coord.", "image": "https://ui-avatars.com/api/?name=D&background=random&color=fff&size=200"}
     ]
 }
 

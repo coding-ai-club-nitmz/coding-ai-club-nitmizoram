@@ -19,13 +19,21 @@
             </div>
             
             <div class="notice-detail-content">
-                <p>{{ notice.content }}</p>
+                <div class="notice-text-content">{{ notice.content | safe }}</div>
                 
                 {% if notice.registration_open %}
                 <div class="notice-detail-action-box">
                     <a href="/register?event={{ notice.event_name | urlencode }}" class="notice-detail-btn">
                         Register Now
                     </a>
+                </div>
+                {% elif notice.links %}
+                <div class="notice-detail-action-box" style="gap: 12px; display: flex; flex-wrap: wrap;">
+                    {% for lnk in notice.links %}
+                    <a href="{{ lnk.url }}" class="notice-detail-btn" target="_blank">
+                        {{ lnk.text }}
+                    </a>
+                    {% endfor %}
                 </div>
                 {% elif notice.link %}
                 <div class="notice-detail-action-box">

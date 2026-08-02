@@ -44,5 +44,9 @@
     <loc>https://coding-ai-club-nitmizoram.vercel.app/register</loc>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://coding-ai-club-nitmizoram.vercel.app/collaborate</loc>
+    <priority>0.8</priority>
+  </url>
 </urlset>
 
