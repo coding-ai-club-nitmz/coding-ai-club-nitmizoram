@@ -142,6 +142,10 @@ def teams():
 def projects():
     return render_template('projects.html', projects=data.PROJECT_DATA)
 
+@app.route('/credits')
+def credits():
+    return render_template('credits.html')
+
 @app.route('/resources')
 def resources():
     return render_template('resources.html', resources=data.RESOURCE_DATA)

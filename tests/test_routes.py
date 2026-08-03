@@ -29,7 +29,9 @@ class TestWebRoutes(unittest.TestCase):
                 print(f"Route '{route}' -> HTTP {response.status_code}")
                 self.assertEqual(response.status_code, 200, f"Route {route} failed with {response.status_code}")
 
-    def test_register_post_route(self):
+    @unittest.mock.patch('app.background_sync_worker')
+    def test_register_post_route(self, mock_sync):
+        mock_sync.return_value = {"status": "success"}
         payload = {
             'name': 'Test Student',
             'roll': 'CSE/23/99',
