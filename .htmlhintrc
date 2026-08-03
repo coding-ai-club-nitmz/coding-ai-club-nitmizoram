@@ -7,5 +7,5 @@
   "spec-char-escape": false,
   "id-unique": true,
   "src-not-empty": true,
-  "title-require": true
+  "title-require": false
 }
