@@ -240,6 +240,11 @@ def process_team_registration(request, event_title):
         m4_roll = request.form.get('m4_roll', '').upper()
         m4_email = request.form.get('m4_email', '').lower()
 
+        # Check for duplicate roll numbers within the submitted team
+        team_rolls = [r for r in [l_roll, m2_roll, m3_roll, m4_roll] if r.strip()]
+        if len(team_rolls) != len(set(team_rolls)):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Duplicate roll numbers found within the team. Each member must have a unique enrollment number.")
+
         # Import locally to avoid circular dependency issues at top level
         from google_sheets import background_sync_team_worker
         

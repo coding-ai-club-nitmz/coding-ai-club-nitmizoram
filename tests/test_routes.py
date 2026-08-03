@@ -1,5 +1,6 @@
 # Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved.
 import unittest
+from unittest.mock import patch
 from app import app
 
 class TestWebRoutes(unittest.TestCase):
@@ -29,7 +30,7 @@ class TestWebRoutes(unittest.TestCase):
                 print(f"Route '{route}' -> HTTP {response.status_code}")
                 self.assertEqual(response.status_code, 200, f"Route {route} failed with {response.status_code}")
 
-    @unittest.mock.patch('app.background_sync_worker')
+    @patch('app.background_sync_worker')
     def test_register_post_route(self, mock_sync):
         mock_sync.return_value = {"status": "success"}
         payload = {

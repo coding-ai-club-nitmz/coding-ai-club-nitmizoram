@@ -214,6 +214,23 @@
                 alert("Please confirm the information is correct by checking the box.");
                 return;
             }
+            
+            // Validate Duplicate Roll Numbers within team
+            const count = parseInt(document.getElementById('teamCount').value);
+            const rollNumbers = [document.getElementById('l_roll').value.trim().toUpperCase()];
+            for (let i = 2; i <= count; i++) {
+                const rollField = document.getElementById('m' + i + '_roll');
+                if (rollField && rollField.value.trim()) {
+                    rollNumbers.push(rollField.value.trim().toUpperCase());
+                }
+            }
+            const uniqueRolls = new Set(rollNumbers);
+            if (uniqueRolls.size !== rollNumbers.length) {
+                e.preventDefault();
+                alert("Duplicate enrollment numbers detected! Each team member must have a unique roll number.");
+                return;
+            }
+
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             fields.forEach(id => {
