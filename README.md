@@ -2,6 +2,8 @@
 
 Welcome to the official portal of the **Coding & AI Club** at the **National Institute of Technology Mizoram (राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम)**. 
 
+[https://coding-ai-club-nitmizoram.vercel.app/](url)
+
 This website serves as a modern, high-performance, and responsive hub to showcase club innovations, core values, announcements, active members, resources, and technical projects.
 
 ---
