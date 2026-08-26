@@ -100,8 +100,6 @@ TEAM_DATA = {
         {"name": "Routhu Deva Varshini", "role": "President", "badge": "President", "image": "images/varshini.jpg"},
         {"name": "Dilip Sahu", "role": "Vice-President", "badge": "VP", "image": "images/dilip.jpg"},
         {"name": "Mahak Singh", "role": "General Secretary", "badge": "Gen. Sec.", "image": "images/mahak.jpg"},
-        {"name": "Chandan Kumar", "role": "CP & Competitions Lead", "badge": "Lead", "image": "images/chandan.jpg"},
-        {"name": "Vivek Kumar", "role": "Projects & Mentorship Lead", "badge": "Lead", "image": "images/vivek.jpg"},
         {"name": "V. Vyshnavi", "role": "Development & Media Lead", "badge": "Lead", "image": "images/vyshnavi.jpg"},
         {"name": "Aditya Kumar", "role": "Finance & Operations Lead", "badge": "Lead", "image": "images/aditya.jpg"},
         {"name": "Bijjala Thanmai", "role": "Events & Logistics Lead", "badge": "Lead", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"},
@@ -158,7 +156,7 @@ EVENT_DATA = [
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
     {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False}
+    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/events/.jpg", "registration_open": False, "upcoming": False}
 ]
 
 RESOURCE_DATA = [
@@ -170,7 +168,7 @@ RESOURCE_DATA = [
 STATS_DATA = [
     {"num": "30+", "label": "Active Members"},
     {"num": "1+", "label": "Projects Launched"},
-    {"num": "6+", "label": "Events Hosted"},
+    {"num": "7+", "label": "Events Hosted"},
     {"num": "2025", "label": "Est."}
 ]
 
@@ -248,7 +246,7 @@ COLLABORATE_DATA = {
 
     "stats": [
         {"label": "Active Members", "value": "30+"},
-        {"label": "Events Hosted", "value": "5+"},
+        {"label": "Events Hosted", "value": "6+"},
         {"label": "Projects Launched", "value": "1+"},
         {"label": "Established", "value": "2025"},
     ],
