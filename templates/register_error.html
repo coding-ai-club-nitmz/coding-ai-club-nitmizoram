@@ -4,19 +4,25 @@
 {% block content %}
     <section class="section">
         <div class="success-container" style="border-top: 4px solid #e53e3e;">
-            <svg class="success-icon" style="color: #e53e3e;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="success-icon" style="color: #e53e3e;" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
             <h2 class="success-title" style="color: #e53e3e;">Registration Failed</h2>
             <p class="success-message">
                 We're sorry, <strong>{{ name }}</strong>. Your registration for <strong>{{ event_name }}</strong> could not be completed.
             </p>
-            <p class="success-subtext" style="color: #4a5568;">
+            <p class="success-subtext" style="color: #4a5568; line-height: 1.6;">
+                {% if error_msg %}
                 <strong>Error Details:</strong> {{ error_msg }}<br><br>
-                Please try again later. If the issue persists due to network restrictions, you may need to switch to mobile data or contact the core team for help.
+                {% else %}
+                <strong>System Malfunction:</strong> An unexpected error occurred while processing your registration. This usually happens if the backend database is missing or there is a critical system failure.<br><br>
+                {% endif %}
+                Please try again later. If the issue persists after multiple attempts, please <strong>report this immediately</strong> to the team so we can fix it:<br><br>
+                <strong>Email:</strong> <a href="mailto:coding.club@nitmz.ac.in" style="color: #e53e3e;">coding.club@nitmz.ac.in</a> or <a href="mailto:bt24cs028@nitmz.ac.in" style="color: #e53e3e;">bt24cs028@nitmz.ac.in</a><br>
+                <strong>Contact:</strong> +91 8233958847 (Vice President Dilip Sahu, Coding & AI Club NIT Mizoram)
             </p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="window.history.back()" class="notice-detail-btn" style="background-color: #e53e3e; border: none; cursor: pointer; color: white;">&larr; Back</button>
+                <a href="/events" class="notice-detail-btn" style="background-color: #e53e3e; border: none; text-decoration: none; display: inline-block; color: white;">&larr; Back to Events</a>
                 <a href="/" class="notice-detail-btn" style="background-color: transparent; border: 2px solid #e53e3e; color: #e53e3e;">Return to Home Page</a>
             </div>
         </div>

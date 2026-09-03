@@ -30,7 +30,7 @@
                 {% elif notice.links %}
                 <div class="notice-detail-action-box" style="gap: 12px; display: flex; flex-wrap: wrap;">
                     {% for lnk in notice.links %}
-                    <a href="{{ lnk.url }}" class="notice-detail-btn" target="_blank">
+                    <a href="{{ lnk.url }}" class="notice-detail-btn" target="_blank" rel="noopener noreferrer">
                         {{ lnk.text }}
                     </a>
                     {% endfor %}

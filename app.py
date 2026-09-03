@@ -28,6 +28,7 @@ load_dotenv()
 
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
 app = Flask(__name__, template_folder=template_dir)
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 
 # Initialize Security Headers (Talisman)
 csp = {
@@ -69,7 +70,7 @@ def reload_data_if_modified():
 # Context processor makes 'global_data' available in every template
 @app.context_processor
 def inject_global_data():
-    return dict(global_data=data.GLOBAL_DATA)
+    return dict(global_data=data.GLOBAL_DATA, common_dropdowns=data.COMMON_DROPDOWNS, stats_data=data.STATS_DATA)
 
 # Configure caching based on request type: prevent caching for dynamic templates in development, but cache in production
 @app.after_request
@@ -110,7 +111,7 @@ def add_header(response):
 def index():
     # Only show 'featured' notices on the home page
     featured_notices = [n for n in data.ANNOUNCEMENTS if n.get('featured')]
-    return render_template('index.html', stats=data.STATS_DATA, notices=featured_notices, home=data.HOME_DATA)
+    return render_template('index.html', notices=featured_notices, home=data.HOME_DATA)
 
 @app.route('/notices')
 def notices():
@@ -134,17 +135,14 @@ def events():
 @app.route('/teams')
 def teams():
     return render_template('teams.html', 
-                           mentors=data.TEAM_DATA['mentors'], 
-                           core=data.TEAM_DATA['core'],
-                           coordinators=data.TEAM_DATA['coordinators'])
+                           mentors=data.TEAM_DATA.get('mentors', []), 
+                           founding=data.TEAM_DATA.get('founding', []),
+                           core=data.TEAM_DATA.get('core', []),
+                           coordinators=data.TEAM_DATA.get('coordinators', []))
 
 @app.route('/projects')
 def projects():
     return render_template('projects.html', projects=data.PROJECT_DATA)
-
-@app.route('/credits')
-def credits():
-    return render_template('credits.html')
 
 @app.route('/resources')
 def resources():
@@ -172,7 +170,6 @@ def register():
         
         # Format phone number
         phone = request.form.get('phone', '')
-        import re
         phone = re.sub(r'\D', '', phone)
         if len(phone) >= 12 and phone.startswith('91'):
             phone = phone[2:]
@@ -185,6 +182,9 @@ def register():
         year = request.form.get('year', '').upper()
         event_name = request.form.get('eventName', '') # Don't uppercase event name because it's used for file matching
         skills = request.form.get('skills', '').upper()
+        
+        if not name or not roll or not email or not phone:
+            return render_template('register_error.html', name=name, event_name=event_name, error_msg="Missing required fields. Please fill out the form completely.")
         
         # Capture the user's IP Address (handles Vercel/Cloudflare proxies too)
         ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -221,6 +221,9 @@ def process_team_registration(request, event_title):
         l_name = request.form.get('l_name', '').upper()
         l_roll = request.form.get('l_roll', '').upper()
         l_email = request.form.get('l_email', '').lower()
+        
+        if not team_name or not l_name or not l_roll or not l_email:
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for the Team Leader. Please fill out the form completely.")
         
         l_phone = request.form.get('l_phone', '')
         l_phone = re.sub(r'\D', '', l_phone)
@@ -264,21 +267,65 @@ def process_team_registration(request, event_title):
             error_msg = res.get("message", "A network or server error occurred.") if res else "A network or server error occurred."
             return render_template('register_error.html', name=l_name, event_name=event_title, error_msg=error_msg)
 
-@app.route('/register/idea-pitching', methods=['GET', 'POST'])
+@app.route('/register/<event_id>', methods=['GET', 'POST'])
 @limiter.limit("5 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
-def register_idea_pitching():
-    event_title = "Idea Pitching Competition"
+def register_team_event(event_id):
+    team_event = data.TEAM_EVENTS.get(event_id)
+    if not team_event:
+        return render_template('404.html'), 404
+        
+    event_title = team_event["title"]
+    form_type = team_event["form_type"]
+    
     if request.method == 'POST':
         return process_team_registration(request, event_title)
-    return render_template('register_team.html', form_type='idea', event_title=event_title, submit_url='/register/idea-pitching')
+        
+    return render_template('register_team.html', form_type=form_type, event_title=event_title, submit_url=f'/register/{event_id}')
 
-@app.route('/register/aiml', methods=['GET', 'POST'])
+@app.route('/apply/<form_id>', methods=['GET', 'POST'])
 @limiter.limit("5 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
-def register_aiml():
-    event_title = "AI/ML Competition 2026"
+def apply_form(form_id):
+    form_data = data.DYNAMIC_FORMS.get(form_id)
+    if not form_data:
+        return render_template('404.html'), 404
+        
     if request.method == 'POST':
-        return process_team_registration(request, event_title)
-    return render_template('register_team.html', form_type='aiml', event_title=event_title, submit_url='/register/aiml')
+        import re
+        submission = {}
+        for field in form_data['fields']:
+            base_name = field.replace('-comp', '')
+            safe_name = re.sub(r'[^a-zA-Z0-9]', '_', base_name).lower()
+            submission[base_name] = request.form.get(safe_name, '')
+            
+        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if ip_address:
+            ip_address = ip_address.split(',')[0].strip()
+            
+        from google_sheets import background_dynamic_sync_worker
+        res = background_dynamic_sync_worker(form_id, form_data, submission, ip_address)
+        
+        # Try to find a name field to display in the success page
+        name_val = "User"
+        for key in submission:
+            if 'name' in key.lower():
+                name_val = submission[key]
+                break
+        if name_val == "User" and submission:
+            name_val = list(submission.values())[0]
+            
+        event_name = form_data['title']
+        
+        if res and res.get("status") == "success":
+            return render_template('register_success.html', name=name_val, event_name=event_name)
+        elif res and res.get("status") == "duplicate":
+            duplicate_msg = res.get("message", "You have already registered.")
+            return render_template('register_duplicate.html', name=name_val, event_name=event_name, duplicate_msg=duplicate_msg)
+        else:
+            error_msg = res.get("message", "A network or server error occurred.") if res else "A network or server error occurred."
+            return render_template('register_error.html', name=name_val, event_name=event_name, error_msg=error_msg)
+            
+    return render_template('dynamic_form.html', form_id=form_id, form_data=form_data)
+
 
 
 

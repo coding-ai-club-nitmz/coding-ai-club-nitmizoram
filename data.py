@@ -11,7 +11,7 @@ GLOBAL_DATA = {
     "club_name": "Coding & AI Club",
     "tagline": "Code . Create . Collaborate",
     "hindi_name": "राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम",
-    "copyright": " 2026 Coding & AI Club",
+    "copyright": "© 2026 Coding & AI Club",
     "social": {
         "email": "coding.club@nitmz.ac.in",
         "instagram": "https://www.instagram.com/codingclub_nitmz",
@@ -93,8 +93,12 @@ ANNOUNCEMENTS = [
 
 TEAM_DATA = {
     "mentors": [
-        {"name": "Dr. Suakanta Roy", "role": "Faculty Mentor", "badge": "Faculty", "image": "https://ui-avatars.com/api/?name=S&background=random&color=fff&size=200"},
+        {"name": "Dr. Sukanta Roy", "role": "Faculty Mentor", "badge": "Faculty", "image": "https://ui-avatars.com/api/?name=S&background=random&color=fff&size=200"},
         {"name": "Mr. Bishal Sinha", "role": "PhD Mentor", "badge": "Research", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"}
+    ],
+    "founding": [
+        {"name": "Pragya", "role": "Founding Member (4th Year, IIT Madras)", "badge": "Founder", "image": "images/pragya.jpg"},
+        {"name": "Rishabh Shukla", "role": "Founding Member (4th Year, IIT Madras)", "badge": "Founder", "image": "images/rishabh.jpg"}
     ],
     "core": [
         {"name": "Routhu Deva Varshini", "role": "President", "badge": "President", "image": "images/varshini.jpg"},
@@ -156,13 +160,13 @@ EVENT_DATA = [
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
     {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/events/.jpg", "registration_open": False, "upcoming": False}
+    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/club-logo.png", "registration_open": False, "upcoming": False}
 ]
 
 RESOURCE_DATA = [
-    {"title": "Machine Learning Guide", "desc": "Our comprehensive introductory PDF guide for beginners starting with Python and ML models.", "tag": "Documentation", "link": "https://github.com/coding-ai-club-nitmz"},
-    {"title": "Web Dev Roadmap", "desc": "A step-by-step checklist and resource collection for mastering frontend and backend development.", "tag": "Roadmap", "link": "https://github.com/coding-ai-club-nitmz"},
-    {"title": "Tech Fest Rulebooks", "desc": "Official guidelines, problem statements, and judging criteria for upcoming hackathons.", "tag": "Competition", "link": "https://github.com/coding-ai-club-nitmz"}
+    {"title": "Machine Learning Guide", "desc": "Our comprehensive introductory PDF guide for beginners starting with Python and ML models.", "tag": "Documentation", "link": "https://github.com/coding-ai-club-nitmz#ml-guide"},
+    {"title": "Web Dev Roadmap", "desc": "A step-by-step checklist and resource collection for mastering frontend and backend development.", "tag": "Roadmap", "link": "https://github.com/coding-ai-club-nitmz#web-roadmap"},
+    {"title": "Tech Fest Rulebooks", "desc": "Official guidelines, problem statements, and judging criteria for upcoming hackathons.", "tag": "Competition", "link": "https://github.com/coding-ai-club-nitmz#rulebooks"}
 ]
 
 STATS_DATA = [
@@ -213,7 +217,7 @@ CONTACT_PAGE_DATA = {
     ],
     "address": {
         "title": "Find Us",
-        "name": "Coding & AI Club",
+        "name": GLOBAL_DATA["club_name"],
         "institute": "National Institute of Technology Mizoram",
         "location": "Chaltlang, Aizawl — 796012, Mizoram, India"
     }
@@ -244,12 +248,6 @@ COLLABORATE_DATA = {
         },
     ],
 
-    "stats": [
-        {"label": "Active Members", "value": "30+"},
-        {"label": "Events Hosted", "value": "6+"},
-        {"label": "Projects Launched", "value": "1+"},
-        {"label": "Established", "value": "2025"},
-    ],
 
     "categories": [
         {
@@ -328,7 +326,7 @@ COLLABORATE_DATA = {
 
     "cta": {
         "text": "Propose a Collaboration",
-        "email": "coding.club@nitmz.ac.in",
+        "email": GLOBAL_DATA["social"]["email"],
         "link": "/join",
         "prefill": {
             "topic": "Collaboration Proposal - Coding & AI Club",
@@ -349,7 +347,7 @@ COLLABORATE_DATA = {
 
 HOME_DATA = {
     "welcome_title": "Welcome to the Club",
-    "welcome_desc": "The official home of the Coding & AI Club — a student-driven community building real-world technology at NIT Mizoram.",
+    "welcome_desc": f"The official home of the {GLOBAL_DATA['club_name']} — a student-driven community building real-world technology at NIT Mizoram.",
     "banner_text": "Grow Together and Learn Together",
     "hero_desc": "We focus on practical engineering, collaborative projects, and peer-to-peer learning. Join us to turn your ideas into functional software."
 }
@@ -357,8 +355,13 @@ HOME_DATA = {
 JOIN_PAGE_DATA = {
     "title": "Application & Proposal Portal",
     "desc": "Please complete the application form below. Upon submission, a formalized email draft will be prepared for transmission to the club administration.",
+    "intro_block": {
+        "title": "Want to join the club?",
+        "desc": f"If you are a student at NIT Mizoram and want to become a member of the {GLOBAL_DATA['club_name']}, please use our dedicated membership registration form.",
+        "button_text": "Apply for Membership",
+        "button_link": "/apply/club-join"
+    },
     "options": [
-        "Membership Registration",
         "Core Team Application - Coding & AI Club",
         "Project Proposal - Coding & AI Club",
         "Join Project Team Request",
@@ -366,5 +369,61 @@ JOIN_PAGE_DATA = {
         "General Collaboration Inquiry",
         "General Inquiry"
     ]
+}
+
+COMMON_DROPDOWNS = {
+    "degree": [
+        "B.Tech",
+        "M.Tech",
+        "Ph.D",
+        "Other"
+    ],
+    "year": [
+        "1st Year",
+        "2nd Year",
+        "3rd Year",
+        "4th Year",
+        "Other / Master-PhD Year"
+    ],
+    "branch": [
+        "Computer Science & Engineering",
+        "Mathematics & Computing",
+        "Chemical Science & Technology",
+        "Electronics & Communication Engineering",
+        "Electrical Engineering",
+        "Mechanical Engineering",
+        "Civil Engineering",
+        "Other / Open Elective"
+    ]
+}
+
+DYNAMIC_FORMS = {
+    "club-join": {
+        "title": f"Join {GLOBAL_DATA['club_name']}",
+        "description": f"Register to become a member of the official {GLOBAL_DATA['club_name']} at NIT Mizoram. Please fill out your details carefully.",
+        "sheet_name": "Club_Registrations_2026",
+        "duplicate_check_field": "Roll Number",
+        "fields": [
+            "Full Name-comp",
+            "Roll Number-comp",
+            "Email Address-comp",
+            "Phone Number-comp",
+            "Branch-comp",
+            "Degree Programme-comp",
+            "Academic Year-comp",
+            "Why do you want to join?-comp"
+        ]
+    }
+}
+
+TEAM_EVENTS = {
+    "innovaite-idea-pitching": {
+        "title": "Innovaite 2026: Idea Pitching Competition",
+        "form_type": "idea"
+    },
+    "innovaite-ai-ml": {
+        "title": "Innovaite 2026: AI/ML Competition",
+        "form_type": "aiml"
+    }
 }
 

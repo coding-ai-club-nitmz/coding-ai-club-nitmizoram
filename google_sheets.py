@@ -8,7 +8,6 @@ from datetime import datetime
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import gspread
-import fcntl
 
 # Global thread lock to prevent race conditions during concurrent writing within a single process
 sheets_api_lock = threading.Lock()
@@ -102,10 +101,6 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
         # Load API clients globally (instant if already loaded)
         gspread_client, drive_service = get_google_clients(creds_file)
         
-        # Cross-process locking (for Gunicorn/Multi-process setups)
-        lock_fd = os.open('/tmp/google_sheets_sync.lock', os.O_CREAT | os.O_RDWR)
-        fcntl.flock(lock_fd, fcntl.LOCK_EX)
-        
         try:
             with sheets_api_lock:
                 is_new = False
@@ -177,9 +172,7 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
         
         finally:
-            # Release cross-process lock
-            fcntl.flock(lock_fd, fcntl.LOCK_UN)
-            os.close(lock_fd)
+            pass
             
     except Exception as e:
         error_msg = str(e)
@@ -237,9 +230,6 @@ def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l
         m4_n, m4_r, m4_e = s(m4_name), s(m4_roll), s(m4_email)
         
         gspread_client, drive_service = get_google_clients(creds_file)
-        
-        lock_fd = os.open('/tmp/google_sheets_sync.lock', os.O_CREAT | os.O_RDWR)
-        fcntl.flock(lock_fd, fcntl.LOCK_EX)
         
         try:
             with sheets_api_lock:
@@ -316,8 +306,7 @@ def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
         
         finally:
-            fcntl.flock(lock_fd, fcntl.LOCK_UN)
-            os.close(lock_fd)
+            pass
             
     except Exception as e:
         return {"status": "error", "message": str(e)}
@@ -337,4 +326,106 @@ def background_sync_team_worker(ip_address, event_name, team_name, track, l_name
                 time.sleep((base_delay ** attempt) + random.uniform(0.5, 1.5))
             else:
                 return res
+
+def sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_address):
+    folder_id = os.environ.get('GOOGLE_DRIVE_FOLDER_ID')
+    creds_file = os.environ.get('GOOGLE_SERVICE_ACCOUNT_FILE')
+    client_email = os.environ.get('GOOGLE_CLIENT_EMAIL')
+    private_key = os.environ.get('GOOGLE_PRIVATE_KEY')
+    creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
+    
+    if not folder_id:
+        return {"status": "skipped", "message": "GOOGLE_DRIVE_FOLDER_ID is not configured."}
+        
+    try:
+        gspread_client, drive_service = get_google_clients(creds_file)
+        sheet_name = form_data.get('sheet_name', form_data['title'])
+        
+        try:
+            with sheets_api_lock:
+                is_new = False
+                spreadsheet_id = _spreadsheet_cache.get(sheet_name)
+            
+            if not spreadsheet_id:
+                query = f"name = '{sheet_name}' and '{folder_id}' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false"
+                results = drive_service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
+                files = results.get('files', [])
+                
+                if files:
+                    spreadsheet_id = files[0]['id']
+                else:
+                    ss = gspread_client.create(sheet_name)
+                    spreadsheet_id = ss.id
+                    is_new = True
+                    
+                    file_meta = drive_service.files().get(fileId=spreadsheet_id, fields='parents').execute()
+                    previous_parents = ",".join(file_meta.get('parents', []))
+                    
+                    drive_service.files().update(
+                        fileId=spreadsheet_id, addParents=folder_id, removeParents=previous_parents, fields='id, parents'
+                    ).execute()
+                    
+                    try:
+                        permission = {'type': 'user', 'role': 'writer', 'emailAddress': 'coding.club@nitmz.ac.in'}
+                        drive_service.permissions().create(fileId=spreadsheet_id, body=permission, fields='id').execute()
+                    except Exception: pass
+                
+                _spreadsheet_cache[sheet_name] = spreadsheet_id
+                
+            ss = gspread_client.open_by_key(spreadsheet_id)
+            sheet = ss.sheet1
+            
+            headers = ["Timestamp", "IP Address"]
+            for field in form_data['fields']:
+                headers.append(field.replace('-comp', ''))
+            
+            # Check Duplicates
+            dup_field = form_data.get('duplicate_check_field')
+            if dup_field and dup_field in headers:
+                try:
+                    col_index = headers.index(dup_field) + 1
+                    existing_vals = sheet.col_values(col_index)
+                    dup_val = submission.get(dup_field, '')
+                    if dup_val and any(dup_val.strip().upper() == r.strip().upper() for r in existing_vals[1:]):
+                        return {"status": "duplicate", "message": f"{dup_field} '{dup_val}' is already registered."}
+                except Exception: pass
+                
+            if spreadsheet_id not in _headers_initialized:
+                try:
+                    if not sheet.row_values(1):
+                        sheet.append_row(headers)
+                except Exception: pass
+                _headers_initialized.add(spreadsheet_id)
+                
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            row_data = [timestamp, ip_address]
+            for field in form_data['fields']:
+                base_name = field.replace('-comp', '')
+                val = submission.get(base_name, '')
+                row_data.append(sanitize_for_sheet(val))
+                
+            sheet.append_row(row_data)
+            
+            return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
+        
+        finally:
+            pass
+            
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+def background_dynamic_sync_worker(form_id, form_data, submission, ip_address):
+    max_retries = 5
+    base_delay = 2.0
+    
+    for attempt in range(max_retries):
+        res = sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_address)
+        if res["status"] in ["success", "duplicate", "skipped", "fatal_error"]:
+            return res
+        else:
+            if attempt < max_retries - 1:
+                time.sleep((base_delay ** attempt) + random.uniform(0.5, 1.5))
+            else:
+                return res
+
 

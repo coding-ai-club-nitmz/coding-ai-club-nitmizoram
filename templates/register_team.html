@@ -1,6 +1,11 @@
 <!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
 {% extends "base.html" %}
 {% block title %}{{ event_title }} Registration – Coding &amp; AI Club{% endblock %}
+{% block meta_description %}Register your team for {{ event_title }} hosted by the Coding & AI Club.{% endblock %}
+{% block og_title %}{{ event_title }} Registration – Coding & AI Club{% endblock %}
+{% block og_description %}Register your team for {{ event_title }} hosted by the Coding & AI Club.{% endblock %}
+{% block twitter_title %}{{ event_title }} Registration – Coding & AI Club{% endblock %}
+{% block twitter_desc %}Register your team for {{ event_title }} hosted by the Coding & AI Club.{% endblock %}
 {% block content %}
 <section class="section">
     <h2>{{ event_title }} Registration</h2>
@@ -39,49 +44,16 @@
         <h3 style="margin-top: 30px; margin-bottom: 15px; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 5px; display: inline-block;">Team Leader / Member 1</h3>
         
         <label for="l_name">Full Name</label>
-        <input type="text" id="l_name" name="l_name" class="uppercase-field" placeholder="Enter leader's full name" required>
+        <input type="text" id="l_name" name="l_name" class="uppercase-field" placeholder="Enter leader's full name" autocomplete="name" required>
 
         <label for="l_roll">Enrollment Number</label>
-        <input type="text" id="l_roll" name="l_roll" class="uppercase-field" placeholder="e.g. BT24CS000" required>
+        <input type="text" id="l_roll" name="l_roll" class="uppercase-field" placeholder="e.g. BT24CS000" pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$" title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)" required>
 
         <label for="l_email">Institute Email Address</label>
-        <input type="email" id="l_email" name="l_email" placeholder="e.g. student@nitmz.ac.in" required>
+        <input type="email" id="l_email" name="l_email" placeholder="e.g. student@nitmz.ac.in" autocomplete="email" required>
 
         <label for="l_phone">Contact Number (WhatsApp)</label>
-        <input type="tel" id="l_phone" name="l_phone" class="phone-formatter" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" required>
-
-        <!-- Optional additional fields for Leader to track demographics -->
-        <label for="candDegree">Degree Programme</label>
-        <select id="candDegree" name="degree" required>
-            <option value="" disabled selected>Select Degree</option>
-            <option value="B.Tech">B.Tech</option>
-            <option value="M.Tech">M.Tech</option>
-            <option value="Ph.D">Ph.D</option>
-            <option value="Other">Other</option>
-        </select>
-
-        <label for="candYear">Academic Year</label>
-        <select id="candYear" name="year" required>
-            <option value="" disabled selected>Select Academic Year</option>
-            <option value="1st Year">1st Year</option>
-            <option value="2nd Year">2nd Year</option>
-            <option value="3rd Year">3rd Year</option>
-            <option value="4th Year">4th Year</option>
-            <option value="Other">Other / Master-PhD Year</option>
-        </select>
-
-        <label for="candBranch">Department / Branch</label>
-        <select id="candBranch" name="branch" required>
-            <option value="" disabled selected>Select Department</option>
-            <option value="Computer Science &amp; Engineering">Computer Science &amp; Engineering</option>
-            <option value="Mathematics &amp; Computing">Mathematics &amp; Computing</option>
-            <option value="Chemical Science &amp; Technology">Chemical Science &amp; Technology</option>
-            <option value="Electronics &amp; Communication Engineering">Electronics &amp; Communication Engineering</option>
-            <option value="Electrical Engineering">Electrical Engineering</option>
-            <option value="Mechanical Engineering">Mechanical Engineering</option>
-            <option value="Civil Engineering">Civil Engineering</option>
-            <option value="Other">Other / Open Elective</option>
-        </select>
+        <input type="tel" id="l_phone" name="l_phone" class="phone-formatter" placeholder="Enter mobile number" pattern="^(\+\d{1,3})?\d{10}$" title="Enter 10-digit number, with optional country code like +91" autocomplete="tel" required>
 
         <!-- Member 2 Block -->
         <div id="member2_block" style="display: none; margin-top: 30px;">
@@ -90,7 +62,7 @@
             <input type="text" id="m2_name" name="m2_name" class="uppercase-field" placeholder="Enter member 2's full name">
 
             <label for="m2_roll">Enrollment Number</label>
-            <input type="text" id="m2_roll" name="m2_roll" class="uppercase-field" placeholder="e.g. BT24CS000">
+            <input type="text" id="m2_roll" name="m2_roll" class="uppercase-field" placeholder="e.g. BT24CS000" pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$" title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)">
 
             <label for="m2_email">Institute Email Address</label>
             <input type="email" id="m2_email" name="m2_email" placeholder="e.g. student@nitmz.ac.in">
@@ -103,7 +75,7 @@
             <input type="text" id="m3_name" name="m3_name" class="uppercase-field" placeholder="Enter member 3's full name">
 
             <label for="m3_roll">Enrollment Number</label>
-            <input type="text" id="m3_roll" name="m3_roll" class="uppercase-field" placeholder="e.g. BT24CS000">
+            <input type="text" id="m3_roll" name="m3_roll" class="uppercase-field" placeholder="e.g. BT24CS000" pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$" title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)">
 
             <label for="m3_email">Institute Email Address</label>
             <input type="email" id="m3_email" name="m3_email" placeholder="e.g. student@nitmz.ac.in">
@@ -116,7 +88,7 @@
             <input type="text" id="m4_name" name="m4_name" class="uppercase-field" placeholder="Enter member 4's full name">
 
             <label for="m4_roll">Enrollment Number</label>
-            <input type="text" id="m4_roll" name="m4_roll" class="uppercase-field" placeholder="e.g. BT24CS000">
+            <input type="text" id="m4_roll" name="m4_roll" class="uppercase-field" placeholder="e.g. BT24CS000" pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$" title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)">
 
             <label for="m4_email">Institute Email Address</label>
             <input type="email" id="m4_email" name="m4_email" placeholder="e.g. student@nitmz.ac.in">
@@ -133,8 +105,8 @@
     </form>
 
     <script>
-        // Auto-uppercase all inputs with class 'uppercase-field'
-        document.querySelectorAll('.uppercase-field').forEach(el => {
+        // Auto-uppercase all text inputs except email
+        document.querySelectorAll('input[type="text"]').forEach(el => {
             el.addEventListener('input', function() {
                 this.value = this.value.toUpperCase();
             });
@@ -144,10 +116,11 @@
         const phoneInput = document.getElementById('l_phone');
         if (phoneInput) {
             phoneInput.addEventListener('input', function(e) {
-                let val = e.target.value.replace(/\D/g, '');
-                if (val.length >= 12 && val.startsWith('91')) val = val.substring(2);
-                else if (val.length >= 11 && val.startsWith('0')) val = val.substring(1);
-                e.target.value = val.substring(0, 10);
+                let val = e.target.value;
+                let hasPlus = val.startsWith('+');
+                val = val.replace(/\D/g, ''); // Strip non-digits
+                if (hasPlus) val = '+' + val;
+                e.target.value = val.substring(0, 14); // Limit total length
             });
         }
 
@@ -231,6 +204,14 @@
                 return;
             }
 
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn.disabled) {
+                e.preventDefault();
+                return;
+            }
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Processing...';
+
             document.getElementById('loadingOverlay').style.display = 'flex';
             
             fields.forEach(id => {
@@ -240,13 +221,25 @@
     </script>
 </section>
 
-<!-- Loading Overlay -->
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(244, 246, 249, 0.85); z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; color: #0a1f44; text-align: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
-    <div style="border: 5px solid rgba(10,31,68,0.1); border-radius: 50%; border-top: 5px solid #8ab4f8; width: 70px; height: 70px; animation: spin 1s linear infinite;"></div>
-    <h3 style="margin-top: 30px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; color: #0a1f44;">Processing Team Registration...</h3>
-    <p style="opacity: 0.8; font-size: 1rem; font-family: 'Noto Sans', sans-serif; color: #4f5f6f;">Securely syncing with the club database. Please do not close this window.</p>
+<!-- Loading Overlay (Light Glassmorphism Theme) -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <h3>Processing Registration...</h3>
+    <p>Securely syncing with the club database. Please do not close this window.</p>
 </div>
 <style>
+    .loading-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(244, 246, 249, 0.85); z-index: 2147483647; flex-direction: column; justify-content: center; align-items: center; color: #0a1f44; text-align: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .spinner {
+        border: 5px solid rgba(10,31,68,0.1); border-radius: 50%; border-top: 5px solid #8ab4f8; width: 70px; height: 70px; animation: spin 1s linear infinite;
+    }
+    .loading-overlay h3 {
+        margin-top: 30px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; color: #0a1f44;
+    }
+    .loading-overlay p {
+        opacity: 0.8; font-size: 1rem; font-family: 'Noto Sans', sans-serif; color: #4f5f6f;
+    }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 {% endblock %}

@@ -1,10 +1,26 @@
 <!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
 {% extends "base.html" %}
 {% block title %}Join Us – Coding &amp; AI Club{% endblock %}
+{% block meta_description %}Join the official Coding & AI Club at NIT Mizoram and become part of our tech community.{% endblock %}
+{% block og_title %}Join Us – Coding & AI Club{% endblock %}
+{% block og_description %}Join the official Coding & AI Club at NIT Mizoram and become part of our tech community.{% endblock %}
+{% block twitter_title %}Join Us – Coding & AI Club{% endblock %}
+{% block twitter_desc %}Join the official Coding & AI Club at NIT Mizoram and become part of our tech community.{% endblock %}
 {% block content %}
     <section class="section">
         <h2>{{ join_data.title }}</h2>
         <p>{{ join_data.desc }}</p>
+        
+        {% if join_data.intro_block %}
+        <div class="event-card" style="margin: 0 auto 40px; max-width: 650px; width: 100%; padding: 35px 25px;">
+            <h3>{{ join_data.intro_block.title }}</h3>
+            <p style="margin-bottom: 25px;">{{ join_data.intro_block.desc }}</p>
+            <a href="{{ join_data.intro_block.button_link }}" class="notice-detail-btn" style="padding: 10px 24px;">{{ join_data.intro_block.button_text }}</a>
+        </div>
+        {% endif %}
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);">
+        
         <form class="contact-form" id="joinForm" onsubmit="sendEmail(event)">
             <label for="userName">Full Name</label>
             <input type="text" id="userName" placeholder="Enter your full name" required>
@@ -86,14 +102,16 @@
                 const name = document.getElementById('userName').value;
                 const topic = document.getElementById('userTopic').value;
                 const message = document.getElementById('userMessage').value;
-                const body = `Name: ${name}%0D%0ATopic: ${topic}%0D%0A%0D%0A${encodeURIComponent(message)}`;
-                // Clear saved data after preparing email
-                fields.forEach(id => {
-                    try {
-                        localStorage.removeItem('join_' + id);
-                    } catch(e) {}
-                });
+                const body = encodeURIComponent(`Name: ${name}\nTopic: ${topic}\n\n${message}`);
                 window.location.href = `mailto:{{ global_data.social.email }}?subject=${encodeURIComponent(topic)}&body=${body}`;
+                // Delay clearing local storage so mailto link works
+                setTimeout(() => {
+                    fields.forEach(id => {
+                        try {
+                            localStorage.removeItem('join_' + id);
+                        } catch(e) {}
+                    });
+                }, 1000);
             }
         </script>
     </section>

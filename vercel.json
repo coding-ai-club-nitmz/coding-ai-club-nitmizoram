@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/static/images/(club-logo\\.png|nitmz-logo\\.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
       "source": "/static/images/(.*)",
       "headers": [
         {

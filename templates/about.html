@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
 {% extends "base.html" %}
-{% block title %}About – Coding & AI Club{% endblock %}
+{% block title %}About – {{ global_data.club_name }}{% endblock %}
 {% block content %}
     <section class="section">
         <h2>Who We Are</h2>
@@ -15,9 +15,9 @@
         </div>
     </section>
     <div class="info-strip">
-        <div class="stat"><span class="stat-num">NIT</span><span class="stat-label">Mizoram</span></div>
-        <div class="stat"><span class="stat-num" style="font-family:'Noto Sans Devanagari',sans-serif;font-size:1.3rem;">राष्ट्रीय</span><span class="stat-label">प्रौद्योगिकी संस्थान</span></div>
-        <div class="stat"><span class="stat-num">2025</span><span class="stat-label">Est.</span></div>
+        {% for stat in stats_data %}
+        <div class="stat"><span class="stat-num">{{ stat.num }}</span><span class="stat-label">{{ stat.label }}</span></div>
+        {% endfor %}
     </div>
     <section class="section">
         <h2>Our Values</h2>

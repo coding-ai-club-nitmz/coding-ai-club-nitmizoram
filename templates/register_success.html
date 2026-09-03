@@ -4,7 +4,7 @@
 {% block content %}
     <section class="section">
         <div class="success-container">
-            <svg class="success-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="success-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <h2 class="success-title">Registration Successful!</h2>
@@ -15,7 +15,6 @@
                 A confirmation has been logged by our systems. Further updates, rulebooks, and event access links will be sent directly to your registered email address.
             </p>
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                <button onclick="window.history.back()" class="notice-detail-btn" style="background-color: transparent; border: 2px solid var(--primary); color: var(--primary); cursor: pointer;">&larr; Back</button>
                 <a href="/" class="notice-detail-btn">Return to Home Page</a>
             </div>
         </div>

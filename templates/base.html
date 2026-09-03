@@ -14,13 +14,23 @@
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="7FOk2uCkU1uXxhlgkiw2IAfLTyA42zHhyoMykjDgX1o" />
     <title>{% block title %}{{ global_data.club_name }}{% endblock %}</title>
+    <link rel="canonical" href="{{ request.base_url }}">
 
-    <!-- Open Graph / Social Media -->
+    <!-- Open Graph / Social Media (Link Previews) -->
     <meta property="og:title" content="{% block og_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
     <meta property="og:description"
         content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
-    <meta property="og:image" content="/static/images/club-logo.png">
+    <meta property="og:image" content="{{ request.url_root.rstrip('/') }}/static/images/Website-Preview.png">
+    <meta property="og:image:alt" content="{{ global_data.club_name }} Logo">
+    <meta property="og:url" content="{{ request.url }}">
     <meta property="og:type" content="website">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_desc %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
+    <meta name="twitter:image" content="{{ request.url_root.rstrip('/') }}/static/images/Website-Preview.png">
+    
     <meta name="theme-color" content="#0a1f44">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/images/club-logo.png" type="image/png">

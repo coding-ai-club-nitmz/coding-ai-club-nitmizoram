@@ -15,7 +15,6 @@ class TestWebRoutes(unittest.TestCase):
             '/notices',
             '/events',
             '/teams',
-            '/credits',
             '/projects',
             '/resources',
             '/contact',

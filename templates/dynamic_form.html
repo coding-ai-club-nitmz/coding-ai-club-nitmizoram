@@ -1,0 +1,220 @@
+<!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
+{% extends "base.html" %}
+{% block title %}{{ form_data.title }} – {{ global_data.club_name }}{% endblock %}
+{% block meta_description %}{{ form_data.description }}{% endblock %}
+{% block og_title %}{{ form_data.title }} – {{ global_data.club_name }}{% endblock %}
+{% block og_description %}{{ form_data.description }}{% endblock %}
+{% block twitter_title %}{{ form_data.title }} – {{ global_data.club_name }}{% endblock %}
+{% block twitter_desc %}{{ form_data.description }}{% endblock %}
+
+{% block content %}
+<style>
+    .form-section {
+        padding: clamp(30px, 6vh, 60px) clamp(12px, 4vw, 40px);
+        text-align: center;
+        flex: 1;
+        max-width: 800px;
+        margin: 0 auto;
+        width: 100%;
+        animation: fadeUp 0.7s ease both;
+    }
+    
+    .form-header h2 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 12px;
+    }
+    
+    .form-header p {
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+    }
+    
+    .dynamic-form {
+        background: var(--bg-card);
+        padding: clamp(25px, 5vw, 40px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        border-top: 5px solid var(--accent);
+        text-align: left;
+    }
+    
+    .form-group {
+        margin-bottom: 22px;
+    }
+    
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    
+    .required-asterisk {
+        color: #e53935;
+        margin-left: 3px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(16, 42, 86, 0.15);
+        background: #f9fbff;
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 1rem;
+        transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.2);
+    }
+    
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        color: white;
+        border: none;
+        padding: 16px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: transform var(--transition), box-shadow var(--transition);
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .loading-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<section class="form-section">
+    <div class="form-header">
+        <h2>{{ form_data.title }}</h2>
+        <p>{{ form_data.description }}</p>
+    </div>
+    
+    <form class="dynamic-form" id="dynamicForm" method="POST" action="/apply/{{ form_id }}">
+        {% for field in form_data.fields %}
+            {% set is_required = field.endswith('-comp') %}
+            {% set base_name = field[:-5] if is_required else field %}
+            {% set safe_name = base_name|lower|replace(' ', '_')|replace('?', '')|replace('-', '_')|replace('&', 'and')|replace('/', '_') %}
+            
+            <div class="form-group">
+                <label for="{{ safe_name }}">
+                    {{ base_name }}
+                    {% if is_required %}<span class="required-asterisk">*</span>{% endif %}
+                </label>
+                
+                {% if 'why' in base_name|lower or 'description' in base_name|lower or 'motivation' in base_name|lower %}
+                    <textarea class="form-control" id="{{ safe_name }}" name="{{ safe_name }}" {% if is_required %}required{% endif %} placeholder="Your answer..."></textarea>
+                {% elif 'branch' in base_name|lower or 'department' in base_name|lower %}
+                    <select class="form-control" id="{{ safe_name }}" name="{{ safe_name }}" {% if is_required %}required{% endif %}>
+                        <option value="" disabled selected>Select Department</option>
+                        {% for opt in common_dropdowns.branch %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                        {% endfor %}
+                    </select>
+                {% elif 'degree' in base_name|lower %}
+                    <select class="form-control" id="{{ safe_name }}" name="{{ safe_name }}" {% if is_required %}required{% endif %}>
+                        <option value="" disabled selected>Select Degree</option>
+                        {% for opt in common_dropdowns.degree %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                        {% endfor %}
+                    </select>
+                {% elif 'year' in base_name|lower %}
+                    <select class="form-control" id="{{ safe_name }}" name="{{ safe_name }}" {% if is_required %}required{% endif %}>
+                        <option value="" disabled selected>Select Academic Year</option>
+                        {% for opt in common_dropdowns.year %}
+                        <option value="{{ opt }}">{{ opt }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="{% if 'email' in base_name|lower %}email{% elif 'phone' in base_name|lower %}tel{% else %}text{% endif %}" 
+                           class="form-control" id="{{ safe_name }}" name="{{ safe_name }}" 
+                           {% if is_required %}required{% endif %} 
+                           {% if 'name' in base_name|lower %}autocomplete="name"{% endif %}
+                           {% if 'email' in base_name|lower %}autocomplete="email"{% endif %}
+                           {% if 'phone' in base_name|lower %}autocomplete="tel" pattern="^(\+\d{1,3})?\d{10}$" title="Enter 10-digit number, with optional country code like +91"{% endif %}
+                           {% if 'roll' in base_name|lower %}pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$" title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)"{% endif %}
+                           placeholder="Your answer...">
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">Submit Application</span>
+            <div class="loading-spinner" id="spinner"></div>
+        </button>
+    </form>
+</section>
+
+<script>
+    // Auto-uppercase all text inputs and textareas (except email)
+    document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+        el.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+    });
+
+    // Phone Number Formatter
+    document.querySelectorAll('input[type="tel"]').forEach(phoneInput => {
+        phoneInput.addEventListener('input', function(e) {
+            let val = e.target.value;
+            let hasPlus = val.startsWith('+');
+            val = val.replace(/\D/g, ''); // Strip non-digits
+            if (hasPlus) val = '+' + val;
+            e.target.value = val.substring(0, 14); // Limit total length
+        });
+    });
+
+    document.getElementById('dynamicForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const btnText = btn.querySelector('.btn-text');
+        
+        btn.disabled = true;
+        spinner.style.display = 'block';
+        btnText.textContent = 'Submitting...';
+    });
+</script>
+{% endblock %}

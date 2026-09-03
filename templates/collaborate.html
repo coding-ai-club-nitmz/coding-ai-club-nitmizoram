@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
 {% extends "base.html" %}
-{% block title %}Collaborate – Coding & AI Club{% endblock %}
+{% block title %}Collaborate – {{ global_data.club_name }}{% endblock %}
 {% block meta_description %}Partner with the Coding & AI Club at NIT Mizoram. Sponsor hackathons, co-host workshops, provide APIs, or mentor student teams building AI and software projects.{% endblock %}
 {% block content %}
 
@@ -12,8 +12,8 @@
            style="display: inline-block; padding: 7px 18px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.92rem; letter-spacing: 0.5px; color: white; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; text-decoration: none; transition: background 0.3s;">{{ collaborate.cta.text }} →</a>
         <!-- Inline stats -->
         <div style="display: flex; justify-content: center; gap: clamp(20px, 5vw, 60px); flex-wrap: wrap; margin-top: 8px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12);">
-            {% for stat in collaborate.stats %}
-            <div class="stat"><span class="stat-num">{{ stat.value }}</span><span class="stat-label">{{ stat.label }}</span></div>
+            {% for stat in stats_data %}
+            <div class="stat"><span class="stat-num">{{ stat.num }}</span><span class="stat-label">{{ stat.label }}</span></div>
             {% endfor %}
         </div>
     </div>

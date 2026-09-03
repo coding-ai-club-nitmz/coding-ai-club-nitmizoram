@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
 {% extends "base.html" %}
-{% block title %}Team – Coding & AI Club{% endblock %}
+{% block title %}Team – {{ global_data.club_name }}{% endblock %}
 {% block content %}
     <section class="section">
         <h2>Mentors</h2>
@@ -37,6 +37,21 @@
         <p>The dedicated individuals who ensure smooth execution of projects, events, and club activities.</p>
         <div class="team-container">
             {% for person in coordinators %}
+            <div class="team-card">
+                <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
+                     alt="{{ person.name }}"
+                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ person.name | urlencode }}&background=random&color=fff&size=200'">
+                <span class="role-badge">{{ person.badge }}</span>
+                <h3>{{ person.name }}</h3>
+                <p>{{ person.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <h2>Founding Members</h2>
+        <p>The visionaries who started it all. Currently shaping the future at IIT Madras.</p>
+        <div class="team-container">
+            {% for person in founding %}
             <div class="team-card">
                 <img src="{% if person.image.startswith('http') %}{{ person.image }}{% else %}/static/{{ person.image }}{% endif %}" 
                      alt="{{ person.name }}"
