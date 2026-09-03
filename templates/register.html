@@ -71,7 +71,11 @@
             placeholder="List any tech stacks you use, or explain why you are interested in this event..."
             required></textarea>
 
-        <button type="submit" {% if not open_events %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>Submit Registration</button>
+        {% if not open_events %}
+        <button type="submit" disabled style="opacity: 0.5; cursor: not-allowed;">Submit Registration</button>
+        {% else %}
+        <button type="submit">Submit Registration</button>
+        {% endif %}
     </form>
 
     <script>
