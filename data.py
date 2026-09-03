@@ -399,8 +399,8 @@ COMMON_DROPDOWNS = {
 
 DYNAMIC_FORMS = {
     "club-join": {
-        "title": f"Join {GLOBAL_DATA['club_name']}",
-        "description": f"Register to become a member of the official {GLOBAL_DATA['club_name']} at NIT Mizoram. Please fill out your details carefully.",
+        "title": "Join the Club",
+        "description": "Formally inviting student applications for the upcoming academic term. Join our community to learn how to build real-world technology, receive mentorship, and grow your technical skills!",
         "sheet_name": "Club_Registrations_2026",
         "duplicate_check_field": "Roll Number",
         "fields": [
