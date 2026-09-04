@@ -294,7 +294,7 @@ def apply_form(form_id):
         submission = {}
         for field in form_data['fields']:
             base_name = field.replace('-comp', '')
-            safe_name = re.sub(r'[^a-zA-Z0-9]', '_', base_name).lower()
+            safe_name = base_name.lower().replace(' ', '_').replace('?', '').replace('-', '_').replace('&', 'and').replace('/', '_')
             submission[base_name] = request.form.get(safe_name, '')
             
         ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
