@@ -89,6 +89,15 @@
     </header>
     <nav class="navbar" id="mainNavbar">
         <div class="navbar-mobile-row">
+            {% set m_active_home = 'active' if request.path == '/' else '' %}
+            <a href="/" class="mobile-nav-link {{ m_active_home }}" aria-label="Home">Home</a>
+
+            {% set m_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
+            <a href="/notices" class="mobile-nav-link {{ m_active_notices }}" aria-label="Notices">Notice</a>
+
+            {% set m_active_teams = 'active' if request.path == '/teams' else '' %}
+            <a href="/teams" class="mobile-nav-link {{ m_active_teams }}" aria-label="Team">Team</a>
+
             <button class="navbar-toggle" onclick="toggleNavbar()" aria-label="Toggle Menu">
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>

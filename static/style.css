@@ -668,9 +668,9 @@ body {
         display: flex !important;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between; /* Space out the 4 items perfectly */
         width: 100%;
-        padding: 0 12px;
+        padding: 0 8px; /* Slightly reduced padding to prevent overflow */
         box-sizing: border-box;
     }
 
@@ -679,8 +679,8 @@ body {
         text-decoration: none;
         font-family: 'Rajdhani', sans-serif;
         font-weight: 600;
-        font-size: 0.95rem;
-        padding: 14px 8px;
+        font-size: 0.9rem; /* Down from 0.95 to fit smaller screens */
+        padding: 10px 6px; /* Reduced side padding to prevent overlapping */
         white-space: nowrap;
     }
 
@@ -739,7 +739,7 @@ body {
     }
 
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
+        transform: translateY(11px) rotate(45deg);
     }
 
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(2) {
@@ -747,7 +747,7 @@ body {
     }
 
     .navbar.expanded .navbar-toggle .hamburger-bar:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
+        transform: translateY(-11px) rotate(-45deg);
     }
 
 }
