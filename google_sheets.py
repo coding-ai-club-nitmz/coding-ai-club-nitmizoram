@@ -294,14 +294,19 @@ def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l
                             "Timestamp", "IP Address", "Team Name", "Track/Domain", "Leader Name", "Leader Roll", "Leader Email", "Leader Phone", 
                             "Member 2 Name", "Member 2 Roll", "Member 2 Email", "Member 3 Name", "Member 3 Roll", "Member 3 Email", 
                             "Member 4 Name", "Member 4 Roll", "Member 4 Email"
-                        ])
+                        ], value_input_option="USER_ENTERED")
                 except Exception: pass
                 _headers_initialized.add(spreadsheet_id)
                 
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             sheet.append_row([
-                timestamp, ip_address, t_name, t_track, l_n, l_r, l_e, l_p, m2_n, m2_r, m2_e, m3_n, m3_r, m3_e, m4_n, m4_r, m4_e
-            ])
+                timestamp, ip_address, 
+                sanitize_for_sheet(team_name), sanitize_for_sheet(track),
+                sanitize_for_sheet(l_name), sanitize_for_sheet(l_roll), sanitize_for_sheet(l_email), sanitize_for_sheet(l_phone),
+                sanitize_for_sheet(m2_name), sanitize_for_sheet(m2_roll), sanitize_for_sheet(m2_email),
+                sanitize_for_sheet(m3_name), sanitize_for_sheet(m3_roll), sanitize_for_sheet(m3_email),
+                sanitize_for_sheet(m4_name), sanitize_for_sheet(m4_roll), sanitize_for_sheet(m4_email)
+            ], value_input_option="USER_ENTERED")
             
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
         
@@ -393,7 +398,7 @@ def sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_addre
             if spreadsheet_id not in _headers_initialized:
                 try:
                     if not sheet.row_values(1):
-                        sheet.append_row(headers)
+                        sheet.append_row(headers, value_input_option="USER_ENTERED")
                 except Exception: pass
                 _headers_initialized.add(spreadsheet_id)
                 
@@ -404,7 +409,7 @@ def sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_addre
                 val = submission.get(base_name, '')
                 row_data.append(sanitize_for_sheet(val))
                 
-            sheet.append_row(row_data)
+            sheet.append_row(row_data, value_input_option="USER_ENTERED")
             
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
         
