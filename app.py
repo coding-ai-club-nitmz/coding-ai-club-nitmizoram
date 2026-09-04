@@ -200,8 +200,12 @@ def register():
         
         res = background_sync_worker(name, roll, email, phone, branch, degree, year, event_name, skills, ip_address)
         
+        event_data = next((e for e in data.EVENT_DATA if e['title'] == event_name), {})
+        whatsapp_link = event_data.get('whatsapp_group_link')
+        whatsapp_text = event_data.get('whatsapp_group_text', 'Join Whatsapp Group')
+        
         if res and res.get("status") == "success":
-            return render_template('register_success.html', name=name, event_name=event_name)
+            return render_template('register_success.html', name=name, event_name=event_name, whatsapp_link=whatsapp_link, whatsapp_text=whatsapp_text)
         elif res and res.get("status") == "duplicate":
             return render_template('register_duplicate.html', name=name, event_name=event_name)
         else:
@@ -315,8 +319,11 @@ def apply_form(form_id):
             
         event_name = form_data['title']
         
+        whatsapp_link = form_data.get('whatsapp_group_link')
+        whatsapp_text = form_data.get('whatsapp_group_text', 'Join Whatsapp Group')
+        
         if res and res.get("status") == "success":
-            return render_template('register_success.html', name=name_val, event_name=event_name)
+            return render_template('register_success.html', name=name_val, event_name=event_name, whatsapp_link=whatsapp_link, whatsapp_text=whatsapp_text)
         elif res and res.get("status") == "duplicate":
             duplicate_msg = res.get("message", "You have already registered.")
             return render_template('register_duplicate.html', name=name_val, event_name=event_name, duplicate_msg=duplicate_msg)

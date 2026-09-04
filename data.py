@@ -402,6 +402,8 @@ DYNAMIC_FORMS = {
         "title": "Join the Club",
         "description": "Formally inviting student applications for the upcoming academic term. Join our community to learn how to build real-world technology, receive mentorship, and grow your technical skills!",
         "sheet_name": "Club_Registrations_2026",
+        "whatsapp_group_link": "https://chat.whatsapp.com/FprsWaXEO3L7GY97eMkAh2",
+        "whatsapp_group_text": "Join Whatsapp Group",
         "duplicate_check_field": "Roll Number",
         "fields": [
             "Full Name-comp",

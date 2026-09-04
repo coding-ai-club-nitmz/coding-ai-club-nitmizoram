@@ -668,7 +668,7 @@ body {
         display: flex !important;
         flex-direction: row;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         width: 100%;
         padding: 0 12px;
         box-sizing: border-box;
