@@ -23,6 +23,19 @@ GLOBAL_DATA = {
 # To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
     {
+        "id": "inter-nit-algo-championship",
+        "featured": True,
+        "title": "Inter-NIT Algo Championship",
+        "date": "October 23, 2026",
+        "summary": "Coding & AI Club in collaboration with All 31 NITs of India & AlgoZenith presents the Inter-NIT Algo Championship. Register by 25th Oct 11:59 PM to represent NIT Mizoram!",
+        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organizers:</strong> Coding & AI Club, NIT Mizoram | All 31 NITs of India | AlgoZenith</div><p>The Coding & AI Club, in collaboration with all 31 NITs of India and <strong>AlgoZenith</strong>, is proud to announce the <strong>Inter-NIT Algo Championship</strong> — a competitive programming contest at Codeforces Div 2 level.</p><p>If you are interested in participating and representing NIT Mizoram among other NITs, you are welcome to register. Video recording of yourself and your screen (showing you typing) is mandatory during the contest.</p><p><strong>Contest Date:</strong> 27th October 2026 (Tuesday), after 7:00 PM (tentative).</p><p><strong>Registration Deadline:</strong> 25th October 2026, 11:59 PM.</p><p><strong>Prizes:</strong> To be announced soon.</p><p><strong>Single Point of Contact:</strong> Coding & AI Club, NIT Mizoram — <a href=\"mailto:coding.club@nitmz.ac.in\" style=\"color: var(--accent);\">coding.club@nitmz.ac.in</a></p><p>Register your details on the link below. The contest link, rules, and further information will be shared via email with registered candidates only.</p></div>",
+        "registration_open": True,
+        "registration_deadline": "2026-10-25 23:59:00",
+        "event_name": "Inter-NIT Algo Championship",
+        "link": "/apply/inter-nit-algo",
+        "link_text": "Register Now"
+    },
+    {
         "id": "ai-startup-challenge-2026",
         "featured": True,
         "title": "Innovaite 2026: Successfully Concluded!",
@@ -156,6 +169,7 @@ PROJECT_DATA = {
 
 EVENT_DATA = [
 #    {"title": "Technox'2025-26 Part-II", "desc": "The premier technical festival featuring advanced coding hacks, AI quizzes, and hardware exhibitions.", "image": "images/events/notpresent.jpg", "registration_open": True, "upcoming": True},
+    {"title": "Inter-NIT Algo Championship", "desc": "Competitive programming contest at Codeforces Div 2 level in collaboration with All 31 NITs & AlgoZenith. Contest: 27th Oct (Tue) after 7 PM. Register by 25th Oct!", "image": "images/club-logo.png", "registration_open": True, "registration_link": "/apply/inter-nit-algo", "registration_deadline": "2026-10-25 23:59:00", "upcoming": True},
     {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
@@ -398,6 +412,20 @@ COMMON_DROPDOWNS = {
 }
 
 DYNAMIC_FORMS = {
+    "inter-nit-algo": {
+        "title": "Inter-NIT Algo Championship",
+        "description": "Coding & AI Club in collaboration with All 31 NITs of India & AlgoZenith. Register to represent NIT Mizoram in this Codeforces Div 2 level competitive programming contest. Contest Date: 27th Oct (Tuesday) after 7 PM (tentative). Contest link, rules & further info will be mailed to registered candidates only. For queries: coding.club@nitmz.ac.in",
+        "sheet_name": "InterNIT_Algo_Championship_2026",
+        "duplicate_check_field": "Roll Number",
+        "registration_deadline": "2026-10-25 23:59:00",
+        "fields": [
+            "Full Name-comp",
+            "Roll Number-comp",
+            "Branch-comp",
+            "Academic Year-comp",
+            "Email Address-comp"
+        ]
+    },
     "club-join": {
         "title": "Join the Club",
         "description": "Formally inviting student applications for the upcoming academic term. Join our community to learn how to build real-world technology, receive mentorship, and grow your technical skills!",

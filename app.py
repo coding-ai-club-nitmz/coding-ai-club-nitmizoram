@@ -70,7 +70,8 @@ def reload_data_if_modified():
 # Context processor makes 'global_data' available in every template
 @app.context_processor
 def inject_global_data():
-    return dict(global_data=data.GLOBAL_DATA, common_dropdowns=data.COMMON_DROPDOWNS, stats_data=data.STATS_DATA)
+    from datetime import datetime
+    return dict(global_data=data.GLOBAL_DATA, common_dropdowns=data.COMMON_DROPDOWNS, stats_data=data.STATS_DATA, now=datetime.now())
 
 # Configure caching based on request type: prevent caching for dynamic templates in development, but cache in production
 @app.after_request
@@ -292,6 +293,14 @@ def apply_form(form_id):
     form_data = data.DYNAMIC_FORMS.get(form_id)
     if not form_data:
         return render_template('404.html'), 404
+    
+    # Check registration deadline
+    from datetime import datetime
+    deadline_str = form_data.get('registration_deadline')
+    if deadline_str:
+        deadline = datetime.strptime(deadline_str, "%Y-%m-%d %H:%M:%S")
+        if datetime.now() > deadline:
+            return render_template('register_error.html', name="User", event_name=form_data['title'], error_msg="Registration for this event has closed. The deadline was " + deadline.strftime("%d %b %Y, %I:%M %p") + ".")
         
     if request.method == 'POST':
         import re
