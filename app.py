@@ -9,7 +9,7 @@ def new_getaddrinfo(*args, **kwargs):
     return [res for res in responses if res[0] == socket.AF_INET]
 socket.getaddrinfo = new_getaddrinfo
 
-from flask import Flask, render_template, send_from_directory, request
+from flask import Flask, render_template, send_from_directory, request, redirect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
@@ -302,6 +302,10 @@ def apply_form(form_id):
         if datetime.now() > deadline:
             return render_template('register_error.html', name="User", event_name=form_data['title'], error_msg="Registration for this event has closed. The deadline was " + deadline.strftime("%d %b %Y, %I:%M %p") + ".")
         
+    redirect_url = form_data.get('redirect_url')
+    if redirect_url:
+        return redirect(redirect_url, code=302)
+
     if request.method == 'POST':
         import re
         submission = {}

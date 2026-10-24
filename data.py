@@ -27,13 +27,13 @@ ANNOUNCEMENTS = [
         "featured": True,
         "title": "Inter NIT Code Wars",
         "date": "October 23, 2026",
-        "summary": "Organized by AlgoZenith in collaboration with All 31 NITs of India. Coding & AI Club is the official Single Point of Contact (SPOC) for NIT Mizoram. Register by 25th Oct 11:59 PM to represent our campus!",
-        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organized by:</strong> AlgoZenith | <strong>In Collaboration with:</strong> All 31 NITs of India | <strong>NIT Mizoram SPOC:</strong> Coding & AI Club, NIT Mizoram</div><p><strong>AlgoZenith</strong> is conducting its flagship Pan-India competitive programming contest — the <strong>Inter NIT Code Wars</strong>, where all 31 NITs go head-to-head on a single national leaderboard to settle which NIT has the strongest coding culture!</p><p><strong>Coding & AI Club, NIT Mizoram</strong> is the official <strong>Single Point of Contact (SPOC)</strong> representing NIT Mizoram for this edition. We are calling upon the sharpest coders from NIT Mizoram to step forward, compete, and represent our campus on the national leaderboard.</p><p><strong>Format & Level:</strong> Codeforces Div 2 level contest. Video recording of yourself and your screen (showing you typing) is mandatory during the contest.</p><p><strong>Contest Date:</strong> 27th October 2026 (Tuesday), after 7:00 PM (tentative).</p><p><strong>Registration Deadline:</strong> 25th October 2026, 11:59 PM.</p><p><strong>Prizes:</strong> To be announced soon by AlgoZenith.</p><p><strong>Single Point of Contact (Queries):</strong> Coding & AI Club, NIT Mizoram — <a href=\"mailto:coding.club@nitmz.ac.in\" style=\"color: var(--accent);\">coding.club@nitmz.ac.in</a></p><p>Register your details on the link below. The contest link, guidelines, and rules will be sent directly via email to registered candidates only.</p></div>",
+        "summary": "Organized by AlgoZenith in collaboration with All 31 NITs of India. Coding & AI Club is the official Single Point of Contact (SPOC) for NIT Mizoram. Register by 27th Oct 6:00 PM to represent our campus!",
+        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organized by:</strong> AlgoZenith | <strong>In Collaboration with:</strong> All 31 NITs of India | <strong>NIT Mizoram SPOC:</strong> Coding & AI Club, NIT Mizoram</div><p><strong>AlgoZenith</strong> is conducting its flagship Pan-India competitive programming contest — the <strong>Inter NIT Code Wars</strong>, where all 31 NITs go head-to-head on a single national leaderboard to settle which NIT has the strongest coding culture!</p><p><strong>Coding & AI Club, NIT Mizoram</strong> is the official <strong>Single Point of Contact (SPOC)</strong> representing NIT Mizoram for this edition. We are calling upon the sharpest coders from NIT Mizoram to step forward, compete, and represent our campus on the national leaderboard.</p><p><strong>Format & Level:</strong> Codeforces Div 2 level contest. Video recording of yourself and your screen (showing you typing) is mandatory during the contest.</p><p><strong>Contest Date:</strong> 27th October 2026 (Tuesday), 8:00 PM onwards.</p><p><strong>Registration Deadline:</strong> 27th October 2026, 6:00 PM.</p><p><strong>Prizes:</strong> To be announced soon by AlgoZenith.</p><p><strong>Single Point of Contact (Queries):</strong> Coding & AI Club, NIT Mizoram — <a href=\"mailto:coding.club@nitmz.ac.in\" style=\"color: var(--accent);\">coding.club@nitmz.ac.in</a></p><p>Register your details on the official Google Form linked below. The contest link, guidelines, and rules will be sent directly via email to registered candidates only.</p></div>",
         "registration_open": True,
-        "registration_deadline": "2026-10-25 23:59:00",
+        "registration_deadline": "2026-10-27 18:00:00",
         "event_name": "Inter NIT Code Wars",
-        "link": "/apply/inter-nit-algo",
-        "link_text": "Register Now"
+        "link": "https://forms.gle/V2rUEiLrnKjvCPkJ7",
+        "link_text": "Register on Google Form"
     },
     {
         "id": "ai-startup-challenge-2026",
@@ -169,7 +169,7 @@ PROJECT_DATA = {
 
 EVENT_DATA = [
 #    {"title": "Technox'2025-26 Part-II", "desc": "The premier technical festival featuring advanced coding hacks, AI quizzes, and hardware exhibitions.", "image": "images/events/notpresent.jpg", "registration_open": True, "upcoming": True},
-    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India coding contest by AlgoZenith across All 31 NITs (Codeforces Div 2 level). Contest: 27th Oct (Tue) after 7 PM. Register by 25th Oct to represent NIT Mizoram!", "image": "images/club-logo.png", "registration_open": True, "registration_link": "/apply/inter-nit-algo", "registration_deadline": "2026-10-25 23:59:00", "upcoming": True},
+    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India coding contest by AlgoZenith across All 31 NITs (Codeforces Div 2 level). Contest: 27th Oct (Tue) 8:00 PM onwards. Register by 27th Oct 6:00 PM to represent NIT Mizoram!", "image": "images/club-logo.png", "registration_open": True, "registration_link": "https://forms.gle/V2rUEiLrnKjvCPkJ7", "registration_deadline": "2026-10-27 18:00:00", "upcoming": True},
     {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
@@ -414,10 +414,11 @@ COMMON_DROPDOWNS = {
 DYNAMIC_FORMS = {
     "inter-nit-algo": {
         "title": "Inter NIT Code Wars",
-        "description": "Organized by AlgoZenith in collaboration with All 31 NITs of India. Coding & AI Club, NIT Mizoram is the official Single Point of Contact (SPOC) representing NIT Mizoram in this Pan-India competitive programming contest (Codeforces Div 2 level). Contest Date: 27th Oct (Tuesday) after 7 PM (tentative). Contest link, rules & further info will be mailed to registered candidates only. For queries: coding.club@nitmz.ac.in",
+        "description": "Organized by AlgoZenith in collaboration with All 31 NITs of India. Coding & AI Club, NIT Mizoram is the official Single Point of Contact (SPOC) representing NIT Mizoram in this Pan-India competitive programming contest (Codeforces Div 2 level). Contest Date: 27th Oct (Tuesday) 8:00 PM onwards. Registration closes: 27th Oct 6:00 PM. For queries: coding.club@nitmz.ac.in",
         "sheet_name": "InterNIT_Algo_Championship_2026",
         "duplicate_check_field": "Roll Number",
-        "registration_deadline": "2026-10-25 23:59:00",
+        "registration_deadline": "2026-10-27 18:00:00",
+        "redirect_url": "https://forms.gle/V2rUEiLrnKjvCPkJ7",
         "fields": [
             "Full Name-comp",
             "Roll Number-comp",
