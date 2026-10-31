@@ -185,12 +185,12 @@ EVENT_DATA = [
         "action_text": "Email to Represent Club",
         "upcoming": True
     },
-    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India competitive programming contest conducted by AlgoZenith across All 31 NITs on a single national leaderboard.", "image": "images/club-logo.png", "registration_open": False, "upcoming": False},
+    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India competitive programming contest conducted by AlgoZenith across All 31 NITs on a single national leaderboard.", "image": "images/events/internitcodewars.jpeg", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
     {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/club-logo.png", "registration_open": False, "upcoming": False}
+    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/events/innovaite.jpeg", "registration_open": False, "upcoming": False}
 ]
 
 RESOURCE_DATA = [
