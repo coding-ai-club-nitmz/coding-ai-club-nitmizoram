@@ -6,7 +6,7 @@ Please read this document carefully before managing events or modifying the Goog
 When you want to host a new event and start accepting registrations, you MUST follow these exact steps:
 
 1. **Update `data.py`**: Add your new event to the `EVENT_DATA` list in `data.py` and set `"registration_open": True`.
-2. **Create the Spreadsheet**: Go to your specific Google Drive Folder (`1dbs15E1SaMtgPZNYRKWvCR7dnfIA5Q16`). Right-click and create a new, blank Google Sheet.
+2. **Create the Spreadsheet**: Go to your Google Drive Folder configured in `.env` (`GOOGLE_DRIVE_FOLDER_ID`). Right-click and create a new, blank Google Sheet.
 3. **Name it Exactly the Same**: You **MUST name the spreadsheet exactly the same as the event title** you put in `data.py`. 
    - *Example:* If your event title in `data.py` is `Samyuga - Prarambh`, the spreadsheet name must be exactly `Samyuga - Prarambh`. 
    - *Why?* The script searches the folder for a file with that exact name. If there is a typo, space mismatch, or capitalization difference, the bot will not find it and the registration will fail.
@@ -18,7 +18,7 @@ Free-tier Google Cloud Service Accounts (the "Automator" bot) are heavily restri
 
 ## 3. Google Drive Folder Access
 The Automator bot operates securely and can only see what you explicitly share with it.
-- **Check Access**: Ensure that your Google Drive Folder is shared with the bot's email address (`website-datasaving@website-automator-499710.iam.gserviceaccount.com`).
+- **Check Access**: Ensure that your Google Drive Folder is shared with the service account email configured in your `.env` (`GOOGLE_CLIENT_EMAIL`).
 - It must be given **Editor** permissions. If it only has "Viewer" access, or if the folder isn't shared, it cannot type the student registrations into the sheets.
 
 ## 4. Hosting Warning (Vercel)

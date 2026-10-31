@@ -11,8 +11,14 @@ dist/
 build/
 *.egg-info/
 
-# Environment variables
-.env
+# Environment variables & Secrets
+.env*
+!.env.example
+*credential*.json
+*service_account*.json
+*.pem
+*.key
+*.cert
 
 # Vercel
 .vercel

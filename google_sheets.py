@@ -37,9 +37,14 @@ def get_google_clients(creds_file):
         creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
         
         if client_email and private_key:
+            project_id = os.environ.get('GOOGLE_PROJECT_ID')
+            if not project_id and '@' in client_email:
+                project_id = client_email.split('@')[1].split('.')[0]
+            if not project_id:
+                project_id = "website-automator"
             creds_info = {
                 "type": "service_account",
-                "project_id": "website-automator-499710",
+                "project_id": project_id,
                 "private_key": private_key.replace('\\n', '\n'),
                 "client_email": client_email,
                 "token_uri": "https://oauth2.googleapis.com/token"
@@ -69,7 +74,7 @@ def sanitize_for_sheet(value):
     value_str = str(value).strip()
     
     # Escape leading characters to prevent Spreadsheet Formula / CSV Injection
-    if value_str and value_str[0] in ('=', '+', '-', '@'):
+    if value_str and value_str[0] in ('=', '+', '-', '@', '\t', '\r'):
         value_str = "'" + value_str
         
     # Strip HTML and script tags
@@ -167,9 +172,9 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
                 _headers_initialized.add(spreadsheet_id)
                 
             # Append data row (Fastest operation)
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
             sheet.append_row([
-                timestamp, ip_address, name, roll, email, phone, branch, degree, year, skills
+                timestamp, sanitize_for_sheet(ip_address), name, roll, email, phone, branch, degree, year, skills
             ])
             
             return {"status": "success", "isNew": is_new, "spreadsheetId": spreadsheet_id}
@@ -181,7 +186,8 @@ def sync_registration_to_folder(name, roll, email, phone, branch, degree, year, 
         error_msg = str(e)
         if "Quota exceeded" in error_msg or "403" in error_msg:
             return {"status": "fatal_error", "message": f"CRITICAL: Spreadsheet '{event_name}' does not exist and the bot does not have storage quota to create it. Please manually create a blank spreadsheet named '{event_name}' in your Google Drive folder."}
-        return {"status": "error", "message": error_msg}
+        print(f"Error syncing registration: {e}")
+        return {"status": "error", "message": "A database synchronization error occurred. Please contact coding.club@nitmz.ac.in if this persists."}
 
 def background_sync_worker(name, roll, email, phone, branch, degree, year, event_name, skills, ip_address=""):
     max_retries = 5
@@ -301,9 +307,9 @@ def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l
                 except Exception: pass
                 _headers_initialized.add(spreadsheet_id)
                 
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timestamp = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
             sheet.append_row([
-                timestamp, ip_address, 
+                timestamp, sanitize_for_sheet(ip_address), 
                 sanitize_for_sheet(team_name), sanitize_for_sheet(track),
                 sanitize_for_sheet(l_name), sanitize_for_sheet(l_roll), sanitize_for_sheet(l_email), sanitize_for_sheet(l_phone),
                 sanitize_for_sheet(m2_name), sanitize_for_sheet(m2_roll), sanitize_for_sheet(m2_email),
@@ -317,7 +323,8 @@ def sync_team_registration_to_folder(ip_address, event_name, team_name, track, l
             pass
             
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        print(f"Error syncing team registration: {e}")
+        return {"status": "error", "message": "A database synchronization error occurred. Please contact coding.club@nitmz.ac.in if this persists."}
 
 def background_sync_team_worker(ip_address, event_name, team_name, track, l_name, l_roll, l_email, l_phone, m2_name, m2_roll, m2_email, m3_name, m3_roll, m3_email, m4_name, m4_roll, m4_email):
     max_retries = 5
@@ -405,8 +412,8 @@ def sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_addre
                 except Exception: pass
                 _headers_initialized.add(spreadsheet_id)
                 
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            row_data = [timestamp, ip_address]
+            timestamp = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
+            row_data = [timestamp, sanitize_for_sheet(ip_address)]
             for field in form_data['fields']:
                 base_name = field.replace('-comp', '')
                 val = submission.get(base_name, '')
@@ -420,7 +427,8 @@ def sync_dynamic_registration_to_folder(form_id, form_data, submission, ip_addre
             pass
             
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        print(f"Error syncing dynamic registration: {e}")
+        return {"status": "error", "message": "A database synchronization error occurred. Please contact coding.club@nitmz.ac.in if this persists."}
 
 def background_dynamic_sync_worker(form_id, form_data, submission, ip_address):
     max_retries = 5
@@ -537,7 +545,8 @@ def mark_attendance(roll_number, attendance_config):
         return {"status": "success", "name": student_name or roll_number}
         
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        print(f"Error marking attendance: {e}")
+        return {"status": "error", "message": "Unable to record attendance at this time due to a database error. Please try again shortly."}
 
 def background_attendance_worker(roll_number, attendance_config):
     max_retries = 3

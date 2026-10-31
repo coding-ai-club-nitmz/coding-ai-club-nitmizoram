@@ -29,6 +29,15 @@ IST = timezone(timedelta(hours=5, minutes=30))
 def get_ist_now():
     return datetime.now(IST).replace(tzinfo=None)
 
+def get_client_ip():
+    """Extracts and validates client IP address, guarding against header injection attacks."""
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip:
+        ip = ip.split(',')[0].strip()
+        if not re.match(r'^[0-9a-fA-F:.]+$', ip):
+            ip = request.remote_addr or 'unknown'
+    return ip or 'unknown'
+
 # Load environment variables
 load_dotenv()
 
@@ -201,9 +210,7 @@ def register():
             return render_template('register_error.html', name=name, event_name=event_name, error_msg="Missing required fields. Please fill out the form completely.")
         
         # Capture the user's IP Address (handles Vercel/Cloudflare proxies too)
-        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-        if ip_address:
-            ip_address = ip_address.split(',')[0].strip()
+        ip_address = get_client_ip()
         
         # Log complete candidate details locally as an immutable backup log
         app.logger.info(
@@ -230,8 +237,7 @@ def register():
 
 def process_team_registration(request, event_title):
     if request.method == 'POST':
-        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-        if ip_address: ip_address = ip_address.split(',')[0].strip()
+        ip_address = get_client_ip()
         
         team_name = request.form.get('team_name', '').upper()
         track = request.form.get('track', '')
@@ -326,9 +332,7 @@ def apply_form(form_id):
             safe_name = base_name.lower().replace(' ', '_').replace('?', '').replace('-', '_').replace('&', 'and').replace('/', '_')
             submission[base_name] = request.form.get(safe_name, '')
             
-        ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-        if ip_address:
-            ip_address = ip_address.split(',')[0].strip()
+        ip_address = get_client_ip()
             
         from google_sheets import background_dynamic_sync_worker
         res = background_dynamic_sync_worker(form_id, form_data, submission, ip_address)
