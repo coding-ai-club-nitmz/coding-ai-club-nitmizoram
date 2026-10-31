@@ -29,9 +29,15 @@
                 {% endif %}
                 {% if notice.registration_open and not deadline_passed %}
                 <div class="notice-detail-action-box">
-                    <a href="{{ notice.link if notice.link else '/register?event=' ~ (notice.event_name | urlencode) }}" class="notice-detail-btn" {% if notice.link and notice.link.startswith('http') %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                    {% if notice.link and notice.link.startswith('http') %}
+                    <a href="{{ notice.link }}" class="notice-detail-btn" target="_blank" rel="noopener noreferrer">
                         {{ notice.link_text if notice.link_text else 'Register Now' }}
                     </a>
+                    {% else %}
+                    <a href="{{ notice.link if notice.link else '/register?event=' ~ (notice.event_name | urlencode) }}" class="notice-detail-btn">
+                        {{ notice.link_text if notice.link_text else 'Register Now' }}
+                    </a>
+                    {% endif %}
                 </div>
                 {% elif notice.registration_open and deadline_passed %}
                 <div class="notice-detail-action-box">

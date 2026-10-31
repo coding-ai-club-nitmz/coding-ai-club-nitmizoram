@@ -104,7 +104,11 @@
                     {% endif %}
                 {% endif %}
                 {% if event.registration_open and not deadline_passed %}
-                <a href="{{ event.registration_link if event.registration_link else '/register?event=' ~ (event.title | urlencode) }}" class="notice-detail-btn" style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block;" {% if event.registration_link and event.registration_link.startswith('http') %}target="_blank" rel="noopener noreferrer"{% endif %}>Register Now</a>
+                    {% if event.registration_link and event.registration_link.startswith('http') %}
+                    <a href="{{ event.registration_link }}" class="notice-detail-btn" style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block;" target="_blank" rel="noopener noreferrer">Register Now</a>
+                    {% else %}
+                    <a href="{{ event.registration_link if event.registration_link else '/register?event=' ~ (event.title | urlencode) }}" class="notice-detail-btn" style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block;">Register Now</a>
+                    {% endif %}
                 {% else %}
                 <span style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block; background: #e0e0e0; color: #666; border-radius: 8px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif;">{% if deadline_passed %}Registration Closed{% else %}Closed{% endif %}</span>
                 {% endif %}
