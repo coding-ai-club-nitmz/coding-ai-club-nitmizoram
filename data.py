@@ -118,7 +118,7 @@ TEAM_DATA = {
         {"name": "Dilip Sahu", "role": "Vice-President", "badge": "VP", "image": "images/dilip.jpg"},
         {"name": "Mahak Singh", "role": "General Secretary", "badge": "Gen. Sec.", "image": "images/mahak.jpg"},
         {"name": "V. Vyshnavi", "role": "Development & Media Lead", "badge": "Lead", "image": "images/vyshnavi.jpg"},
-        {"name": "Aditya Kumar", "role": "Finance & Operations Lead", "badge": "Lead", "image": "images/aditya.jpg"},
+        {"name": "Aditya Verma", "role": "Finance & Operations Lead", "badge": "Lead", "image": "images/adityaverma.jpeg"},
         {"name": "Bijjala Thanmai", "role": "Events & Logistics Lead", "badge": "Lead", "image": "https://ui-avatars.com/api/?name=B&background=random&color=fff&size=200"},
         {"name": "Manoranjan Kumar", "role": "PR & Partnerships Lead", "badge": "Lead", "image": "https://ui-avatars.com/api/?name=M&background=random&color=fff&size=200"}
     ],
