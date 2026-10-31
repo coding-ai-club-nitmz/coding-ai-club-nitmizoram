@@ -433,4 +433,121 @@ def background_dynamic_sync_worker(form_id, form_data, submission, ip_address):
             else:
                 return res
 
+def mark_attendance(roll_number, attendance_config):
+    """
+    Checks if a roll number exists in the registration sheet.
+    If found, adds today's date as a column header (if not already present) and marks TRUE for that student.
+    If not found, returns not_registered status.
+    """
+    folder_id = os.environ.get('GOOGLE_DRIVE_FOLDER_ID')
+    creds_file = os.environ.get('GOOGLE_SERVICE_ACCOUNT_FILE')
+    
+    if not folder_id:
+        return {"status": "error", "message": "GOOGLE_DRIVE_FOLDER_ID is not configured."}
+    
+    try:
+        gspread_client, drive_service = get_google_clients(creds_file)
+        sheet_name = attendance_config.get('sheet_name')
+        
+        # Find the spreadsheet
+        with sheets_api_lock:
+            spreadsheet_id = _spreadsheet_cache.get(sheet_name)
+        
+        if not spreadsheet_id:
+            query = f"name = '{sheet_name}' and '{folder_id}' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' and trashed = false"
+            results = drive_service.files().list(q=query, spaces='drive', fields='files(id, name)').execute()
+            files = results.get('files', [])
+            
+            if files:
+                spreadsheet_id = files[0]['id']
+                _spreadsheet_cache[sheet_name] = spreadsheet_id
+            else:
+                return {"status": "error", "message": f"Registration sheet '{sheet_name}' not found. Please contact the admin."}
+        
+        ss = gspread_client.open_by_key(spreadsheet_id)
+        sheet = ss.sheet1
+        
+        # Get all data to find the roll number
+        all_data = sheet.get_all_values()
+        if not all_data:
+            return {"status": "not_registered"}
+        
+        headers = all_data[0]
+        
+        # Find Roll Number column
+        roll_col_name = attendance_config.get('roll_column', 'Roll Number')
+        roll_col_idx = None
+        for i, h in enumerate(headers):
+            if h.strip().upper() == roll_col_name.strip().upper():
+                roll_col_idx = i
+                break
+        
+        if roll_col_idx is None:
+            return {"status": "error", "message": f"Column '{roll_col_name}' not found in the sheet."}
+        
+        # Find the row with matching roll number
+        roll_upper = roll_number.strip().upper()
+        target_row = None
+        student_name = None
+        for row_idx, row in enumerate(all_data[1:], start=2):  # start=2 because sheets are 1-indexed + header
+            if roll_col_idx < len(row) and row[roll_col_idx].strip().upper() == roll_upper:
+                target_row = row_idx
+                # Try to get the student's name (usually the column before roll number, or first data col after Timestamp/IP)
+                name_col_idx = None
+                for ni, nh in enumerate(headers):
+                    if 'name' in nh.lower() and 'team' not in nh.lower():
+                        name_col_idx = ni
+                        break
+                if name_col_idx is not None and name_col_idx < len(row):
+                    student_name = row[name_col_idx]
+                break
+        
+        if target_row is None:
+            return {"status": "not_registered"}
+        
+        # Today's date as column header
+        today_str = datetime.now().strftime("%d-%b-%Y")
+        
+        # Check if today's date column already exists
+        date_col_idx = None
+        for i, h in enumerate(headers):
+            if h.strip() == today_str:
+                date_col_idx = i + 1  # 1-indexed for gspread
+                break
+        
+        if date_col_idx is None:
+            # Add new column header for today's date
+            date_col_idx = len(headers) + 1
+            sheet.update_cell(1, date_col_idx, today_str)
+        
+        # Check if already marked
+        try:
+            current_val = sheet.cell(target_row, date_col_idx).value
+            if current_val and current_val.strip().upper() == "TRUE":
+                return {"status": "already_marked", "name": student_name or roll_number}
+        except Exception:
+            pass
+        
+        # Mark attendance as TRUE
+        sheet.update_cell(target_row, date_col_idx, "TRUE")
+        
+        return {"status": "success", "name": student_name or roll_number}
+        
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+def background_attendance_worker(roll_number, attendance_config):
+    max_retries = 3
+    base_delay = 2.0
+    
+    for attempt in range(max_retries):
+        res = mark_attendance(roll_number, attendance_config)
+        if res["status"] in ["success", "already_marked", "not_registered", "skipped"]:
+            return res
+        else:
+            if attempt < max_retries - 1:
+                time.sleep((base_delay ** attempt) + random.uniform(0.5, 1.5))
+            else:
+                return res
+
 

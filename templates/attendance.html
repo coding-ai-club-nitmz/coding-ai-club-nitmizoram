@@ -1,0 +1,265 @@
+<!-- Copyright (c) 2026 Coding & AI Club, NIT Mizoram. All Rights Reserved. -->
+{% extends "base.html" %}
+{% block title %}{{ att_config.title }} – {{ global_data.club_name }}{% endblock %}
+{% block meta_description %}{{ att_config.description }}{% endblock %}
+
+{% block content %}
+<style>
+    .attendance-section {
+        padding: clamp(30px, 6vh, 60px) clamp(12px, 4vw, 40px);
+        text-align: center;
+        flex: 1;
+        max-width: 550px;
+        margin: 0 auto;
+        width: 100%;
+        animation: fadeUp 0.7s ease both;
+    }
+
+    .attendance-card {
+        background: var(--bg-card);
+        padding: clamp(30px, 5vw, 45px);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        border-top: 5px solid var(--accent);
+        text-align: center;
+    }
+
+    .attendance-card h2 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 10px;
+    }
+
+    .attendance-card .desc {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 28px;
+        line-height: 1.6;
+    }
+
+    .attendance-input {
+        width: 100%;
+        padding: 16px 18px;
+        border-radius: 8px;
+        border: 1px solid rgba(16, 42, 86, 0.15);
+        background: #f9fbff;
+        font-family: 'Noto Sans', sans-serif;
+        font-size: 1.1rem;
+        text-align: center;
+        letter-spacing: 2px;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: border-color var(--transition), box-shadow var(--transition);
+        box-sizing: border-box;
+    }
+
+    .attendance-input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.2);
+    }
+
+    .attendance-submit {
+        width: 100%;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        color: white;
+        border: none;
+        padding: 16px;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: transform var(--transition), box-shadow var(--transition);
+        margin-top: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .attendance-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .attendance-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .result-box {
+        margin-top: 24px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .result-success {
+        background: #e6ffed;
+        border: 1px solid #34d058;
+        color: #22863a;
+    }
+
+    .result-already {
+        background: #fff8e1;
+        border: 1px solid #f9a825;
+        color: #6d4c00;
+    }
+
+    .result-error {
+        background: #ffeef0;
+        border: 1px solid #e53e3e;
+        color: #b71c1c;
+    }
+
+    .result-not-registered {
+        background: #ffeef0;
+        border: 1px solid #e53e3e;
+        color: #b71c1c;
+    }
+
+    .result-box h3 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .result-box p {
+        font-size: 0.95rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .result-box .result-icon {
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+    }
+
+    .time-closed-box {
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+        color: #666;
+        padding: 24px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+
+    .time-closed-box h3 {
+        font-family: 'Rajdhani', sans-serif;
+        color: #555;
+        margin-bottom: 6px;
+    }
+
+    .loading-spinner-att {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<section class="attendance-section">
+    <div class="attendance-card">
+        <h2>{{ att_config.title }}</h2>
+        <p class="desc">{{ att_config.description }}</p>
+
+        {% if not time_open %}
+        <!-- Attendance window is closed -->
+        <div class="time-closed-box">
+            <h3>⏰ Attendance Window Closed</h3>
+            <p>Attendance is not currently open. Please check back during the scheduled time window.</p>
+        </div>
+
+        {% elif success %}
+        <!-- Attendance marked successfully -->
+        <div class="result-box result-success">
+            <div class="result-icon">✅</div>
+            <h3>Attendance Marked!</h3>
+            <p>Welcome, <strong>{{ student_name }}</strong>. Your attendance for today has been recorded successfully.</p>
+        </div>
+        <div style="margin-top: 20px;">
+            <a href="/" class="notice-detail-btn">Return to Home Page</a>
+        </div>
+
+        {% elif already_marked %}
+        <!-- Already marked today -->
+        <div class="result-box result-already">
+            <div class="result-icon">📋</div>
+            <h3>Already Marked</h3>
+            <p><strong>{{ student_name }}</strong>, your attendance for today has already been recorded. No action needed!</p>
+        </div>
+        <div style="margin-top: 20px;">
+            <a href="/" class="notice-detail-btn">Return to Home Page</a>
+        </div>
+
+        {% elif not_registered %}
+        <!-- Not a registered member -->
+        <div class="result-box result-not-registered">
+            <div class="result-icon">❌</div>
+            <h3>Not Registered</h3>
+            <p>{{ att_config.not_registered_message }}</p>
+        </div>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+            <a href="{{ att_config.not_registered_link }}" class="notice-detail-btn">{{ att_config.not_registered_link_text }}</a>
+            <a href="/attendance" class="notice-detail-btn" style="background: transparent; border: 2px solid var(--accent); color: var(--accent);">Try Again</a>
+        </div>
+
+        {% elif error %}
+        <!-- Error state -->
+        <div class="result-box result-error">
+            <div class="result-icon">⚠️</div>
+            <h3>Error</h3>
+            <p>{{ error }}</p>
+        </div>
+        <div style="margin-top: 20px;">
+            <a href="/attendance" class="notice-detail-btn" style="background: transparent; border: 2px solid var(--accent); color: var(--accent);">Try Again</a>
+        </div>
+
+        {% else %}
+        <!-- Default: Show the form -->
+        <form method="POST" action="/attendance" id="attendanceForm">
+            <input type="text" name="roll" class="attendance-input" 
+                   placeholder="e.g. BT24CS028" 
+                   required 
+                   pattern="^[A-Za-z]{2}\d{2}[A-Za-z]{2}\d{3}$"
+                   title="Format: 2 letters, 2 numbers, 2 letters, 3 numbers (e.g. BT24CS028)"
+                   autocomplete="off"
+                   autofocus>
+            <button type="submit" class="attendance-submit" id="submitBtn">
+                <span class="btn-text">Mark Attendance</span>
+                <div class="loading-spinner-att" id="spinner"></div>
+            </button>
+        </form>
+
+        <script>
+            // Auto-uppercase
+            document.querySelector('.attendance-input').addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+
+            document.getElementById('attendanceForm').addEventListener('submit', function() {
+                var btn = document.getElementById('submitBtn');
+                var spinner = document.getElementById('spinner');
+                var btnText = btn.querySelector('.btn-text');
+                btn.disabled = true;
+                spinner.style.display = 'block';
+                btnText.textContent = 'Checking...';
+            });
+        </script>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

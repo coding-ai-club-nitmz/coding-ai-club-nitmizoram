@@ -350,6 +350,46 @@ def apply_form(form_id):
 
 
 
+@app.route('/attendance', methods=['GET', 'POST'])
+@limiter.limit("10 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
+def attendance():
+    from datetime import datetime
+    att_config = data.ATTENDANCE_CONFIG
+    
+    # Check time window
+    now = datetime.now()
+    start_str = att_config.get('start_time')
+    end_str = att_config.get('end_time')
+    
+    time_open = True
+    if start_str and end_str:
+        start_time = datetime.strptime(start_str, "%Y-%m-%d %H:%M:%S")
+        end_time = datetime.strptime(end_str, "%Y-%m-%d %H:%M:%S")
+        if now < start_time or now > end_time:
+            time_open = False
+    
+    if request.method == 'POST' and time_open:
+        roll = request.form.get('roll', '').strip().upper()
+        
+        if not roll:
+            return render_template('attendance.html', att_config=att_config, time_open=time_open, error="Please enter your Roll Number.")
+        
+        from google_sheets import background_attendance_worker
+        res = background_attendance_worker(roll, att_config)
+        
+        if res and res["status"] == "success":
+            return render_template('attendance.html', att_config=att_config, time_open=time_open, success=True, student_name=res.get("name", roll))
+        elif res and res["status"] == "already_marked":
+            return render_template('attendance.html', att_config=att_config, time_open=time_open, already_marked=True, student_name=res.get("name", roll))
+        elif res and res["status"] == "not_registered":
+            return render_template('attendance.html', att_config=att_config, time_open=time_open, not_registered=True)
+        else:
+            error_msg = res.get("message", "An unexpected error occurred.") if res else "An unexpected error occurred."
+            return render_template('attendance.html', att_config=att_config, time_open=time_open, error=error_msg)
+    
+    return render_template('attendance.html', att_config=att_config, time_open=time_open)
+
+
 @app.route('/robots.txt')
 def robots():
     return send_from_directory(app.root_path, 'robots.txt')
