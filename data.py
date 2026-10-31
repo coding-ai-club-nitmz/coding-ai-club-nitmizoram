@@ -23,17 +23,25 @@ GLOBAL_DATA = {
 # To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
     {
-        "id": "inter-nit-code-wars",
+        "id": "debate-competition-2026",
         "featured": True,
-        "title": "Inter NIT Code Wars",
-        "date": "October 23, 2026",
-        "summary": "Organized by AlgoZenith in collaboration with All 31 NITs of India. Coding & AI Club is the official Single Point of Contact (SPOC) for NIT Mizoram. Register by 27th Oct 6:00 PM to represent our campus!",
-        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organized by:</strong> AlgoZenith | <strong>In Collaboration with:</strong> All 31 NITs of India | <strong>NIT Mizoram SPOC:</strong> Coding & AI Club, NIT Mizoram</div><p><strong>AlgoZenith</strong> is conducting its flagship Pan-India competitive programming contest — the <strong>Inter NIT Code Wars</strong>, where all 31 NITs go head-to-head on a single national leaderboard to settle which NIT has the strongest coding culture!</p><p><strong>Coding & AI Club, NIT Mizoram</strong> is the official <strong>Single Point of Contact (SPOC)</strong> representing NIT Mizoram for this edition. We are calling upon the sharpest coders from NIT Mizoram to step forward, compete, and represent our campus on the national leaderboard.</p><p><strong>Format & Level:</strong> Codeforces Div 2 level contest. Video recording of yourself and your screen (showing you typing) is mandatory during the contest.</p><p><strong>Contest Date:</strong> 27th October 2026 (Tuesday), 8:00 PM onwards.</p><p><strong>Registration Deadline:</strong> 27th October 2026, 6:00 PM.</p><p><strong>Prizes:</strong> To be announced soon by AlgoZenith.</p><p><strong>Single Point of Contact (Queries):</strong> Coding & AI Club, NIT Mizoram — <a href=\"mailto:coding.club@nitmz.ac.in\" style=\"color: var(--accent);\">coding.club@nitmz.ac.in</a></p><p>Register your details on the official Google Form linked below. The contest link, guidelines, and rules will be sent directly via email to registered candidates only.</p></div>",
-        "registration_open": True,
-        "registration_deadline": "2026-10-27 18:00:00",
-        "event_name": "Inter NIT Code Wars",
-        "link": "https://forms.gle/V2rUEiLrnKjvCPkJ7",
-        "link_text": "Register on Google Form"
+        "title": "Inter-Departmental cum Societies/Clubs Debate Competition",
+        "date": "November 11, 2026",
+        "summary": "Represent the Coding & AI Club in the Inter-Departmental cum Societies/Clubs Debate Competition on Nov 11. An internal competition will select the winning team to represent the club!",
+        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Event:</strong> Inter-Departmental cum Societies/Clubs Debate Competition | <strong>Date:</strong> November 11, 2026</div><p>Coding & AI Club is inviting interested candidates to represent our club at the upcoming <strong>Inter-Departmental cum Societies/Clubs Debate Competition</strong> scheduled on <strong>November 11, 2026</strong>.</p><p><strong>Selection & Representation:</strong> An internal screening competition will be conducted by the club. The winning team of the internal competition will officially represent the Coding & AI Club at the institute level!</p><p><strong>Registration Status:</strong> Official registrations have not started yet. If you are interested in participating and representing the club, please email us directly with your details at <a href=\"mailto:coding.club@nitmz.ac.in?subject=Debate%20Competition%20Representation%20-%20Coding%20%26%20AI%20Club\" style=\"color: var(--accent); font-weight: bold;\">coding.club@nitmz.ac.in</a>.</p></div>",
+        "registration_open": False,
+        "link": "mailto:coding.club@nitmz.ac.in?subject=Debate%20Competition%20Representation%20-%20Coding%20%26%20AI%20Club",
+        "link_text": "Email to Represent the Club"
+    },
+    {
+        "id": "inter-nit-code-wars",
+        "featured": False,
+        "title": "Inter NIT Code Wars: Successfully Concluded!",
+        "date": "October 27, 2026",
+        "summary": "The Pan-India competitive programming contest by AlgoZenith across All 31 NITs has concluded. Thank you to all participants who represented NIT Mizoram!",
+        "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organizers:</strong> AlgoZenith | All 31 NITs of India | <strong>NIT Mizoram SPOC:</strong> Coding & AI Club</div><p>The <strong>Inter NIT Code Wars</strong> has officially wrapped up! Thank you to all the sharp coders from NIT Mizoram who represented our campus on the national leaderboard in the Codeforces Div 2 level contest.</p></div>",
+        "registration_open": False,
+        "links": []
     },
     {
         "id": "ai-startup-challenge-2026",
@@ -168,8 +176,16 @@ PROJECT_DATA = {
 }
 
 EVENT_DATA = [
-#    {"title": "Technox'2025-26 Part-II", "desc": "The premier technical festival featuring advanced coding hacks, AI quizzes, and hardware exhibitions.", "image": "images/events/notpresent.jpg", "registration_open": True, "upcoming": True},
-    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India coding contest by AlgoZenith across All 31 NITs (Codeforces Div 2 level). Contest: 27th Oct (Tue) 8:00 PM onwards. Register by 27th Oct 6:00 PM to represent NIT Mizoram!", "image": "images/club-logo.png", "registration_open": True, "registration_link": "https://forms.gle/V2rUEiLrnKjvCPkJ7", "registration_deadline": "2026-10-27 18:00:00", "upcoming": True},
+    {
+        "title": "Inter-Departmental / Clubs Debate Competition",
+        "desc": "Represent the Coding & AI Club in the Inter-Departmental cum Societies/Clubs Debate Competition on Nov 11, 2026. Internal competition winners will represent the club! Email coding.club@nitmz.ac.in if interested.",
+        "image": "images/club-logo.png",
+        "registration_open": False,
+        "action_link": "mailto:coding.club@nitmz.ac.in?subject=Interest%20in%20representing%20Coding%20%26%20AI%20Club%20-%20Debate%20Competition",
+        "action_text": "Email to Represent Club",
+        "upcoming": True
+    },
+    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India competitive programming contest conducted by AlgoZenith across All 31 NITs on a single national leaderboard.", "image": "images/club-logo.png", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
     {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
     {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},

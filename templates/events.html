@@ -114,6 +114,8 @@
                     {% else %}
                     <a href="{{ event.registration_link if event.registration_link else '/register?event=' ~ (event.title | urlencode) }}" class="notice-detail-btn" style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block;">Register Now</a>
                     {% endif %}
+                {% elif event.action_link %}
+                <a href="{{ event.action_link }}" class="notice-detail-btn" style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block;">{{ event.action_text if event.action_text else 'Email to Participate' }}</a>
                 {% else %}
                 <span style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block; background: #e0e0e0; color: #666; border-radius: 8px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif;">{% if deadline_passed %}Registration Closed{% else %}Closed{% endif %}</span>
                 {% endif %}
