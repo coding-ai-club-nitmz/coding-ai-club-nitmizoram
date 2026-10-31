@@ -20,6 +20,7 @@ class TestWebRoutes(unittest.TestCase):
             '/contact',
             '/join',
             '/register',
+            '/attendance',
             '/robots.txt',
             '/sitemap.xml'
         ]
