@@ -4,10 +4,13 @@ import re
 import time
 import random
 import threading
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import gspread
+
+# IST Timezone for accurate Indian Standard Time in Google Sheets logs
+IST = timezone(timedelta(hours=5, minutes=30))
 
 # Global thread lock to prevent race conditions during concurrent writing within a single process
 sheets_api_lock = threading.Lock()
@@ -505,8 +508,8 @@ def mark_attendance(roll_number, attendance_config):
         if target_row is None:
             return {"status": "not_registered"}
         
-        # Today's date as column header
-        today_str = datetime.now().strftime("%d-%b-%Y")
+        # Today's date as column header in IST
+        today_str = datetime.now(IST).strftime("%d-%b-%Y")
         
         # Check if today's date column already exists
         date_col_idx = None

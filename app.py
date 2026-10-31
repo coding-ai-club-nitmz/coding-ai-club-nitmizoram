@@ -19,8 +19,15 @@ import time
 import re
 import data
 import threading
+from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 from google_sheets import background_sync_worker
+
+# IST Timezone Helper (NIT Mizoram is in IST, while Vercel servers run in UTC)
+IST = timezone(timedelta(hours=5, minutes=30))
+
+def get_ist_now():
+    return datetime.now(IST).replace(tzinfo=None)
 
 # Load environment variables
 load_dotenv()
@@ -70,12 +77,18 @@ def reload_data_if_modified():
 # Context processor makes 'global_data' available in every template
 @app.context_processor
 def inject_global_data():
-    from datetime import datetime
-    return dict(global_data=data.GLOBAL_DATA, common_dropdowns=data.COMMON_DROPDOWNS, stats_data=data.STATS_DATA, now=datetime.now())
+    return dict(global_data=data.GLOBAL_DATA, common_dropdowns=data.COMMON_DROPDOWNS, stats_data=data.STATS_DATA, now=get_ist_now())
 
 # Configure caching based on request type: prevent caching for dynamic templates in development, but cache in production
 @app.after_request
 def add_header(response):
+    # Dynamic and time-sensitive routes must never be cached by CDN or browser
+    is_dynamic = (
+        request.path == '/attendance' or 
+        request.path.startswith('/apply/') or 
+        request.path.startswith('/register')
+    )
+    
     # Check if the request is for a static asset
     is_static = (
         request.endpoint == 'static' or 
@@ -86,18 +99,18 @@ def add_header(response):
     # Check if running in production on Vercel
     is_vercel = os.environ.get('VERCEL') == '1'
     
-    if is_static:
+    if is_dynamic:
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+    elif is_static:
         # Cache static files in the browser (configured in data.py)
-        # "must-revalidate" combined with a max-age tells the browser to cache files locally.
         cache_age = data.SYSTEM_CONFIG.get("static_cache_max_age", 180)
         response.headers["Cache-Control"] = f"public, max-age={cache_age}, must-revalidate"
         response.headers.pop("Pragma", None)
         response.headers.pop("Expires", None)
     elif is_vercel:
-        # In production on Vercel, cache HTML pages at Vercel's global CDN Edge permanently (until next deployment).
-        # We tell the browser to cache pages locally for 5 minutes (max-age=300) to prevent log spam from prefetch hovers.
-        # The CDN serves the cached page instantly (s-maxage=31536000) and revalidates in the background (stale-while-revalidate=60).
-        # This reduces loading time from 300ms/100ms down to 10-20ms (CDN speed) globally!
+        # In production on Vercel, cache static informational HTML pages at Vercel's global CDN Edge
         response.headers["Cache-Control"] = "public, max-age=300, s-maxage=31536000, stale-while-revalidate=60"
         response.headers.pop("Pragma", None)
         response.headers.pop("Expires", None)
@@ -295,11 +308,10 @@ def apply_form(form_id):
         return render_template('404.html'), 404
     
     # Check registration deadline
-    from datetime import datetime
     deadline_str = form_data.get('registration_deadline')
     if deadline_str:
         deadline = datetime.strptime(deadline_str, "%Y-%m-%d %H:%M:%S")
-        if datetime.now() > deadline:
+        if get_ist_now() > deadline:
             return render_template('register_error.html', name="User", event_name=form_data['title'], error_msg="Registration for this event has closed. The deadline was " + deadline.strftime("%d %b %Y, %I:%M %p") + ".")
         
     redirect_url = form_data.get('redirect_url')
@@ -353,11 +365,10 @@ def apply_form(form_id):
 @app.route('/attendance', methods=['GET', 'POST'])
 @limiter.limit("10 per minute", error_message="You are submitting too fast. Please wait a minute before trying again.")
 def attendance():
-    from datetime import datetime
     att_config = data.ATTENDANCE_CONFIG
     
-    # Check time window
-    now = datetime.now()
+    # Check time window using Indian Standard Time (IST)
+    now = get_ist_now()
     start_str = att_config.get('start_time')
     end_str = att_config.get('end_time')
     
