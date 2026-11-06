@@ -22,8 +22,10 @@
                     {% for lnk in notice.links %}
                     <a href="{{ lnk.url }}" target="_blank" rel="noopener noreferrer" class="notice-action-link notice-action-accent">{{ lnk.text }}</a>
                     {% endfor %}
-                    {% elif notice.link %}
+                    {% elif notice.link and notice.link != '#' %}
                     <a href="{% if notice.prefill %}/join?topic={{ notice.prefill.topic | urlencode }}&message={{ notice.prefill.message | urlencode }}{% else %}{{ notice.link }}{% endif %}" class="notice-action-link notice-action-accent">{{ notice.link_text }}</a>
+                    {% elif notice.link == '#' %}
+                    <span style="font-size: 0.8rem; padding: 4px 10px; background: #e0e0e0; color: #666; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; font-family: 'Rajdhani', sans-serif;">{{ notice.link_text if notice.link_text else 'Closed' }}</span>
                     {% endif %}
                 </div>
             </div>

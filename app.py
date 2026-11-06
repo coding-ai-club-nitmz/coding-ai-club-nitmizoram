@@ -9,7 +9,7 @@ def new_getaddrinfo(*args, **kwargs):
     return [res for res in responses if res[0] == socket.AF_INET]
 socket.getaddrinfo = new_getaddrinfo
 
-from flask import Flask, render_template, send_from_directory, request, redirect
+from flask import Flask, render_template, send_from_directory, request, redirect, Response
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
@@ -161,7 +161,8 @@ def teams():
                            mentors=data.TEAM_DATA.get('mentors', []), 
                            founding=data.TEAM_DATA.get('founding', []),
                            core=data.TEAM_DATA.get('core', []),
-                           coordinators=data.TEAM_DATA.get('coordinators', []))
+                           coordinators=data.TEAM_DATA.get('coordinators', []),
+                           achievements=data.ACHIEVEMENTS_DATA)
 
 @app.route('/projects')
 def projects():
@@ -170,6 +171,10 @@ def projects():
 @app.route('/resources')
 def resources():
     return render_template('resources.html', resources=data.RESOURCE_DATA)
+
+@app.route('/portal')
+def portal():
+    return render_template('portal.html')
 
 @app.route('/collaborate')
 def collaborate():
@@ -245,16 +250,16 @@ def process_team_registration(request, event_title):
         l_name = request.form.get('l_name', '').upper()
         l_roll = request.form.get('l_roll', '').upper()
         l_email = request.form.get('l_email', '').lower()
-        
-        if not team_name or not l_name or not l_roll or not l_email:
-            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for the Team Leader. Please fill out the form completely.")
-        
+
         l_phone = request.form.get('l_phone', '')
         l_phone = re.sub(r'\D', '', l_phone)
         if len(l_phone) >= 12 and l_phone.startswith('91'): l_phone = l_phone[2:]
         elif len(l_phone) >= 11 and l_phone.startswith('0'): l_phone = l_phone[1:]
         l_phone = l_phone[:10]
-        
+
+        if not team_name or not l_name or not l_roll or not l_email or not l_phone:
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for the Team Leader. Please fill out the form completely.")
+
         m2_name = request.form.get('m2_name', '').upper()
         m2_roll = request.form.get('m2_roll', '').upper()
         m2_email = request.form.get('m2_email', '').lower()
@@ -266,6 +271,18 @@ def process_team_registration(request, event_title):
         m4_name = request.form.get('m4_name', '').upper()
         m4_roll = request.form.get('m4_roll', '').upper()
         m4_email = request.form.get('m4_email', '').lower()
+
+        try:
+            members_count = int(request.form.get('members_count', '1'))
+        except ValueError:
+            members_count = 1
+
+        if members_count >= 2 and (not m2_name or not m2_roll or not m2_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 2. Please fill out the form completely.")
+        if members_count >= 3 and (not m3_name or not m3_roll or not m3_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 3. Please fill out the form completely.")
+        if members_count >= 4 and (not m4_name or not m4_roll or not m4_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 4. Please fill out the form completely.")
 
         # Check for duplicate roll numbers within the submitted team
         team_rolls = [r for r in [l_roll, m2_roll, m3_roll, m4_roll] if r.strip()]
@@ -403,6 +420,57 @@ def attendance():
             return render_template('attendance.html', att_config=att_config, time_open=time_open, error=error_msg)
     
     return render_template('attendance.html', att_config=att_config, time_open=time_open)
+
+
+@app.route('/verify', methods=['GET', 'POST'])
+def verify_certificate():
+    cert_data = None
+    query = ""
+    error = None
+    if request.method == 'POST':
+        query = request.form.get('cert_id', '').strip().upper()
+        if query:
+            cert_data = data.CERTIFICATES_DATA.get(query)
+            if not cert_data:
+                for key, val in data.CERTIFICATES_DATA.items():
+                    if isinstance(val, dict) and val.get('roll') == query:
+                        cert_data = val
+                        break
+            if not cert_data:
+                error = f"No certificate record found for '{query}'. Please verify the ID or Roll Number."
+    return render_template('verify.html', cert_data=cert_data, query=query, error=error)
+
+@app.route('/verify/<cert_id>')
+def verify_certificate_id(cert_id):
+    cert_id = cert_id.strip().upper()
+    cert_data = data.CERTIFICATES_DATA.get(cert_id)
+    error = None
+    if not cert_data:
+        error = f"No certificate record found for '{cert_id}'."
+    return render_template('verify.html', cert_data=cert_data, query=cert_id, error=error)
+
+@app.route('/event/<event_slug>/calendar.ics')
+def event_ics_calendar(event_slug):
+    evt = next((e for e in data.EVENT_DATA if e.get('slug') == event_slug), None)
+    if not evt or not evt.get('start_date'):
+        return render_template('404.html'), 404
+
+    start_dt = datetime.strptime(evt['start_date'], "%Y-%m-%d %H:%M:%S")
+    end_dt = datetime.strptime(evt.get('end_date', evt['start_date']), "%Y-%m-%d %H:%M:%S")
+
+    dtstart = start_dt.strftime("%Y%m%dT%H%M%SZ")
+    dtend = end_dt.strftime("%Y%m%dT%H%M%SZ")
+    dtstamp = get_ist_now().strftime("%Y%m%dT%H%M%SZ")
+
+    summary = evt['title']
+    description = evt['desc']
+    location = evt.get('location', 'NIT Mizoram')
+
+    ics_content = f"BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Coding and AI Club//NIT Mizoram//EN\r\nBEGIN:VEVENT\r\nUID:{event_slug}@coding-ai-club-nitmz.ac.in\r\nDTSTAMP:{dtstamp}\r\nDTSTART:{dtstart}\r\nDTEND:{dtend}\r\nSUMMARY:{summary}\r\nDESCRIPTION:{description}\r\nLOCATION:{location}\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n"
+
+    response = Response(ics_content, mimetype='text/calendar')
+    response.headers['Content-Disposition'] = f'attachment; filename="{event_slug}.ics"'
+    return response
 
 
 @app.route('/robots.txt')

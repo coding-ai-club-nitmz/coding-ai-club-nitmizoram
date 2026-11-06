@@ -119,6 +119,11 @@
                 {% else %}
                 <span style="font-size: 0.8rem; padding: 6px 15px; margin-top: 10px; display: inline-block; background: #e0e0e0; color: #666; border-radius: 8px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif;">{% if deadline_passed %}Registration Closed{% else %}Closed{% endif %}</span>
                 {% endif %}
+                {% if event.slug and event.start_date %}
+                <div style="margin-top: 10px;">
+                    <a href="/event/{{ event.slug }}/calendar.ics" class="contact-link color-web" style="font-size: 0.78rem; padding: 5px 12px; display: inline-block;">Add to Calendar (.ics)</a>
+                </div>
+                {% endif %}
             </div>
             {% endif %}
             {% endfor %}
