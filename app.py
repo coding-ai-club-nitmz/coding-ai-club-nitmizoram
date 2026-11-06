@@ -20,6 +20,7 @@ import time
 import re
 import data
 import threading
+from urllib.parse import quote
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 from google_sheets import background_sync_worker
@@ -472,6 +473,26 @@ def event_ics_calendar(event_slug):
     response = Response(ics_content, mimetype='text/calendar')
     response.headers['Content-Disposition'] = f'attachment; filename="{event_slug}.ics"'
     return response
+
+@app.route('/event/<event_slug>/google-calendar')
+def event_google_calendar(event_slug):
+    evt = next((e for e in data.EVENT_DATA if e.get('slug') == event_slug), None)
+    if not evt or not evt.get('start_date'):
+        return render_template('404.html'), 404
+
+    # Convert IST time (UTC+5:30) to UTC for Google Calendar ISO format
+    start_dt = datetime.strptime(evt['start_date'], "%Y-%m-%d %H:%M:%S") - timedelta(hours=5, minutes=30)
+    end_dt = datetime.strptime(evt.get('end_date', evt['start_date']), "%Y-%m-%d %H:%M:%S") - timedelta(hours=5, minutes=30)
+
+    dtstart = start_dt.strftime("%Y%m%dT%H%M%SZ")
+    dtend = end_dt.strftime("%Y%m%dT%H%M%SZ")
+
+    title = quote(evt['title'])
+    details = quote(evt['desc'])
+    location = quote(evt.get('location', 'NIT Mizoram'))
+
+    google_url = f"https://calendar.google.com/calendar/render?action=TEMPLATE&text={title}&dates={dtstart}/{dtend}&details={details}&location={location}"
+    return redirect(google_url, code=302)
 
 
 @app.route('/robots.txt')

@@ -211,6 +211,14 @@ class TestWebRoutes(unittest.TestCase):
         bad_res = self.client.get('/event/non-existent-event/calendar.ics')
         self.assertEqual(bad_res.status_code, 404)
 
+    def test_google_calendar_redirect(self):
+        res = self.client.get('/event/debate-competition-2026/google-calendar')
+        self.assertEqual(res.status_code, 302)
+        self.assertIn('calendar.google.com/calendar/render', res.location)
+
+        bad_res = self.client.get('/event/non-existent-event/google-calendar')
+        self.assertEqual(bad_res.status_code, 404)
+
     def test_notice_detail_scenarios(self):
         from data import ANNOUNCEMENTS
         if ANNOUNCEMENTS:
