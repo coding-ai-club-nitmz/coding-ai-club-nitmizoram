@@ -190,8 +190,9 @@
             {% set m_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
             <a href="/notices" class="mobile-nav-link {{ m_active_notices }}" aria-label="Notices">Notice</a>
 
-            {% set m_active_teams = 'active' if request.path == '/teams' else '' %}
-            <a href="/teams" class="mobile-nav-link {{ m_active_teams }}" aria-label="Team">Team</a>
+            {% set is_portal_path = (request.path.startswith('/portal') or request.path.startswith('/attendance') or request.path.startswith('/verify') or request.path.startswith('/resources') or request.path.startswith('/register') or request.path.startswith('/apply')) %}
+            {% set m_active_portal = 'active' if is_portal_path else '' %}
+            <a href="/portal" class="mobile-nav-link {{ m_active_portal }}" aria-label="Portal">Portal</a>
 
             <button class="navbar-toggle" onclick="toggleNavbar()" aria-label="Toggle Menu">
                 <span class="hamburger-bar"></span>
@@ -212,8 +213,8 @@
             {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
             <a href="/notices" class="{{ d_active_notices }}" {{ d_aria_notices }}>Notice Board</a>
 
-            {% set d_active_events = 'active' if request.path == '/events' else '' %}
-            {% set d_aria_events = 'aria-current=page' if request.path == '/events' else '' %}
+            {% set d_active_events = 'active' if (request.path == '/events' or request.path.startswith('/event/')) else '' %}
+            {% set d_aria_events = 'aria-current=page' if (request.path == '/events' or request.path.startswith('/event/')) else '' %}
             <a href="/events" class="{{ d_active_events }}" {{ d_aria_events }}>Events</a>
 
             {% set d_active_teams = 'active' if request.path == '/teams' else '' %}
@@ -224,8 +225,8 @@
             {% set d_aria_projects = 'aria-current=page' if request.path == '/projects' else '' %}
             <a href="/projects" class="{{ d_active_projects }}" {{ d_aria_projects }}>Projects</a>
 
-            {% set d_active_portal = 'active' if (request.path == '/portal' or request.path == '/attendance' or request.path == '/verify' or request.path == '/resources') else '' %}
-            {% set d_aria_portal = 'aria-current=page' if (request.path == '/portal' or request.path == '/attendance' or request.path == '/verify' or request.path == '/resources') else '' %}
+            {% set d_active_portal = 'active' if is_portal_path else '' %}
+            {% set d_aria_portal = 'aria-current=page' if is_portal_path else '' %}
             <a href="/portal" class="{{ d_active_portal }}" {{ d_aria_portal }}>Student Portal</a>
 
             {% set d_active_collab = 'active' if request.path == '/collaborate' else '' %}
