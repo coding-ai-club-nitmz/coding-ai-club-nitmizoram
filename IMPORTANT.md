@@ -21,8 +21,7 @@ The Automator bot operates securely and can only see what you explicitly share w
 - **Check Access**: Ensure that your Google Drive Folder is shared with the service account email configured in your `.env` (`GOOGLE_CLIENT_EMAIL`).
 - It must be given **Editor** permissions. If it only has "Viewer" access, or if the folder isn't shared, it cannot type the student registrations into the sheets.
 
-## 4. Hosting Warning (Vercel)
-This application uses Python's `threading.Thread` to send data to Google Sheets in the background. This ensures the website feels lightning-fast for the student clicking "Submit".
-- **VPS / Normal Servers (Safe)**: If you host this on AWS, Render, DigitalOcean, or Hostinger VPS, background threads work perfectly.
-- **Vercel / Serverless (Danger)**: If you deploy this to Vercel, Vercel completely freezes the server the exact millisecond the success page loads. This means your background thread will be frozen and killed before it finishes sending data to Google Sheets! 
-   - *Fix for Vercel:* If you MUST use Vercel, you need to remove the background threading in `app.py` and run the Google Sheets function normally, so the script waits for Google to confirm the save before loading the Success page.
+## 4. Hosting & Vercel Serverless Notes
+This application executes Google Sheets synchronization synchronously within Flask request handlers to ensure 100% data delivery before displaying the success page.
+- **Serverless Compatibility**: Because execution is synchronous, serverless platforms (such as Vercel) will complete the sheet sync during the request window before freezing the function instance.
+- **Client UX**: The web forms feature a smooth loading overlay ("Processing Registration...") that informs students while Google Sheets sync takes place in the background.

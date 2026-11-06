@@ -245,16 +245,16 @@ def process_team_registration(request, event_title):
         l_name = request.form.get('l_name', '').upper()
         l_roll = request.form.get('l_roll', '').upper()
         l_email = request.form.get('l_email', '').lower()
-        
-        if not team_name or not l_name or not l_roll or not l_email:
-            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for the Team Leader. Please fill out the form completely.")
-        
+
         l_phone = request.form.get('l_phone', '')
         l_phone = re.sub(r'\D', '', l_phone)
         if len(l_phone) >= 12 and l_phone.startswith('91'): l_phone = l_phone[2:]
         elif len(l_phone) >= 11 and l_phone.startswith('0'): l_phone = l_phone[1:]
         l_phone = l_phone[:10]
-        
+
+        if not team_name or not l_name or not l_roll or not l_email or not l_phone:
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for the Team Leader. Please fill out the form completely.")
+
         m2_name = request.form.get('m2_name', '').upper()
         m2_roll = request.form.get('m2_roll', '').upper()
         m2_email = request.form.get('m2_email', '').lower()
@@ -266,6 +266,18 @@ def process_team_registration(request, event_title):
         m4_name = request.form.get('m4_name', '').upper()
         m4_roll = request.form.get('m4_roll', '').upper()
         m4_email = request.form.get('m4_email', '').lower()
+
+        try:
+            members_count = int(request.form.get('members_count', '1'))
+        except ValueError:
+            members_count = 1
+
+        if members_count >= 2 and (not m2_name or not m2_roll or not m2_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 2. Please fill out the form completely.")
+        if members_count >= 3 and (not m3_name or not m3_roll or not m3_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 3. Please fill out the form completely.")
+        if members_count >= 4 and (not m4_name or not m4_roll or not m4_email):
+            return render_template('register_error.html', name=l_name, event_name=event_title, error_msg="Missing required fields for Member 4. Please fill out the form completely.")
 
         # Check for duplicate roll numbers within the submitted team
         team_rolls = [r for r in [l_roll, m2_roll, m3_roll, m4_roll] if r.strip()]

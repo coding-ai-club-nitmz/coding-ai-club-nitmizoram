@@ -61,6 +61,8 @@
                     <a href="{{ notice.link }}{{ '?subject=' ~ ('Official Inquiry regarding ' ~ notice.title ~ ' | ' ~ global_data.club_name ~ ', NIT Mizoram') | urlencode if '?' not in notice.link else '' }}" class="notice-detail-btn">
                         {{ notice.link_text }}
                     </a>
+                    {% elif notice.link == '#' %}
+                    <span style="font-size: 0.95rem; padding: 10px 20px; display: inline-block; background: #e0e0e0; color: #666; border-radius: 8px; font-weight: 700; letter-spacing: 1px; font-family: 'Rajdhani', sans-serif;">{{ notice.link_text if notice.link_text else 'Registration Closed' }}</span>
                     {% else %}
                     <a href="{{ notice.link }}" class="notice-detail-btn">
                         {{ notice.link_text }}

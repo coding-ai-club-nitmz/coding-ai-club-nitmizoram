@@ -17,6 +17,7 @@ class TestWebRoutes(unittest.TestCase):
             '/teams',
             '/projects',
             '/resources',
+            '/collaborate',
             '/contact',
             '/join',
             '/register',
@@ -34,8 +35,8 @@ class TestWebRoutes(unittest.TestCase):
     def test_register_post_route(self, mock_sync):
         mock_sync.return_value = {"status": "success"}
         payload = {
-            'name': 'Test Student',
-            'roll': 'CSE/23/99',
+            'name': 'TEST STUDENT',
+            'roll': 'BT23CS099',
             'email': 'test@nitmz.ac.in',
             'phone': '9876543210',
             'branch': 'Computer Science & Engineering',
@@ -50,7 +51,6 @@ class TestWebRoutes(unittest.TestCase):
         self.assertIn(b"Registration Successful", response.data)
 
     def test_notice_detail_route(self):
-        # Notice detail requires a valid ID. Let's inspect ANNOUNCEMENTS from data
         from data import ANNOUNCEMENTS
         if ANNOUNCEMENTS:
             first_id = ANNOUNCEMENTS[0]['id']
@@ -65,6 +65,63 @@ class TestWebRoutes(unittest.TestCase):
             print(f"Bad notice '{bad_route}' -> HTTP {response.status_code}")
             self.assertEqual(response.status_code, 404)
 
+    @patch('google_sheets.background_sync_team_worker')
+    def test_team_register_route(self, mock_team_sync):
+        mock_team_sync.return_value = {"status": "success"}
+        get_res = self.client.get('/register/innovaite-idea-pitching')
+        self.assertEqual(get_res.status_code, 200)
+
+        payload = {
+            'team_name': 'CYBERBOTS',
+            'members_count': '1',
+            'track': 'Healthcare',
+            'l_name': 'LEADER NAME',
+            'l_roll': 'BT24CS001',
+            'l_email': 'leader@nitmz.ac.in',
+            'l_phone': '9876543210'
+        }
+        post_res = self.client.post('/register/innovaite-idea-pitching', data=payload)
+        self.assertEqual(post_res.status_code, 200)
+        self.assertIn(b"Registration Successful", post_res.data)
+
+    @patch('google_sheets.background_dynamic_sync_worker')
+    def test_apply_form_route(self, mock_dynamic_sync):
+        mock_dynamic_sync.return_value = {"status": "success"}
+        get_res = self.client.get('/apply/club-join')
+        self.assertEqual(get_res.status_code, 200)
+
+        payload = {
+            'full_name': 'TEST APPLICANT',
+            'roll_number': 'BT24CS010',
+            'email_address': 'applicant@nitmz.ac.in',
+            'phone_number': '9876543210',
+            'branch': 'Computer Science & Engineering',
+            'degree_programme': 'B.Tech',
+            'academic_year': '1st Year',
+            'why_do_you_want_to_join': 'I want to build real software.'
+        }
+        post_res = self.client.post('/apply/club-join', data=payload)
+        self.assertEqual(post_res.status_code, 200)
+        self.assertIn(b"Registration Successful", post_res.data)
+
+    @patch('google_sheets.background_attendance_worker')
+    def test_attendance_post_route(self, mock_attendance):
+        mock_attendance.return_value = {"status": "success", "name": "TEST STUDENT"}
+
+        # Temporarily mock attendance window to open
+        from data import ATTENDANCE_CONFIG
+        orig_start, orig_end = ATTENDANCE_CONFIG.get('start_time'), ATTENDANCE_CONFIG.get('end_time')
+        ATTENDANCE_CONFIG['start_time'] = '2020-01-01 00:00:00'
+        ATTENDANCE_CONFIG['end_time'] = '2030-01-01 00:00:00'
+
+        try:
+            payload = {'roll': 'BT24CS028'}
+            response = self.client.post('/attendance', data=payload)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b"Attendance Marked", response.data)
+        finally:
+            ATTENDANCE_CONFIG['start_time'] = orig_start
+            ATTENDANCE_CONFIG['end_time'] = orig_end
+
 if __name__ == '__main__':
     unittest.main()
-

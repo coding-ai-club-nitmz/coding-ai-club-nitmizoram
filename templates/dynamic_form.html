@@ -189,8 +189,8 @@
 </section>
 
 <script>
-    // Auto-uppercase all text inputs and textareas (except email)
-    document.querySelectorAll('input[type="text"], textarea').forEach(el => {
+    // Auto-uppercase all single-line text inputs (except email, tel, and multiline textareas)
+    document.querySelectorAll('input[type="text"]').forEach(el => {
         el.addEventListener('input', function() {
             this.value = this.value.toUpperCase();
         });

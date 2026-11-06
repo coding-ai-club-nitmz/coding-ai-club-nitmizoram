@@ -45,16 +45,11 @@ Here is the step-by-step path of a candidate submission:
 3. **Level 2: Log Backup (Local Fail-Safe)**
    * The server outputs a structured `EVENT REGISTRATION BACKUP: ...` log line to `stdout` containing the entire candidate record. This log serves as an immutable backup database captured by your cloud host.
 
-4. **Level 3: Decoupled Processing (No Lag)**
-   * Flask spawns a background daemon thread (`background_sync_worker`) carrying the registration payload.
-   * The main Flask worker process immediately returns the `register_success.html` confirmation page to the browser. The page loads in **under 50 milliseconds**, keeping the site responsive.
-
-5. **Level 4: Locked API Sync & Error Recovery**
-   * The background thread attempts to acquire the `sheets_api_lock` (ensuring thread safety).
-   * The thread authenticates via the Service Account JSON file.
-   * It checks the target Google Drive folder. If a sheet with the event's name does not exist, it creates it, moves it to the folder, grants editor permissions to `coding.club@nitmz.ac.in`, writes columns, and releases the lock.
-   * It appends the candidate row.
-   * **Error Management**: If the Google API returns a rate limit error (HTTP 429) or network lag occurs, the thread sleeps on a randomized exponential delay (`2s`, `4s`, `8s` + jitter) and retries up to 5 times.
+4. **Level 3: Synchronous Sync & Error Recovery**
+   * The Flask handler invokes `background_sync_worker` synchronously to guarantee that registration data is saved before returning the response.
+   * The worker attempts to acquire the `sheets_api_lock` (ensuring process thread safety).
+   * It authenticates via the Service Account credentials and checks the target Google Drive folder. If a sheet with the event's name does not exist, it creates it, moves it to the folder, grants editor permissions to `coding.club@nitmz.ac.in`, initializes columns, and appends the candidate record.
+   * **Error Management**: If Google API rate limits (HTTP 429) or transient network errors occur, the worker retries up to 5 times with exponential backoff (`2s`, `4s`, `8s` + jitter) before failing gracefully.
 
 ---
 

@@ -78,11 +78,27 @@ The server will start running at **`http://127.0.0.1:8000/`**.
 
 ---
 
-##  Deployment
+##  Automated CI/CD & Deployment Pipeline
 
-The repository is pre-configured for rapid production deployment:
-*   **Vercel**: Simply connect the repository to Vercel. Be sure to configure `GOOGLE_CLIENT_EMAIL` and `GOOGLE_PRIVATE_KEY` in the Vercel Dashboard Environment Variables. The `vercel.json` configuration handles serverless routing automatically.
-*   **Render / VPS**: Uses the pre-configured `Procfile` to run a production-grade WSGI server via `gunicorn`.
+This repository uses a standard **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci-cd.yml`) that automatically validates code quality and manages deployment:
+
+### 1. Automated Testing & Quality Gate (`test-and-lint`)
+On every `push` or `pull_request` to `main` / `master`:
+- **Python Syntax Check**: Compiles `app.py`, `data.py`, `google_sheets.py`.
+- **Code Quality & Syntax**: Runs `flake8` linting.
+- **HTML Validation**: Runs `htmlhint` across all templates.
+- **Unit Test Suite**: Executes route tests in `tests/test_routes.py`.
+
+### 2. Gated Production Deployment (`deploy`)
+Automatically deploys to **Vercel Production** ONLY IF all test cases and quality checks pass 100% cleanly on `main` / `master`.
+
+#### Setting up Vercel Deployment Secrets in GitHub:
+To enable automated Vercel deployment via GitHub Actions, add the following secrets in GitHub Repository **Settings** -> **Secrets and variables** -> **Actions**:
+1. `VERCEL_TOKEN`: Generated from Vercel Account Settings -> Tokens.
+2. `VERCEL_ORG_ID`: Found in your Vercel Project Settings or `.vercel/project.json`.
+3. `VERCEL_PROJECT_ID`: Found in your Vercel Project Settings or `.vercel/project.json`.
+
+*   **Render / VPS Deployment**: Uses the pre-configured `Procfile` to run a production-grade WSGI server via `gunicorn`.
 
 ---
 
