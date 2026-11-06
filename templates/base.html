@@ -216,13 +216,9 @@
             {% set d_aria_projects = 'aria-current=page' if request.path == '/projects' else '' %}
             <a href="/projects" class="{{ d_active_projects }}" {{ d_aria_projects }}>Projects</a>
 
-            {% set d_active_resources = 'active' if request.path == '/resources' else '' %}
-            {% set d_aria_resources = 'aria-current=page' if request.path == '/resources' else '' %}
-            <a href="/resources" class="{{ d_active_resources }}" {{ d_aria_resources }}>Resources</a>
-
-            {% set d_active_verify = 'active' if request.path == '/verify' else '' %}
-            {% set d_aria_verify = 'aria-current=page' if request.path == '/verify' else '' %}
-            <a href="/verify" class="{{ d_active_verify }}" {{ d_aria_verify }}>Verify Certificate</a>
+            {% set d_active_portal = 'active' if (request.path == '/portal' or request.path == '/attendance' or request.path == '/verify' or request.path == '/resources') else '' %}
+            {% set d_aria_portal = 'aria-current=page' if (request.path == '/portal' or request.path == '/attendance' or request.path == '/verify' or request.path == '/resources') else '' %}
+            <a href="/portal" class="{{ d_active_portal }}" {{ d_aria_portal }}>Student Portal</a>
 
             {% set d_active_collab = 'active' if request.path == '/collaborate' else '' %}
             {% set d_aria_collab = 'aria-current=page' if request.path == '/collaborate' else '' %}

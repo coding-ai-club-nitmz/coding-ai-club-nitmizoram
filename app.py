@@ -172,6 +172,10 @@ def projects():
 def resources():
     return render_template('resources.html', resources=data.RESOURCE_DATA)
 
+@app.route('/portal')
+def portal():
+    return render_template('portal.html')
+
 @app.route('/collaborate')
 def collaborate():
     return render_template('collaborate.html', collaborate=data.COLLABORATE_DATA)
