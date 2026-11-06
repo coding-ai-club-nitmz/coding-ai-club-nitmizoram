@@ -1,25 +1,23 @@
-#  Future Web Team Guide — Coding & AI Club
+# Future Web Team Maintenance & Technical Manual
 
-Hey there, future Web Team!  Welcome to the maintenance and development manual for the **Coding & AI Club NIT Mizoram** website. 
-
-This guide describes how the website functions, how to make instant content updates, and the design tokens you must follow to keep the site looking premium.
+Welcome to the technical maintenance manual for the **Coding & AI Club Web Platform (NIT Mizoram)**. This guide details software architecture, content management procedures, design token specifications, and database operations for incoming web team coordinators and core developers.
 
 ---
 
-##  The Single Source of Truth: `data.py`
+## 1. Central Data Store: `data.py`
 
-To update almost *anything* on the website (text, images, links, announcements, or team members), **you do not need to edit any HTML files**. Simply modify [data.py](./data.py).
+The website is engineered around a data-driven architecture. **Content updates do not require HTML modifications.** All textual content, notice board items, team profiles, event schedules, and certificate records are managed within [data.py](./data.py).
 
-Here is a breakdown of the key data structures in `data.py`:
+### Core Data Structures in `data.py`
 
-### 1. Club Global Meta (`GLOBAL_DATA`)
-Controls the official club name, tagline, Hindi institute tagline, copyright, and global social media URLs.
+#### A. Global Club Metadata (`GLOBAL_DATA`)
+Stores official branding, institutional name, copyright notice, and social contact endpoints:
 ```python
 GLOBAL_DATA = {
     "club_name": "Coding & AI Club",
     "tagline": "Code . Create . Collaborate",
     "hindi_name": "राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम",
-    "copyright": " 2026 Coding & AI Club",
+    "copyright": "© 2026 Coding & AI Club",
     "social": {
         "email": "coding.club@nitmz.ac.in",
         "instagram": "https://www.instagram.com/codingclub_nitmz",
@@ -28,140 +26,86 @@ GLOBAL_DATA = {
 }
 ```
 
-### 2. Notices & Announcements (`ANNOUNCEMENTS`)
-A list of notice dictionaries. 
-*   **To display a notice on the Home Page**: Set `"featured": True`.
-*   **To link a button**: Set `"link"` to a path (e.g. `"/events"`, `"/join"`).
-*   **To prefill the Join/Inquiry form**: Include a `"prefill"` object containing `"topic"` and `"message"`.
-*   **No link action needed**: Set `"link": None`.
+#### B. Announcements & Notice Board (`ANNOUNCEMENTS`)
+Contains official announcements and notice items:
+- `"featured": True`: Displays item on homepage notice slider.
+- `"link"`: Specifies action URL (e.g. `"/events"`, `"/join"`).
+- `"prefill"`: Configures pre-populated topic and body text for application forms.
 
+#### C. Leadership & Core Committee (`TEAM_DATA`)
+Categorized lists (`mentors`, `founding`, `core`, `coordinators`). To add a team member:
 ```python
-{
-    "id": "core-team-recruitment",
-    "featured": True,
-    "title": "Core Team Recruitment 2026",
-    "date": "May 16, 2026",
-    "summary": "We are currently recruiting for core team positions. Apply now!",
-    "content": "Full description of the recruitment drive goes here...",
-    "link": "/join",
-    "prefill": {
-        "topic": "Core Team Application - Coding & AI Club",
-        "message": "Hello Coding & AI Club,\n\nI want to apply for the Core Team position. Here are my details..."
-    },
-    "link_text": "Join Us"
+{"name": "Student Name", "role": "Position Title", "badge": "Lead", "image": "images/filename.jpg"}
+```
+> [!NOTE]  
+> Store local member images in `static/images/`. If a photograph is unavailable, use UI Avatars URL format: `"https://ui-avatars.com/api/?name=First+Last&background=random&color=fff&size=200"`.
+
+#### D. Student Portal & Certificate Records (`CERTIFICATES_DATA`)
+Stores verified credential records for the `/verify` portal:
+```python
+CERTIFICATES_DATA = {
+    "CERT-2026-INV-028": {
+        "cert_id": "CERT-2026-INV-028",
+        "student_name": "Student Name",
+        "roll": "BT24CS028",
+        "event_title": "Innovaite 2026 AI/ML Challenge",
+        "issue_date": "August 26, 2026",
+        "role": "Certificate of Merit",
+        "status": "Official & Verified"
+    }
 }
 ```
 
-### 3. Core Team & Members (`TEAM_DATA`)
-Organized by category lists (`mentors`, `guiders`, `core`, `web_team`, `volunteers`). To add a member, append a new dictionary:
-```python
-{"name": "Alice Smith", "role": "Developer", "badge": "Core", "image": "images/alice.jpg"}
+---
+
+## 2. Design Tokens & Stylesheet Standards
+
+All visual styles and CSS custom properties are centralized in [static/style.css](./static/style.css).
+
+### CSS Design Tokens
+- `--primary`: `#0a1f44` (Navy Primary)
+- `--secondary`: `#102a56` (Navy Secondary)
+- `--accent`: `#8ab4f8` (Ice Blue Highlight)
+- `--bg`: `#f4f6f9` (Canvas Background)
+- `--bg-card`: `#ffffff` (Card Surface)
+
+### Typography Rules
+- **Headings (`h1`, `h2`, `h3`)**: Enforce `font-family: 'Rajdhani', sans-serif; font-weight: 700;`.
+- **Body Text**: Enforce `font-family: 'Noto Sans', sans-serif; line-height: 1.7;`.
+
+---
+
+## 3. Google Drive Spreadsheet Backend Operations
+
+The registration engine ([google_sheets.py](./google_sheets.py)) synchronizes student submissions directly to Google Drive.
+
+### Event Spreadsheet Setup Protocol
+1. Create a blank Google Sheet in the shared Google Drive folder (`GOOGLE_DRIVE_FOLDER_ID`).
+2. Title the sheet **exactly matching** the event `title` in `data.py` (e.g. `24 Hours Hackathon`).
+3. Verify that the Service Account email (`GOOGLE_CLIENT_EMAIL`) has **Editor** permissions on the folder.
+4. The backend automatically initializes headers, sanitizes student inputs, escapes CSV formula injections, and appends rows.
+
+---
+
+## 4. Continuous Integration & Quality Assurance
+
+Automated quality control is executed on every GitHub commit via `.github/workflows/ci-cd.yml`:
+
+```bash
+# Execute local unit test suite
+python -m unittest discover -s tests
+
+# Execute HTML template validation
+npx htmlhint "**/*.html" --config .htmlhintrc
+
+# Execute Flake8 syntax checks
+flake8 . --count --select=E9,F63,F7,F82
 ```
-> [!NOTE]  
-> Store all member photographs in `static/images/`. The templates will automatically resolve local paths relative to the static directory or keep external URLs as is.
-> 
-> [!TIP]  
-> If a member's photograph is not ready or missing, the template will automatically fall back to initial letters from the UI Avatar service, or you can specify it directly: `"https://ui-avatars.com/api/?name=Alice+Smith&background=random&color=fff&size=200"`.
+
+Always ensure local tests pass before merging pull requests into `main`.
 
 ---
 
-##  Design & CSS System
+## Intellectual Property & License
 
-All design rules are centralized in [static/style.css](./static/style.css). To maintain the website's professional and cohesive aesthetic, **always use the predefined CSS variables**:
-
-### Brand Color Tokens
-*   `--primary`: `#0a1f44` (Deep Premium Navy)
-*   `--secondary`: `#002d62` (Royal Accent)
-*   `--accent`: `#8ab4f8` (High-visibility ice blue link/highlight)
-*   `--bg-light`: `#f8fafd` (Soft canvas tint)
-
-### Layout Rules
-1.  **Notice Cards Grid (Homepage)**: Controlled by a responsive slider styling inside `index.html`. It limits desktop display to **exactly 3 cards in one row**. If there are more, it smoothly scrolls horizontally without wrapping.
-2.  **Generic Cards (`.team-card`, `.event-card`)**:
-    *   Titles (`h3`) should have `font-family: 'Rajdhani', sans-serif;` with a bold weight of `700`.
-    *   Descriptions (`p`) should have a standard line-height of `1.5` and `margin-bottom: 10px` to maintain optimal text readability.
-
----
-
-##  Professional Email Integration
-
-To protect our official email against automated spam-bots, we direct users through the local `/join` form instead of rendering direct `mailto` links on card CTAs.
-
-Once the user completes the pre-filled form on `/join` and clicks submit, the website constructs a professional `mailto` query string combining their inputs and redirects them to their mail client:
-```javascript
-window.location.href = `mailto:coding.club@nitmz.ac.in?subject=${encodeURIComponent(topic)}&body=${body}`;
-```
-This keeps spam harvesters from scraping the address directly while providing structured, context-aware emails for club organizers to easily filter and review!
-
----
-
-##  Search Engine Optimization (SEO) & Open Graph
-
-The base shell [templates/base.html](./templates/base.html) features dynamic metadata tags:
-*   **Search Tags**: Every page inherits SEO tags (`meta name="description"`). For individual announcements, the template automatically injects the **Notice Summary** as the description tag, boosting Google search indexing relevance.
-*   **Open Graph previews**: Pre-configured with Facebook, WhatsApp, and LinkedIn preview parameters. Sharing links on social media will automatically load the club logo, custom page title, and structured description.
-
----
-
-##  Flask Development Server Operations
-
-### Disabling Cache for Instant Updates
-To prevent the browser from caching CSS/HTML modifications during local testing, we have added an `after_request` filter in `app.py`:
-```python
-@app.after_request
-def add_header(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-    return response
-```
-This guarantees that **every refresh reflects your latest modifications instantly**.
-
-### Adding a New Route
-To create a new page:
-1.  Add a route in [app.py](./app.py):
-    ```python
-    @app.route('/my-page')
-    def my_page():
-        return render_template('my_page.html')
-    ```
-2.  Create your new template inside `templates/my_page.html` by extending base:
-    ```html
-    {% extends "base.html" %}
-    {% block title %}My New Page – {{ global_data.club_name }}{% endblock %}
-    {% block content %}
-        <section class="section">
-            <h2>Welcome to my new page</h2>
-        </section>
-    {% endblock %}
-    ```
-3. Add the link in navigation header in `templates/base.html`.
-
----
-
-##  Google Sheets Registration Backend
-
-The website features a fully automated Google Sheets backend for live event registrations. 
-When creating a new event, future teams **must** follow these steps:
-1. Create a blank Google Sheet in the designated Club Google Drive folder.
-2. Name the Sheet **exactly** matching the `event_name` value submitted in the frontend form.
-3. The backend `google_sheets.py` script will automatically locate the sheet, format the headers, normalize the user data (capitalization, phone sanitization), and append the rows.
-4. **Duplicate Prevention:** The backend automatically checks Column 4 (Roll Number) to prevent students from registering multiple times.
-
-*Note: Never expose the `GOOGLE_CLIENT_EMAIL` or `GOOGLE_PRIVATE_KEY` in the public repository. Always use Vercel Environment Variables for production.*
-
----
-
-### Automated GitHub CI Pipeline
-
-To prevent broken or syntax-faulty code from being merged into production, we have set up an automated **GitHub Action workflow** located at `.github/workflows/ci.yml`.
-
-Whenever code is pushed or a Pull Request is opened on `main` or `master` branches, the pipeline automatically:
-1. Installs Python and dependencies.
-2. Compiles `app.py` and `data.py` to ensure zero syntax errors.
-3. Tests Flask application imports successfully.
-4. Performs code style linting via `flake8`.
-
-Always verify that the GitHub Actions run shows green checkmarks before merging any pull requests!
-
-Good luck! Keep pushing the boundaries of code and creativity! 
+Copyright (c) 2026 Coding & AI Club, NIT Mizoram. **All Rights Reserved.**

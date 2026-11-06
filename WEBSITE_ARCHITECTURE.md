@@ -1,64 +1,68 @@
-# Website Architecture & Security Blueprint
+# System Architecture & Security Blueprint
 
-This document details the end-to-end flow, concurrency design, backup mechanisms, and layered threat protections implemented on this website.
+This document details request execution flows, concurrency design, database synchronization mechanisms, and threat mitigations implemented on the Coding & AI Club Web Platform (NIT Mizoram).
 
 ---
 
 ## 1. Environment Configuration (`.env`)
 
-To activate the Google Sheets & Drive synchronization, configure the following keys in your local `.env` file:
+Google Sheets and Google Drive synchronization requires the following environment variables:
 
 ```env
-# 1. The unique ID of the Google Drive Folder where spreadsheets will reside.
-# Copy this from the folder URL in your browser: https://drive.google.com/drive/folders/YOUR_FOLDER_ID
+# Google Drive Folder ID where event spreadsheets reside
 GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
 
-# 2. The filename of your Google Cloud Service Account JSON credentials.
-# Put this file in the project root directory (e.g. named credentials.json) and enter its name here.
-GOOGLE_SERVICE_ACCOUNT_FILE=credentials.json
+# Service Account Email Address
+GOOGLE_CLIENT_EMAIL=your-service-account-email@project.iam.gserviceaccount.com
+
+# Service Account Private Key (RSA)
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 ```
 
-### How to obtain the Service Account Credentials File:
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create or select a project.
-3. Enable the **Google Sheets API** and **Google Drive API** in the API Library.
-4. Go to **IAM & Admin** > **Service Accounts** and click **Create Service Account**.
-5. Give it a name, click **Done**, click on the newly created service account, and go to the **Keys** tab.
-6. Click **Add Key** > **Create New Key** (choose JSON format). This downloads the JSON key file.
-7. Move that downloaded file to your project root (e.g., `/home/dilip_sahu/website/credentials.json`) and configure `GOOGLE_SERVICE_ACCOUNT_FILE=credentials.json` in your `.env`.
+### Service Account Provisioning Procedure
+1. Access the Google Cloud Console (`console.cloud.google.com`).
+2. Select or create an institutional project.
+3. Enable **Google Sheets API** and **Google Drive API** in the API Library.
+4. Navigate to **IAM & Admin** > **Service Accounts** and create a Service Account.
+5. Generate a JSON Key for the Service Account.
+6. Configure `GOOGLE_CLIENT_EMAIL` and `GOOGLE_PRIVATE_KEY` in environment variables or host secret managers.
 
 ---
 
-## 2. Request Data Flow (Level 0 to Level 4)
+## 2. Request Data Pipeline
 
-Here is the step-by-step path of a candidate submission:
+Candidate form submissions follow a 4-layer execution pipeline:
 
-1. **Level 0: User Submission**
-   * The candidate inputs details (Name, Roll ID, Email, Phone, Branch, Degree, Year, Event, and Skills/Motivation) into the `/register` web form and submits it.
+1. **Layer 0: User Submission**
+   - User inputs academic and contact credentials on `/register`, `/register/<event_id>`, or `/apply/<form_id>`.
 
-2. **Level 1: Backend Sanitization**
-   * The Flask request handler processes the POST request.
-   * Special sanitization filters clean the inputs:
-     * HTML and Script tags are stripped to block cross-site scripting (XSS) injection.
-     * Special characters (`=`, `+`, `-`, `@`) at the start of any input are escaped with a single quote (`'`) to block spreadsheet formula execution.
+2. **Layer 1: Input Sanitization & Threat Filtering**
+   - Handlers strip script and HTML tags (`re.sub(r'<[^>]*>', '', value)`) to block Cross-Site Scripting (XSS).
+   - Handlers escape leading `=, +, -, @` characters with a single quote (`'`) to block CSV/Spreadsheet formula execution attacks.
 
-3. **Level 2: Log Backup (Local Fail-Safe)**
-   * The server outputs a structured `EVENT REGISTRATION BACKUP: ...` log line to `stdout` containing the entire candidate record. This log serves as an immutable backup database captured by your cloud host.
+3. **Layer 2: Console Fail-Safe Logging**
+   - Server writes a structured `EVENT REGISTRATION BACKUP: ...` log line to `stdout` before initiating remote network calls. This serves as an immutable backup log captured by host log managers.
 
-4. **Level 3: Synchronous Sync & Error Recovery**
-   * The Flask handler invokes `background_sync_worker` synchronously to guarantee that registration data is saved before returning the response.
-   * The worker attempts to acquire the `sheets_api_lock` (ensuring process thread safety).
-   * It authenticates via the Service Account credentials and checks the target Google Drive folder. If a sheet with the event's name does not exist, it creates it, moves it to the folder, grants editor permissions to `coding.club@nitmz.ac.in`, initializes columns, and appends the candidate record.
-   * **Error Management**: If Google API rate limits (HTTP 429) or transient network errors occur, the worker retries up to 5 times with exponential backoff (`2s`, `4s`, `8s` + jitter) before failing gracefully.
+4. **Layer 3: Synchronous API Synchronization**
+   - Handler invokes `sync_registration_to_folder` under thread lock (`sheets_api_lock`) to serialize API requests.
+   - Queries Google Drive API for an existing sheet matching the exact event title.
+   - Appends student data row.
+   - **Fault Tolerance**: If Google API rate limits (HTTP 429) or transient network errors occur, the backend retries up to 5 times with exponential backoff (`2s`, `4s`, `8s` + jitter) before failing gracefully.
 
 ---
 
-## 3. Layered Security & Safety Controls
+## 3. Threat Matrix & Security Controls
 
-| Threat | Impact | Defensive Control |
+| Vulnerability / Threat | Risk & Potential Impact | Defensive Control Implemented |
 | :--- | :--- | :--- |
-| **Spreadsheet Formula Injection** | Rogue inputs like `=HYPERLINK(...)` execute commands or extract data when administrators open the sheet in Excel/Google Sheets. | **Input Escaping**: Leading `=, +, -, @` characters are prepended with a single quote (`'`), converting them into harmless string literals. |
-| **HTML / Script Injection** | Bad actors enter `<script>` tags, causing XSS execution on notice boards or contact logs. | **Tag Stripping**: Regex parser strips out all HTML elements and brackets from registration variables. |
-| **Race Conditions (Double Sheets)** | Under high concurrency, two requests check if a sheet exists at the same millisecond. Both see it's missing and create duplicate sheets. | **Global API Lock**: A `threading.Lock()` synchronizes all search, create, and append calls, forcing threads to execute sequentially. |
-| **API Rate Limits (HTTP 429)** | Google limits Sheet edits to 60/minute, causing write failures under peak registration hours. | **Exponential Backoff with Jitter**: Background threads automatically retry on a sliding delay window, smoothing out requests. |
-| **System Outage / Key Loss** | Complete failure to connect to Google (e.g. key revoked, internet down). | **Console Log Backups**: Full details are written to standard logger before sync is attempted, allowing 100% data recovery from server logs. |
+| **CSV / Formula Injection** | Rogue inputs like `=HYPERLINK(...)` execute commands when administrators open Google Sheets. | **Leading Character Escaping**: `=, +, -, @` characters are prepended with `'`, converting them into string literals. |
+| **Cross-Site Scripting (XSS)** | Injection of `<script>` tags causing execution in browser viewports. | **HTML Tag Stripping**: Regex parser removes all HTML tags and angle brackets. |
+| **Race Conditions (Duplicate Spreadsheets)** | Simultaneous requests creating duplicate event spreadsheets. | **Global API Lock**: `threading.Lock()` synchronizes search, creation, and row append calls sequentially. |
+| **API Rate Limiting (HTTP 429)** | Exceeding Google Sheets write limits (60/min) causing request dropouts. | **Exponential Backoff**: Automatic retry loop over a sliding delay window with randomized jitter. |
+| **Header Injection Attacks** | Spoofed `X-Forwarded-For` HTTP headers corrupting client IP logs. | **Regex IP Validation**: `get_client_ip()` validates IP syntax before logging. |
+
+---
+
+## Technical Governance & Copyright
+
+Copyright (c) 2026 Coding & AI Club, NIT Mizoram. **All Rights Reserved.**

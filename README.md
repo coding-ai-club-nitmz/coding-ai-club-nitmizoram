@@ -1,110 +1,157 @@
-#  Coding & AI Club Website — NIT Mizoram
+# Coding & AI Club Web Platform — NIT Mizoram
 
-Welcome to the official portal of the **Coding & AI Club** at the **National Institute of Technology Mizoram (राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम)**. 
+Official web application repository of the **Coding & AI Club** at the **National Institute of Technology Mizoram (राष्ट्रीय प्रौद्योगिकी संस्थान, मिज़ोरम)**.
 
- Visit Us  at https://coding-ai-club-nitmizoram.vercel.app/
-
-This website serves as a modern, high-performance, and responsive hub to showcase club innovations, core values, announcements, active members, resources, and technical projects.
+Official Portal: [coding-ai-club-nitmizoram.vercel.app](https://coding-ai-club-nitmizoram.vercel.app)
 
 ---
 
-##  Key Features
+## Executive Overview
 
-*   **100% Data-Driven Architecture**: Managed entirely via central data structures. Zero HTML knowledge required to update the site.
-*   **Google Sheets Automation Engine**: Fully integrated backend that automatically normalizes user data, verifies duplicates, and syncs event registrations directly to secure Google Drive Spreadsheets in real-time.
-*   **Dynamic Notice Board**: A custom horizontal slider showcasing the 3 latest announcements side-by-side with smooth horizontal scrolling for more. Includes context-aware `/notices/<id>` detail routing.
-*   **Context-Aware Communication**: Smart pre-filled join/inquiry forms that auto-load custom subject titles and template messages depending on the notice, project contribution, or contact option clicked.
-*   **Premium Visual Experience**: Harmony of HSL primary-navy and modern typography with absolute responsiveness on all device viewports. Includes dynamic glassmorphism UI overlays.
-*   **Production & SEO Optimized**: Features high-fidelity dynamic Open Graph previews, custom dynamic meta tags for search engine bots, and valid `sitemap.xml` & `robots.txt` configurations.
+This repository houses the production source code for the Coding & AI Club's digital platform. Designed as a high-performance, data-driven web application, it serves as the official portal for student activities, competitive programming initiatives, hackathons, open-source projects, and administrative utilities.
+
+The platform is engineered with a strict separation of concerns, separating content management from presentation logic. All site content is driven by structured data objects, allowing seamless updates without template modification.
 
 ---
 
-##  Technology Stack
+## Technical Architecture & Feature Specification
 
-*   **Backend**: Python / Flask (3.0+)
-*   **Database Integration**: Google Drive & Google Sheets API (`gspread`, `google-api-python-client`)
-*   **Frontend**: Vanilla HTML5, CSS3, Jinja2 template engine
-*   **Dev Server**: Werkzeug / Gunicorn
-*   **Deployment Support**: Pre-configured for Vercel and Render (with `Procfile` and `vercel.json`)
+### 1. Data-Driven Content Management
+- **Single Source of Truth**: Managed entirely through central data structures (`data.py`), decoupling content from HTML/CSS layout templates.
+- **Dynamic Hot-Reloading**: Backend automatically detects modifications to the data module and reloads application state during development without requiring server restarts.
+
+### 2. Google Drive & Sheets Integration Engine
+- **Automated Registration Synchronization**: Backend form handlers sanitize student submissions, normalize field formats, and synchronize records directly to designated Google Spreadsheets via Google Cloud Service Accounts.
+- **Security & Injection Defenses**: Implements formula escaping (protecting against CSV/Excel formula execution attacks) and XSS HTML tag stripping.
+- **Concurrency Control**: Process thread locking (`sheets_api_lock`) prevents race conditions during concurrent user submissions.
+
+### 3. Student Portal & Member Utilities (`/portal`)
+- **Attendance Verification (`/attendance`)**: Time-restricted attendance recording for club workshops and technical sessions using Indian Standard Time (IST).
+- **Certificate Verification System (`/verify`)**: Online credential verification engine allowing students, recruiters, and institutions to validate official event certificates.
+- **Direct Calendar Integration**: Generates Google Calendar event creation URLs and `.ics` iCalendar files for upcoming events.
+
+### 4. Interactive Frontend Experience
+- **Filterable Showcase**: Client-side filtering for technical projects by domain (`AI & ML`, `Web Systems`, `Open Roles`).
+- **Glassmorphism Toast Notifications**: Asynchronous user feedback banners replacing standard browser alerts.
+- **Offline / Network Detection**: Automatic network status monitoring (`online`/`offline` event listeners) to safeguard form submissions during poor connectivity.
+
+### 5. Production & Search Engine Optimization
+- **Structured Data (Schema.org)**: Injected JSON-LD `EducationalOrganization` metadata for Google Search snippet indexing.
+- **Dynamic Meta Tags**: Automated Open Graph (`og:`) and Twitter Card previews customized per page and notice item.
 
 ---
 
-##  Quick Start & Local Development
+## Technology Stack
 
-### 1. Prerequisites
-Ensure you have **Python 3.10+** installed on your system.
-You will also need to set up a Google Cloud Service Account and configure your `.env` file for database syncing.
+- **Backend Framework**: Python 3.12 / Flask (3.0+)
+- **WSGI / App Server**: Gunicorn / Werkzeug
+- **Spreadsheet Integration**: `gspread`, `google-api-python-client`, `google-auth`
+- **Frontend Layer**: Vanilla HTML5, CSS3 (Custom Variables, Flexbox/Grid), Jinja2 Templating
+- **Security & Headers**: `Flask-Talisman` (Content Security Policy), `Flask-Limiter` (Rate Limiting)
+- **Quality Assurance**: `unittest`, `flake8`, `htmlhint`
+- **Continuous Integration / Deployment**: GitHub Actions (`.github/workflows/ci-cd.yml`), Vercel / Gunicorn
 
-### 2. Clone and Setup Environment
-```bash
-# Clone the repository
-git clone https://github.com/coding-ai-club-nitmz/coding-ai-club-nitmizoram.git
-cd coding-ai-club-nitmizoram
+---
 
-# Create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+## Local Development & Setup Instructions
 
-# Install dependencies
-pip install -r requirements.txt
+### Prerequisites
+- Python 3.10 or higher
+- Node.js 18+ (for HTMLHint validation)
+- Google Cloud Service Account JSON credentials (for Google Sheets sync)
+
+### Setup Procedure
+
+1. **Clone Repository**:
+   ```bash
+   git clone https://github.com/coding-ai-club-nitmz/coding-ai-club-nitmizoram.git
+   cd coding-ai-club-nitmizoram
+   ```
+
+2. **Initialize Virtual Environment**:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+3. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Environment Configuration**:
+   Create a `.env` file in the root directory:
+   ```env
+   GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
+   GOOGLE_CLIENT_EMAIL=your-service-account-email@project.iam.gserviceaccount.com
+   GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+   ```
+
+5. **Run Local Server**:
+   ```bash
+   python app.py
+   ```
+   The local application will be accessible at `http://127.0.0.1:8000/`.
+
+---
+
+## Directory Structure
+
+```text
+├── app.py                      # Main Flask application & route controllers
+├── data.py                     # Central data store (Single source of truth)
+├── google_sheets.py            # Google API engine & spreadsheet synchronization
+├── requirements.txt            # Python dependencies
+├── Procfile                    # Production Gunicorn configuration
+├── vercel.json                 # Vercel serverless routing & header rules
+├── robots.txt                  # Search engine crawler directives
+├── sitemap.xml                 # XML Sitemap for search indexing
+├── .htmlhintrc                 # HTMLHint linting configuration
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml           # Automated CI/CD testing & deployment workflow
+├── static/
+│   ├── style.css               # Global CSS stylesheet & design tokens
+│   └── images/                 # Logos, graphics, and asset media
+├── templates/
+│   ├── base.html               # Master shell template with SEO headers & navbar
+│   ├── index.html              # Homepage template
+│   ├── portal.html             # Student portal dashboard
+│   ├── verify.html             # Certificate verification template
+│   └── ...                     # Sub-page templates
+└── tests/
+    ├── test_routes.py          # Route & integration test cases
+    └── test_sanitization.py    # XSS & CSV formula injection test cases
 ```
 
-### 3. Run Development Server
-```bash
-python app.py
-```
-The server will start running at **`http://127.0.0.1:8000/`**. 
+---
 
-> [!NOTE]  
-> The development server includes dynamic **no-cache HTTP headers**, meaning any changes you make to the templates or stylesheet will show up instantly on page refresh.
+## Continuous Integration & Deployment Pipeline
+
+This repository incorporates a GitHub Actions CI/CD Pipeline (`.github/workflows/ci-cd.yml`):
+
+1. **Quality Gate (`test-and-lint` Job)**:
+   Triggered on every push or pull request to `main` or `development` branches. Executes:
+   - Python compilation check (`app.py`, `data.py`, `google_sheets.py`).
+   - Flake8 code syntax and import verification.
+   - HTMLHint template structural validation.
+   - Unit test execution (`tests/test_routes.py`, `tests/test_sanitization.py`).
+
+2. **Gated Deployment (`deploy` Job)**:
+   Executes deployment on Vercel Production only when all test cases pass on `main`.
 
 ---
 
-##  Project Structure
+## Technical Governance & Maintenance Documentation
 
-```bash
-├── app.py              # Main Flask application (Route definitions & data formatting)
-├── data.py             # Central Data Store (Single source of truth for all content)
-├── google_sheets.py    # Google API Engine (Handles Drive queries, Sheets append, Cache)
-├── static/             # Static assets folder (Flask default)
-│   ├── style.css       # Global CSS variables, layouts, and responsive media queries
-│   └── images/         # Static logos, avatars, and event graphics
-├── templates/          # Jinja2 HTML Templates
-│   ├── base.html       # Shell structure, dynamic SEO headers, Navbar, and Footer
-│   ├── index.html      # Homepage (Centered welcome & Horizontal Notice Board)
-│   ├── register.html   # Live Event Registration form with data validation
-│   └── ...             # Other modular UI pages
-```
+- [FUTURE_TEAM_GUIDE.md](./FUTURE_TEAM_GUIDE.md): Technical maintenance manual for future web team coordinators.
+- [WEBSITE_ARCHITECTURE.md](./WEBSITE_ARCHITECTURE.md): Architectural blueprint and security specification.
+- [IMPORTANT.md](./IMPORTANT.md): Operational guidelines for event management and Google Drive permissions.
 
 ---
 
-##  Automated CI/CD & Deployment Pipeline
+## License & Intellectual Property
 
-This repository uses a standard **GitHub Actions CI/CD Pipeline** (`.github/workflows/ci-cd.yml`) that automatically validates code quality and manages deployment:
-
-### 1. Automated Testing & Quality Gate (`test-and-lint`)
-On every `push` or `pull_request` to `main` / `master`:
-- **Python Syntax Check**: Compiles `app.py`, `data.py`, `google_sheets.py`.
-- **Code Quality & Syntax**: Runs `flake8` linting.
-- **HTML Validation**: Runs `htmlhint` across all templates.
-- **Unit Test Suite**: Executes route tests in `tests/test_routes.py`.
-
-### 2. Gated Production Deployment (`deploy`)
-Automatically deploys to **Vercel Production** ONLY IF all test cases and quality checks pass 100% cleanly on `main` / `master`.
-
-#### Setting up Vercel Deployment Secrets in GitHub:
-To enable automated Vercel deployment via GitHub Actions, add the following secrets in GitHub Repository **Settings** -> **Secrets and variables** -> **Actions**:
-1. `VERCEL_TOKEN`: Generated from Vercel Account Settings -> Tokens.
-2. `VERCEL_ORG_ID`: Found in your Vercel Project Settings or `.vercel/project.json`.
-3. `VERCEL_PROJECT_ID`: Found in your Vercel Project Settings or `.vercel/project.json`.
-
-*   **Render / VPS Deployment**: Uses the pre-configured `Procfile` to run a production-grade WSGI server via `gunicorn`.
-
----
-
-##  License
 Copyright (c) 2026 Coding & AI Club, NIT Mizoram. **All Rights Reserved.**
 
-This repository and its contents are proprietary. You may not use, copy, modify, distribute, or reproduce this software without explicit prior written permission from the copyright holders. 
-
-Built by the **Coding & AI Club Web Team, NIT Mizoram**.
+This repository and its contents are proprietary property of the Coding & AI Club, National Institute of Technology Mizoram. Unauthorized copying, distribution, or reproduction of this software or its components is strictly prohibited.

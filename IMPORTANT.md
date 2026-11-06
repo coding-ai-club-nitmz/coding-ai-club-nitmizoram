@@ -1,27 +1,44 @@
-#  IMPORTANT PROJECT GUIDELINES 
+# Operational Guidelines & Event Synchronization Protocol
 
-Please read this document carefully before managing events or modifying the Google Sheets integration.
+This document outlines mandatory operational protocols for event managers, web coordinators, and executive members of the Coding & AI Club, NIT Mizoram when initiating new events or managing spreadsheet databases.
 
-## 1. Creating a New Event (CRUCIAL)
-When you want to host a new event and start accepting registrations, you MUST follow these exact steps:
+---
 
-1. **Update `data.py`**: Add your new event to the `EVENT_DATA` list in `data.py` and set `"registration_open": True`.
-2. **Create the Spreadsheet**: Go to your Google Drive Folder configured in `.env` (`GOOGLE_DRIVE_FOLDER_ID`). Right-click and create a new, blank Google Sheet.
-3. **Name it Exactly the Same**: You **MUST name the spreadsheet exactly the same as the event title** you put in `data.py`. 
-   - *Example:* If your event title in `data.py` is `Samyuga - Prarambh`, the spreadsheet name must be exactly `Samyuga - Prarambh`. 
-   - *Why?* The script searches the folder for a file with that exact name. If there is a typo, space mismatch, or capitalization difference, the bot will not find it and the registration will fail.
+## 1. Event Initiation & Spreadsheet Naming Conventions
 
-## 2. Storage Quota Limits
-Free-tier Google Cloud Service Accounts (the "Automator" bot) are heavily restricted by Google and usually have **0 bytes** of Drive storage.
-- The bot **cannot** create new spreadsheets from scratch because it instantly hits a "Quota Exceeded" error. 
-- This is why you must manually create the blank spreadsheet first (as mentioned above). Because YOU created it, it uses your personal Google Drive storage, and the bot is freely allowed to *edit* it.
+When launching a new event, workshop, or competition, execute the following procedure:
 
-## 3. Google Drive Folder Access
-The Automator bot operates securely and can only see what you explicitly share with it.
-- **Check Access**: Ensure that your Google Drive Folder is shared with the service account email configured in your `.env` (`GOOGLE_CLIENT_EMAIL`).
-- It must be given **Editor** permissions. If it only has "Viewer" access, or if the folder isn't shared, it cannot type the student registrations into the sheets.
+1. **Register Event in `data.py`**:
+   Add a dictionary entry to the `EVENT_DATA` list in `data.py` with `"registration_open": True` and specify the exact `title` string.
 
-## 4. Hosting & Vercel Serverless Notes
-This application executes Google Sheets synchronization synchronously within Flask request handlers to ensure 100% data delivery before displaying the success page.
-- **Serverless Compatibility**: Because execution is synchronous, serverless platforms (such as Vercel) will complete the sheet sync during the request window before freezing the function instance.
-- **Client UX**: The web forms feature a smooth loading overlay ("Processing Registration...") that informs students while Google Sheets sync takes place in the background.
+2. **Initialize Google Spreadsheet**:
+   Navigate to the designated Google Drive Folder configured under `GOOGLE_DRIVE_FOLDER_ID`. Create a new blank Google Sheet.
+
+3. **Exact String Match Requirement**:
+   The Google Sheet **must be named identically to the `title` string specified in `data.py`**.
+   - *Example*: If the event title in `data.py` is `"Samyuga - Prarambh"`, the Google Sheet title must be `"Samyuga - Prarambh"`.
+   - *Technical Rationale*: The backend search queries the Google Drive API for a file matching the exact string name. Any discrepancy in spelling, spacing, or capitalization will prevent the synchronization engine from locating the target file, resulting in form submission failures.
+
+---
+
+## 2. Service Account Storage Quotas
+
+Google Cloud Service Accounts operating under default quota tiers are restricted from creating new files directly within root accounts due to zero-byte default storage allocations.
+- **Protocol**: Spreadsheets must be created manually by an authorized club administrator within the shared Google Drive folder.
+- **Result**: Because the spreadsheet is created within the administrator's personal or institutional Drive storage quota, the Service Account requires only **Editor** permissions to append user records.
+
+---
+
+## 3. Google Drive Permission Delegation
+
+The Service Account operates under principle of least privilege:
+- Ensure the Google Drive folder (`GOOGLE_DRIVE_FOLDER_ID`) is explicitly shared with the Service Account email address (`GOOGLE_CLIENT_EMAIL`).
+- Assign **Editor** role permissions to the Service Account. Assigning "Viewer" permissions will result in write authorization failures.
+
+---
+
+## 4. Serverless Execution & Synchronous Processing
+
+The backend executes database synchronization synchronously within Flask request handlers to guarantee complete data delivery before rendering success confirmation pages.
+- **Serverless Compatibility**: This synchronous execution ensures full compatibility with serverless execution environments (such as Vercel) by completing API requests before function freezing occurs.
+- **User Interface Handling**: Web forms feature progress overlays that inform users during active database synchronization.
