@@ -182,6 +182,11 @@
 
         // Loading Screen and Clear Storage
         document.getElementById('registerTeamForm').addEventListener('submit', function(e) {
+            if (!navigator.onLine) {
+                e.preventDefault();
+                showToast("You are currently offline. Please check your internet connection before submitting.", "error");
+                return;
+            }
             if(!document.getElementById('confirmationCheckbox').checked) {
                 e.preventDefault();
                 showToast("Please confirm the information is correct by checking the box.", "warning");

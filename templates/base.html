@@ -121,6 +121,14 @@
                 }, { threshold: 0.5 });
                 statElements.forEach(function(el) { observer.observe(el); });
             }
+
+            // 4. Global Network Connection Listeners
+            window.addEventListener('offline', function() {
+                showToast("You are currently offline. Form submissions and requests may fail.", "warning");
+            });
+            window.addEventListener('online', function() {
+                showToast("Internet connection restored.", "success");
+            });
         });
 
         // 4. Toast Notification System

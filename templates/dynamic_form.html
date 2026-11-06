@@ -207,7 +207,12 @@
         });
     });
 
-    document.getElementById('dynamicForm').addEventListener('submit', function() {
+    document.getElementById('dynamicForm').addEventListener('submit', function(e) {
+        if (!navigator.onLine) {
+            e.preventDefault();
+            showToast("You are currently offline. Please check your internet connection before submitting.", "error");
+            return;
+        }
         const btn = document.getElementById('submitBtn');
         const spinner = document.getElementById('spinner');
         const btnText = btn.querySelector('.btn-text');
