@@ -6,7 +6,8 @@ import socket
 old_getaddrinfo = socket.getaddrinfo
 def new_getaddrinfo(*args, **kwargs):
     responses = old_getaddrinfo(*args, **kwargs)
-    return [res for res in responses if res[0] == socket.AF_INET]
+    ipv4_responses = [res for res in responses if res[0] == socket.AF_INET]
+    return ipv4_responses if ipv4_responses else responses
 socket.getaddrinfo = new_getaddrinfo
 
 from flask import Flask, render_template, send_from_directory, request, redirect, Response
