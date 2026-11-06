@@ -54,7 +54,7 @@ jobs:
   deploy:
     name: Deploy to Vercel Production
     needs: test-and-lint
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && secrets.VERCEL_TOKEN != ''
     runs-on: ubuntu-latest
 
     steps:
