@@ -6,21 +6,63 @@
         <h2>Our Innovations</h2>
         <p>{{ projects.intro }}</p>
         
-        <h2 style="margin-top:40px;">Featured Systems</h2>
-        <div class="event-container">
+        <div class="filter-tabs">
+            {% for cat in projects.categories %}
+            <button class="filter-btn {% if loop.first %}active{% endif %}" onclick="filterProjects('{{ cat }}', this)">{{ cat }}</button>
+            {% endfor %}
+        </div>
+
+        <div class="event-container" id="projectContainer">
             {% for project in projects.featured %}
-            <div class="event-card">
-                <h3>{{ project.title }}</h3>
-                <p>{{ project.desc }}</p>
-                <div class="btn-group">
-                    <a href="{{ project.github }}" target="_blank" rel="noopener noreferrer" class="contact-link color-drive">GitHub Repo</a>
-                    {% if project.live and project.live != '/' %}
-                    <a href="{{ project.live }}" class="contact-link color-web">Live Version</a>
+            <div class="event-card project-item" data-category="{{ project.category }}" data-has-roles="{% if project.open_roles %}true{% else %}false{% endif %}" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.desc }}</p>
+                    <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;">
+                        {% for tag in project.tags %}
+                        <span class="project-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    {% if project.open_roles %}
+                    <div style="margin-top: 12px; padding: 8px 12px; background: rgba(138, 180, 248, 0.12); border-radius: 6px; border-left: 3px solid var(--accent); text-align: left;">
+                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary); display: block; margin-bottom: 2px;">Open Roles:</span>
+                        {% for role in project.open_roles %}
+                        <span style="font-size: 0.8rem; color: var(--secondary); display: block;">• {{ role }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="btn-group" style="width: 100%; margin-top: 15px;">
+                    <a href="{{ project.github }}" target="_blank" rel="noopener noreferrer" class="contact-link color-drive" style="flex: 1; text-align: center;">GitHub Repo</a>
+                    {% if project.open_roles %}
+                    <a href="/join?topic={{ ('Join Project Team - ' ~ project.title) | urlencode }}&message={{ ('Hello Coding & AI Club,\n\nI want to apply for an open role on the project: ' ~ project.title) | urlencode }}" class="contact-link color-web" style="flex: 1; text-align: center;">Apply to Join</a>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
+
+        <script>
+            function filterProjects(category, btn) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.querySelectorAll('.project-item').forEach(item => {
+                    const itemCat = item.getAttribute('data-category');
+                    const hasRoles = item.getAttribute('data-has-roles') === 'true';
+
+                    if (category === 'All') {
+                        item.style.display = 'flex';
+                    } else if (category === 'Open Roles') {
+                        item.style.display = hasRoles ? 'flex' : 'none';
+                    } else if (itemCat === category) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        </script>
 
         <hr>
         <h2>{{ projects.contribution.title }}</h2>

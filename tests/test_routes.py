@@ -17,6 +17,7 @@ class TestWebRoutes(unittest.TestCase):
             '/teams',
             '/projects',
             '/resources',
+            '/verify',
             '/collaborate',
             '/contact',
             '/join',
@@ -108,7 +109,6 @@ class TestWebRoutes(unittest.TestCase):
     def test_attendance_post_route(self, mock_attendance):
         mock_attendance.return_value = {"status": "success", "name": "TEST STUDENT"}
 
-        # Temporarily mock attendance window to open
         from data import ATTENDANCE_CONFIG
         orig_start, orig_end = ATTENDANCE_CONFIG.get('start_time'), ATTENDANCE_CONFIG.get('end_time')
         ATTENDANCE_CONFIG['start_time'] = '2020-01-01 00:00:00'
@@ -122,6 +122,32 @@ class TestWebRoutes(unittest.TestCase):
         finally:
             ATTENDANCE_CONFIG['start_time'] = orig_start
             ATTENDANCE_CONFIG['end_time'] = orig_end
+
+    def test_verify_certificate_routes(self):
+        get_res = self.client.get('/verify')
+        self.assertEqual(get_res.status_code, 200)
+
+        post_valid = self.client.post('/verify', data={'cert_id': 'CERT-2026-INV-028'})
+        self.assertEqual(post_valid.status_code, 200)
+        self.assertIn(b"OFFICIAL VERIFIED CREDENTIAL", post_valid.data)
+
+        post_invalid = self.client.post('/verify', data={'cert_id': 'INVALID-CERT-999'})
+        self.assertEqual(post_invalid.status_code, 200)
+        self.assertIn(b"VERIFICATION FAILED", post_invalid.data)
+
+        get_cert = self.client.get('/verify/CERT-2026-INV-028')
+        self.assertEqual(get_cert.status_code, 200)
+        self.assertIn(b"Dilip Sahu", get_cert.data)
+
+    def test_calendar_ics_route(self):
+        res = self.client.get('/event/debate-competition-2026/calendar.ics')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.mimetype, 'text/calendar')
+        self.assertIn(b"BEGIN:VCALENDAR", res.data)
+        self.assertIn(b"Inter-Departmental / Clubs Debate Competition", res.data)
+
+        bad_res = self.client.get('/event/non-existent-event/calendar.ics')
+        self.assertEqual(bad_res.status_code, 404)
 
 if __name__ == '__main__':
     unittest.main()

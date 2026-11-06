@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO Meta Tags (Hidden from normal view, read by GoogleBot) -->
+    <!-- SEO Meta Tags -->
     <meta name="description"
         content="{% block meta_description %}Official website of the Coding & AI Club at NIT Mizoram. A community of student engineers building real-world AI and software projects.{% endblock %}">
     <meta name="keywords"
@@ -16,7 +16,7 @@
     <title>{% block title %}{{ global_data.club_name }}{% endblock %}</title>
     <link rel="canonical" href="{{ request.base_url }}">
 
-    <!-- Open Graph / Social Media (Link Previews) -->
+    <!-- Open Graph / Social Media -->
     <meta property="og:title" content="{% block og_title %}{{ global_data.club_name }} | NIT Mizoram{% endblock %}">
     <meta property="og:description"
         content="{% block og_description %}Join the hub of innovation at NIT Mizoram. We code, create, and collaborate on cutting-edge technology.{% endblock %}">
@@ -35,9 +35,30 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="/static/images/club-logo.png" type="image/png">
 
-    <!-- Performance Optimization Script: Includes Image Cache Recovery and Hover-based Page Prefetching -->
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "{{ global_data.club_name }}",
+      "alternateName": "Coding and AI Club NIT Mizoram",
+      "url": "https://coding-ai-club-nitmizoram.vercel.app",
+      "logo": "https://coding-ai-club-nitmizoram.vercel.app/static/images/club-logo.png",
+      "sameAs": [
+        "{{ global_data.social.instagram }}",
+        "{{ global_data.social.linkedin }}"
+      ],
+      "parentOrganization": {
+        "@type": "CollegeOrUniversity",
+        "name": "National Institute of Technology Mizoram",
+        "url": "https://www.nitmz.ac.in"
+      }
+    }
+    </script>
+
+    <!-- Client Scripts & Performance Optimizations -->
     <script>
-        // 1. Image Cache Recovery: Auto-retries failed cached images directly from server
+        // 1. Image Cache Recovery
         document.addEventListener('error', function (event) {
             var element = event.target;
             if (element.tagName === 'IMG') {
@@ -46,18 +67,16 @@
                     var originalSrc = element.src;
                     var separator = originalSrc.indexOf('?') !== -1 ? '&' : '?';
                     element.src = originalSrc + separator + 'retry=true&t=' + Date.now();
-                    console.warn('Image failed to load from cache. Bypassing cache to load from server:', originalSrc);
                 }
             }
-        }, true); // Use capture phase because image error events do not bubble
+        }, true);
 
-        // 2. Hover Prefetching: Prefetches links on hover/touch, making page transitions feel instant (<0ms!)
+        // 2. Hover Prefetching
         document.addEventListener('DOMContentLoaded', function () {
             var links = document.querySelectorAll('nav a, header a, .navbar a');
             var preloaded = {};
             links.forEach(function (link) {
                 var href = link.getAttribute('href');
-                // Only prefetch internal navigation links
                 if (href && href.startsWith('/') && href !== '/' && !href.startsWith('mailto:')) {
                     var handlePrefetch = function () {
                         if (!preloaded[href]) {
@@ -68,16 +87,84 @@
                             document.head.appendChild(preloadLink);
                         }
                     };
-                    // Trigger on desktop hover or mobile touch start
                     link.addEventListener('mouseenter', handlePrefetch);
                     link.addEventListener('touchstart', handlePrefetch, { passive: true });
                 }
             });
+
+            // 3. Stat Counters Intersection Observer
+            var statElements = document.querySelectorAll('.stat-num');
+            if ('IntersectionObserver' in window && statElements.length > 0) {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var el = entry.target;
+                            var text = el.innerText.trim();
+                            var match = text.match(/^(\d+)(\+?)$/);
+                            if (match) {
+                                var target = parseInt(match[1]);
+                                var suffix = match[2];
+                                var current = 0;
+                                var step = Math.max(1, Math.floor(target / 20));
+                                var timer = setInterval(function() {
+                                    current += step;
+                                    if (current >= target) {
+                                        current = target;
+                                        clearInterval(timer);
+                                    }
+                                    el.innerText = current + suffix;
+                                }, 30);
+                            }
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                statElements.forEach(function(el) { observer.observe(el); });
+            }
         });
+
+        // 4. Toast Notification System
+        function showToast(message, type) {
+            type = type || 'info';
+            var container = document.getElementById('toast-container');
+            if (!container) return;
+
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+
+            var textSpan = document.createElement('span');
+            textSpan.textContent = message;
+            toast.appendChild(textSpan);
+
+            var closeBtn = document.createElement('button');
+            closeBtn.className = 'toast-close';
+            closeBtn.textContent = 'x';
+            closeBtn.onclick = function () {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(40px)';
+                setTimeout(function () {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            };
+            toast.appendChild(closeBtn);
+
+            container.appendChild(toast);
+
+            setTimeout(function () {
+                if (toast.parentNode) {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(40px)';
+                    setTimeout(function () {
+                        if (toast.parentNode) toast.parentNode.removeChild(toast);
+                    }, 300);
+                }
+            }, 4000);
+        }
     </script>
 </head>
 
 <body>
+    <div id="toast-container"></div>
     <header class="header top-header">
         <a href="/"><img src="/static/images/nitmz-logo.png" alt="Institute Logo" class="logo"></a>
         <div class="header-text">
@@ -113,10 +200,8 @@
             {% set d_aria_about = 'aria-current=page' if request.path == '/about' else '' %}
             <a href="/about" class="{{ d_active_about }}" {{ d_aria_about }}>About</a>
 
-            {% set d_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/'))
-            else '' %}
-            {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or
-            request.path.startswith('/notices/')) else '' %}
+            {% set d_active_notices = 'active' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
+            {% set d_aria_notices = 'aria-current=page' if (request.path == '/notices' or request.path.startswith('/notices/')) else '' %}
             <a href="/notices" class="{{ d_active_notices }}" {{ d_aria_notices }}>Notice Board</a>
 
             {% set d_active_events = 'active' if request.path == '/events' else '' %}
@@ -134,6 +219,10 @@
             {% set d_active_resources = 'active' if request.path == '/resources' else '' %}
             {% set d_aria_resources = 'aria-current=page' if request.path == '/resources' else '' %}
             <a href="/resources" class="{{ d_active_resources }}" {{ d_aria_resources }}>Resources</a>
+
+            {% set d_active_verify = 'active' if request.path == '/verify' else '' %}
+            {% set d_aria_verify = 'aria-current=page' if request.path == '/verify' else '' %}
+            <a href="/verify" class="{{ d_active_verify }}" {{ d_aria_verify }}>Verify Certificate</a>
 
             {% set d_active_collab = 'active' if request.path == '/collaborate' else '' %}
             {% set d_aria_collab = 'aria-current=page' if request.path == '/collaborate' else '' %}

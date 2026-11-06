@@ -29,6 +29,10 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://coding-ai-club-nitmizoram.vercel.app/verify</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://coding-ai-club-nitmizoram.vercel.app/contact</loc>
     <priority>0.6</priority>
   </url>
@@ -45,4 +49,3 @@
     <priority>0.8</priority>
   </url>
 </urlset>
-

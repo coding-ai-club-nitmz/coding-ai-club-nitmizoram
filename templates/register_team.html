@@ -184,7 +184,7 @@
         document.getElementById('registerTeamForm').addEventListener('submit', function(e) {
             if(!document.getElementById('confirmationCheckbox').checked) {
                 e.preventDefault();
-                alert("Please confirm the information is correct by checking the box.");
+                showToast("Please confirm the information is correct by checking the box.", "warning");
                 return;
             }
             
@@ -200,7 +200,7 @@
             const uniqueRolls = new Set(rollNumbers);
             if (uniqueRolls.size !== rollNumbers.length) {
                 e.preventDefault();
-                alert("Duplicate enrollment numbers detected! Each team member must have a unique roll number.");
+                showToast("Duplicate enrollment numbers detected! Each team member must have a unique roll number.", "error");
                 return;
             }
 

@@ -20,7 +20,6 @@ GLOBAL_DATA = {
 }
 
 # Announcements / Notice Board
-# To show a notice on the home page, set 'featured': True
 ANNOUNCEMENTS = [
     {
         "id": "debate-competition-2026",
@@ -52,30 +51,6 @@ ANNOUNCEMENTS = [
         "content": "<div class=\"notice-text-intro\"><div class=\"organizer-highlight\"><strong>Organizers:</strong> IIC NIT Mizoram | Coding & AI Club, NIT Mizoram | NMICPS Technology Innovation Hub on Autonomous Navigation (TiHAN) IIT Hyderabad.</div><p>The Innovaite AI & Startup Challenge has officially wrapped up! Thank you to all the participants who pushed the limits of Artificial Intelligence in our Idea Pitching and AI/ML competitions.</p></div>",
         "links": []
     },
-#    {
-#        "id": "technox-part-ii",
-#        "featured": False,
-#        "title": "Technox'2025-26 Part-II",
-#        "date": "May 27, 2026",
-#        "summary": "Registration is open for Technox Part-II events. Register now!",
-#        "content": "The much-awaited Technox'2025-26 Part-II technical festival is starting soon! Get ready for exciting coding events, AI hackathons, hardware exhibitions, and tech #quizzes. Registrations are now open for all students. Choose your target event and submit the registration form to confirm your participation.",
-#        "registration_open": False,
-#        "event_name": "Technox'2025-26 Part-II",
-#        "link": "/register",
-#        "link_text": "open soon"
-#   },
-#    {
-#        "id": "oa-helper-collaboration",
-#        "featured": True,
-#        "title": "OA Helper x Coding & AI Club: Online Assessment Prep",
-#        "date": "July 20, 2026",
-#        "summary": "Registration is open for the OA Helper initiative. Prepare for company-specific and topic-based MNC Online Assessments!",
-#        "content": "The Coding & AI Club, NIT Mizoram is thrilled to announce our collaboration with OA Helper! Gear up for the upcoming placement season with our specialized Online Assessment (OA) preparation series. This comprehensive program is specifically designed to help students master both company-specific test patterns and topic-based coding rounds of top MNCs. Registrations are now officially open. Join us to elevate your problem-solving skills and ace your upcoming technical assessments.",
-#        "registration_open": True,
-#        "event_name": "OA Helper Preparation Series",
-#        "link": "/register",
-#        "link_text": "Register Now"
-#    },
     {
         "id": "upcoming-projects",
         "featured": True,
@@ -141,14 +116,53 @@ TEAM_DATA = {
     ]
 }
 
+ACHIEVEMENTS_DATA = [
+    {
+        "title": "Inter NIT Code Wars Representation",
+        "recipient": "NIT Mizoram CP Contingent",
+        "desc": "Represented NIT Mizoram in the Pan-India AlgoZenith competitive programming contest across all 31 NITs on the national leaderboard.",
+        "badge": "National Level",
+        "category": "CP"
+    },
+    {
+        "title": "Innovaite 2026 AI/ML Challenge",
+        "recipient": "Innovaite Student Finalists",
+        "desc": "Engineered real-world machine learning models and idea pitches in collaboration with IIC NIT Mizoram and TiHAN IIT Hyderabad.",
+        "badge": "AI Hackathon",
+        "category": "Hackathon"
+    },
+    {
+        "title": "24 Hours Hackathon Prototypes",
+        "recipient": "Club Developer Teams",
+        "desc": "Successfully built and shipped open-source software prototypes overnight during the annual club hackathon.",
+        "badge": "Flagship Hackathon",
+        "category": "Engineering"
+    }
+]
+
 PROJECT_DATA = {
     "intro": "Exploring real-world solutions through technology.",
+    "categories": ["All", "Web Systems", "AI & ML", "Open Roles"],
     "featured": [
         {
+            "id": "official-website",
+            "category": "Web Systems",
             "title": "Official Club Website",
-            "desc": "The very website you are browsing! Designed and built from scratch by the Web Team to showcase our club's members, events, and projects.",
+            "desc": "The official web platform of the Coding & AI Club! Designed and built from scratch by the Web Team to showcase members, events, and projects.",
             "github": "https://github.com/coding-ai-club-nitmz",
-            "live": None
+            "live": None,
+            "tags": ["Flask", "Python", "Jinja2"],
+            "open_roles": ["Frontend Developer Needed", "Backend Maintainer Needed"]
+        },
+        {
+            "id": "ai-campus-assistant",
+            "category": "AI & ML",
+            "title": "AI Campus Assistant",
+            "desc": "An intelligent query resolution system designed for NIT Mizoram students using modern NLP pipelines.",
+            "github": "https://github.com/coding-ai-club-nitmz",
+            "live": None,
+            "tags": ["Python", "PyTorch", "Transformers"],
+            "open_roles": ["ML Engineer Needed"]
         }
     ],
     "contribution": {
@@ -177,20 +191,66 @@ PROJECT_DATA = {
 
 EVENT_DATA = [
     {
+        "slug": "debate-competition-2026",
         "title": "Inter-Departmental / Clubs Debate Competition",
         "desc": "Represent the Coding & AI Club in the Inter-Departmental cum Societies/Clubs Debate Competition on Nov 11, 2026. Internal competition winners will represent the club! Email coding.club@nitmz.ac.in if interested.",
         "image": "images/club-logo.png",
         "registration_open": False,
         "action_link": "mailto:coding.club@nitmz.ac.in?subject=Interest%20in%20representing%20Coding%20%26%20AI%20Club%20-%20Debate%20Competition",
         "action_text": "Email to Represent Club",
-        "upcoming": True
+        "upcoming": True,
+        "start_date": "2026-11-11 10:00:00",
+        "end_date": "2026-11-11 16:00:00",
+        "location": "NIT Mizoram Auditorium"
     },
-    {"title": "Inter NIT Code Wars", "desc": "Flagship Pan-India competitive programming contest conducted by AlgoZenith across All 31 NITs on a single national leaderboard.", "image": "images/events/internitcodewars.jpeg", "registration_open": False, "upcoming": False},
-    {"title": "Samyuga - Prarambh", "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.", "image": "images/events/prarambh.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Samyuga - Trishul", "desc": "Advanced competitive programming challenges for the sharpest coders.", "image": "images/events/trishul.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Chakravyuh AI Quiz", "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.", "image": "images/events/chakravyuh.jpg", "registration_open": False, "upcoming": False},
-    {"title": "24 Hours Hackathon", "desc": "Build real-world solutions and innovative prototypes overnight.", "image": "images/events/hackathon.jpg", "registration_open": False, "upcoming": False},
-    {"title": "Innovaite 2026", "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.", "image": "images/events/innovaite.jpeg", "registration_open": False, "upcoming": False}
+    {
+        "slug": "inter-nit-code-wars",
+        "title": "Inter NIT Code Wars",
+        "desc": "Flagship Pan-India competitive programming contest conducted by AlgoZenith across All 31 NITs on a single national leaderboard.",
+        "image": "images/events/internitcodewars.jpeg",
+        "registration_open": False,
+        "upcoming": False
+    },
+    {
+        "slug": "samyuga-prarambh",
+        "title": "Samyuga - Prarambh",
+        "desc": "The coding contest initiation designed to test your algorithmic thinking and speed.",
+        "image": "images/events/prarambh.jpg",
+        "registration_open": False,
+        "upcoming": False
+    },
+    {
+        "slug": "samyuga-trishul",
+        "title": "Samyuga - Trishul",
+        "desc": "Advanced competitive programming challenges for the sharpest coders.",
+        "image": "images/events/trishul.jpg",
+        "registration_open": False,
+        "upcoming": False
+    },
+    {
+        "slug": "chakravyuh-ai-quiz",
+        "title": "Chakravyuh AI Quiz",
+        "desc": "Test your knowledge of Machine Learning, Deep Learning, and AI history.",
+        "image": "images/events/chakravyuh.jpg",
+        "registration_open": False,
+        "upcoming": False
+    },
+    {
+        "slug": "24-hours-hackathon",
+        "title": "24 Hours Hackathon",
+        "desc": "Build real-world solutions and innovative prototypes overnight.",
+        "image": "images/events/hackathon.jpg",
+        "registration_open": False,
+        "upcoming": False
+    },
+    {
+        "slug": "innovaite-2026",
+        "title": "Innovaite 2026",
+        "desc": "Massive AI/ML and Idea Pitching competitions pushing the limits of Artificial Intelligence.",
+        "image": "images/events/innovaite.jpeg",
+        "registration_open": False,
+        "upcoming": False
+    }
 ]
 
 RESOURCE_DATA = [
@@ -219,6 +279,7 @@ ABOUT_DATA = {
         {"title": "Launch", "content": "Represent at hackathons, competitions, and technical fests.", "tag": "Compete & Win"}
     ]
 }
+
 CONTACT_PAGE_DATA = {
     "intro": "Follow our journey and reach out for collaborations, queries, or just to say hello.",
     "cards": [
@@ -277,7 +338,6 @@ COLLABORATE_DATA = {
             "desc": "Our core and web teams are technical by default — API integrations, platform-specific requirements, and custom tooling are things we can actually build, not just talk about."
         },
     ],
-
 
     "categories": [
         {
@@ -486,3 +546,23 @@ ATTENDANCE_CONFIG = {
     "not_registered_link_text": "Apply for Membership"
 }
 
+CERTIFICATES_DATA = {
+    "CERT-2026-INV-028": {
+        "cert_id": "CERT-2026-INV-028",
+        "student_name": "Dilip Sahu",
+        "roll": "BT24CS028",
+        "event_title": "Innovaite 2026 AI/ML Challenge",
+        "issue_date": "August 26, 2026",
+        "role": "Certificate of Merit",
+        "status": "Official & Verified"
+    },
+    "CERT-2026-SAM-001": {
+        "cert_id": "CERT-2026-SAM-001",
+        "student_name": "Club Participant",
+        "roll": "BT24CS001",
+        "event_title": "Samyuga Trishul Coding Contest",
+        "issue_date": "May 15, 2026",
+        "role": "Certificate of Excellence",
+        "status": "Official & Verified"
+    }
+}
