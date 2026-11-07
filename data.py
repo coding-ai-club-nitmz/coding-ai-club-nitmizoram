@@ -540,7 +540,7 @@ ATTENDANCE_CONFIG = {
     "sheet_name": "Club_Registrations_2026",
     "roll_column": "Roll Number",
     "start_time": "2026-11-07 10:45:00",
-    "end_time": "2026-11-07 11:15:00",
+    "end_time": "2026-11-07 11:30:00",
     "not_registered_message": "You are currently not registered as a club member. Please go to the Join Us page and apply for membership first.",
     "not_registered_link": "/apply/club-join",
     "not_registered_link_text": "Apply for Membership"
